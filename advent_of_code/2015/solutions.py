@@ -142,28 +142,31 @@ def solve_day_6_part_ab():
 
 
   return 0,0
+def solve():
+    day1_a, day1_b = solve_day_1_part_ab()
+    print(f"Day1a: Santa is at floor {day1_a}")
+    print(f"Day1b: Santa enters the basement at {day1_b}")
+    
+    
+    day2_a, day2_b = solve_day_2_part_ab()
+    print(f"Day2a: Elves require {day2_a} square feet of wrapping paper")
+    print(f"Day2b: In addition the elves require {day2_b} feet of ribbon")
+    
+    day3_a, day3_b = solve_day_3_part_ab()
+    print(f"Day3a: Santa has visited {day3_a} houses")
+    print(f"Day3b: Santa and robo santa have seen now {day3_b} houses")
+    
+    
+    day4_a, day4_b = solve_day_4_part_ab()
+    print(f"Day4a: First hash with 5 zeros is at count {day4_a}")
+    print(f"Day4a: First hash with 6 zeros is at count {day4_b}")
+    
+    day5_a, day5_b = solve_day_5_part_ab()
+    print(f"Day5a: Counted {day5_a} nice strings")
+    print(f"Day5a: Counted {day5_b} nice strings in version 2")
+    
+    day6_a, day6_b = solve_day_6_part_ab()
+    print(f"Day6a: {day6_a} light are lit")
 
-day1_a, day1_b = solve_day_1_part_ab()
-print(f"Day1a: Santa is at floor {day1_a}")
-print(f"Day1b: Santa enters the basement at {day1_b}")
-
-
-day2_a, day2_b = solve_day_2_part_ab()
-print(f"Day2a: Elves require {day2_a} square feet of wrapping paper")
-print(f"Day2b: In addition the elves require {day2_b} feet of ribbon")
-
-day3_a, day3_b = solve_day_3_part_ab()
-print(f"Day3a: Santa has visited {day3_a} houses")
-print(f"Day3b: Santa and robo santa have seen now {day3_b} houses")
-
-
-day4_a, day4_b = solve_day_4_part_ab()
-print(f"Day4a: First hash with 5 zeros is at count {day4_a}")
-print(f"Day4a: First hash with 6 zeros is at count {day4_b}")
-
-day5_a, day5_b = solve_day_5_part_ab()
-print(f"Day5a: Counted {day5_a} nice strings")
-print(f"Day5a: Counted {day5_b} nice strings in version 2")
-
-day6_a, day6_b = solve_day_6_part_ab()
-print(f"Day6a: {day6_a} light are lit")
+if __name__ == "__main__":
+  solve()
