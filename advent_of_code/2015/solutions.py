@@ -180,15 +180,24 @@ def solve_day_6_part_ab():
 
 
 def solve_day_7_part_ab():
-    def parse_line(line):
-        result = re.match(
-            "(\w*) (AND|RSHIFT|LSHIFT|OR) (\w*) -> (\w*)",
-            line.strip())
-        return result and result.groups()
+    scope = collections.defaultdict(lambda: 0)
+    def eval_line(line):
+        line =line.strip()
+        ternary = re.match(
+            "(\w+) (AND|RSHIFT|LSHIFT|OR) (\w+) -> (\w+)",line)
+        binary= re.match(
+            "NOT (\w+) -> (\w+)", line)
+        constant= re.match(
+            "(\d+) -> (\w+)", line)
+        setter = re.match(
+            "([a-z]+) -> (\w+)", line)
+
+          
+        return ternary or binary or constant or setter
 
     with open("day_7.txt", "r") as f:
         for line in f:
-            if not parse_line(line):
+            if not eval_line(line):
               print(f"Can't parse {line}")
 
     return 0,0
