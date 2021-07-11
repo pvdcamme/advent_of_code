@@ -140,17 +140,16 @@ def solve_day_6_part_ab():
         result = re.match(
             "(turn on|turn off|toggle) (\d+),(\d+) through (\d+),(\d+)",
             line.strip())
-        return result.group(1), (int(result.group(2)),
-                                 int(result.group(3))), (int(result.group(4)),
-                                                         int(result.group(5)))
+        return (result.group(1), (int(result.group(2)), int(result.group(3))),
+                (int(result.group(4)), int(result.group(5))))
 
     grid_v1 = [[False for _ in range(1000)] for _ in range(1000)]
     grid_v2 = [[0 for _ in range(1000)] for _ in range(1000)]
 
     actions_v1 = {
-            "turn off": lambda prev: False, 
-            "turn on": lambda prev: True, 
-            "toggle": lambda prev: not prev
+        "turn off": lambda prev: False,
+        "turn on": lambda prev: True,
+        "toggle": lambda prev: not prev
     }
     actions_v2 = {
         "turn off": lambda prev: max(0, prev - 1),
@@ -162,17 +161,18 @@ def solve_day_6_part_ab():
         start_x, start_y = start
         end_x, end_y = end
         for y in range(start_y, end_y + 1):
-          row = grid[y]
-          for x in range(start_x, end_x + 1):
-            old_val = row[x]
-            row[x] = action(old_val)
+            row = grid[y]
+            for x in range(start_x, end_x + 1):
+                old_val = row[x]
+                row[x] = action(old_val)
 
     with open("day_6.txt", "r") as f:
         for line in f:
             current_action, start, end = parse_line(line)
             action_v1 = actions_v1[current_action]
-            action_v2 = actions_v2[current_action]
             update(grid_v1, start, end, action_v1)
+
+            action_v2 = actions_v2[current_action]
             update(grid_v2, start, end, action_v2)
 
     total_lit = sum((sum(row) for row in grid_v1))
@@ -204,6 +204,7 @@ def solve():
     day6_a, day6_b = solve_day_6_part_ab()
     print(f"Day6a: {day6_a} light are lit")
     print(f"Day6b: {day6_b} is the total brightness")
+
 
 if __name__ == "__main__":
     solve()
