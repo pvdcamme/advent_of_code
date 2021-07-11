@@ -136,25 +136,36 @@ def solve_day_6_part_ab():
     return result.group(1), (int(result.group(2)), int(result.group(3))), (int(result.group(4)), int(result.group(5)))
     
   grid = [[False for _ in range(1000)] for _ in range(1000)]
+  grid_v2 = [[0 for _ in range(1000)] for _ in range(1000)]
+
   turn_off = lambda prev_val: False
   turn_on = lambda prev_val: True
   toggle = lambda prev_val: not prev_val
   actions = {"turn on": turn_on, "turn off": turn_off, "toggle": toggle}
+  actions_v2 = {"turn on": lambda prev: prev + 1,
+                "turn off": lambda prev: max(0, prev -1),
+                "toggle": lambda prev: prev + 2 
+  }
+
+  def update(grid, x, y, action):
+    old_val = grid[x][y]
+    grid[x][y] =action(old_val)
 
   with open("day_6.txt", "r") as f:
     for line in f:
       current_action, start, end = parse_line(line)
       start_x, start_y = start
       end_x, end_y =end
+      action_v1 = actions[current_action]
+      action_v2 = actions_v2[current_action]
       for y in range(start_y, end_y + 1):
-        row = grid[y]
         for x in range(start_x, end_x + 1):
-          old_val = row[x]
-          new_val = actions[current_action](old_val)
-          row[x] = new_val
+          update(grid, x, y, action_v1)
+          update(grid_v2, x, y, action_v2)
       
   total_lit = sum((sum(row) for row in grid))
-  return total_lit,0
+  total_brightness= sum((sum(row) for row in grid_v2))
+  return total_lit,total_brightness
 def solve():
     day1_a, day1_b = solve_day_1_part_ab()
     print(f"Day1a: Santa is at floor {day1_a}")
@@ -180,6 +191,7 @@ def solve():
     
     day6_a, day6_b = solve_day_6_part_ab()
     print(f"Day6a: {day6_a} light are lit")
+    print(f"Day6b: {day6_b} is the total brightness")
 
 if __name__ == "__main__":
   solve()
