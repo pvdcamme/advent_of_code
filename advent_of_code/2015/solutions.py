@@ -152,8 +152,8 @@ def solve_day_6_part_ab():
     toggle = lambda prev_val: not prev_val
     actions = {"turn on": turn_on, "turn off": turn_off, "toggle": toggle}
     actions_v2 = {
-        "turn on": lambda prev: prev + 1,
         "turn off": lambda prev: max(0, prev - 1),
+        "turn on": lambda prev: prev + 1,
         "toggle": lambda prev: prev + 2
     }
 
