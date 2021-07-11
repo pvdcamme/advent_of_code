@@ -157,21 +157,22 @@ def solve_day_6_part_ab():
         "toggle": lambda prev: prev + 2
     }
 
-    def update(grid, x, y, action):
-        old_val = grid[x][y]
-        grid[x][y] = action(old_val)
+    def update(grid, start, end, action):
+        start_x, start_y = start
+        end_x, end_y = end
+        for y in range(start_y, end_y + 1):
+          row = grid[y]
+          for x in range(start_x, end_x + 1):
+            old_val = row[x]
+            row[x] = action(old_val)
 
     with open("day_6.txt", "r") as f:
         for line in f:
             current_action, start, end = parse_line(line)
-            start_x, start_y = start
-            end_x, end_y = end
             action_v1 = actions[current_action]
             action_v2 = actions_v2[current_action]
-            for y in range(start_y, end_y + 1):
-                for x in range(start_x, end_x + 1):
-                    update(grid, x, y, action_v1)
-                    update(grid_v2, x, y, action_v2)
+            update(grid, start, end, action_v1)
+            update(grid_v2, start, end, action_v2)
 
     total_lit = sum((sum(row) for row in grid))
     total_brightness = sum((sum(row) for row in grid_v2))
@@ -202,7 +203,6 @@ def solve():
     day6_a, day6_b = solve_day_6_part_ab()
     print(f"Day6a: {day6_a} light are lit")
     print(f"Day6b: {day6_b} is the total brightness")
-
 
 if __name__ == "__main__":
     solve()
