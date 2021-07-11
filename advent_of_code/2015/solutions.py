@@ -180,8 +180,7 @@ def solve_day_6_part_ab():
 
 
 def solve_day_7_part_ab():
-    scope = collections.defaultdict(lambda: 0)
-    def eval_line(line):
+    def eval_line(line,scope):
         line =line.strip()
         ternary = re.match(
             "(\w+) (AND|RSHIFT|LSHIFT|OR) (\w+) -> (\w+)",line)
@@ -192,12 +191,22 @@ def solve_day_7_part_ab():
         setter = re.match(
             "([a-z]+) -> (\w+)", line)
 
+        if ternary:
+          arg1, op, arg2, trg = ternary.groups() 
+        elif binary:
+          arg1, trg = binary.groups()
+        elif constant:
+          val, trg = constant.groups()
+        elif setter:
+          arg, trg = setter.groups()
           
         return ternary or binary or constant or setter
 
+
+    scope = collections.defaultdict(lambda: 0)
     with open("day_7.txt", "r") as f:
         for line in f:
-            if not eval_line(line):
+            if not eval_line(line,scope):
               print(f"Can't parse {line}")
 
     return 0,0
