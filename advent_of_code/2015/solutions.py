@@ -1,5 +1,6 @@
 import collections
 import hashlib
+import re
 
 
 def solve_day_1_part_ab():
@@ -134,8 +135,6 @@ def solve_day_5_part_ab():
 
 
 def solve_day_6_part_ab():
-    import re
-
     def parse_line(line):
         result = re.match(
             "(turn on|turn off|toggle) (\d+),(\d+) through (\d+),(\d+)",
@@ -181,7 +180,18 @@ def solve_day_6_part_ab():
 
 
 def solve_day_7_part_ab():
-  return 0,0
+    def parse_line(line):
+        result = re.match(
+            "(\w*) (AND|RSHIFT|LSHIFT|OR) (\w*) -> (\w*)",
+            line.strip())
+        return result and result.groups()
+
+    with open("day_7.txt", "r") as f:
+        for line in f:
+            if not parse_line(line):
+              print(f"Can't parse {line}")
+
+    return 0,0
 
 def solve():
     day1_a, day1_b = solve_day_1_part_ab()
