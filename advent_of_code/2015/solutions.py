@@ -180,6 +180,9 @@ def solve_day_6_part_ab():
     return total_lit, total_brightness
 
 
+def solve_day_7_part_ab():
+  return 0,0
+
 def solve():
     day1_a, day1_b = solve_day_1_part_ab()
     print(f"Day1a: Santa is at floor {day1_a}")
@@ -204,6 +207,9 @@ def solve():
     day6_a, day6_b = solve_day_6_part_ab()
     print(f"Day6a: {day6_a} light are lit")
     print(f"Day6b: {day6_b} is the total brightness")
+
+    day7_a, day7_b = solve_day_7_part_ab()
+    print(f"Day7a: Wire 'a' has value {day7_a}")
 
 
 if __name__ == "__main__":
