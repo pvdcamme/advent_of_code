@@ -144,13 +144,14 @@ def solve_day_6_part_ab():
                                  int(result.group(3))), (int(result.group(4)),
                                                          int(result.group(5)))
 
-    grid = [[False for _ in range(1000)] for _ in range(1000)]
+    grid_v1 = [[False for _ in range(1000)] for _ in range(1000)]
     grid_v2 = [[0 for _ in range(1000)] for _ in range(1000)]
 
-    turn_off = lambda prev_val: False
-    turn_on = lambda prev_val: True
-    toggle = lambda prev_val: not prev_val
-    actions = {"turn on": turn_on, "turn off": turn_off, "toggle": toggle}
+    actions_v1 = {
+            "turn off": lambda prev: False, 
+            "turn on": lambda prev: True, 
+            "toggle": lambda prev: not prev
+    }
     actions_v2 = {
         "turn off": lambda prev: max(0, prev - 1),
         "turn on": lambda prev: prev + 1,
@@ -169,12 +170,12 @@ def solve_day_6_part_ab():
     with open("day_6.txt", "r") as f:
         for line in f:
             current_action, start, end = parse_line(line)
-            action_v1 = actions[current_action]
+            action_v1 = actions_v1[current_action]
             action_v2 = actions_v2[current_action]
-            update(grid, start, end, action_v1)
+            update(grid_v1, start, end, action_v1)
             update(grid_v2, start, end, action_v2)
 
-    total_lit = sum((sum(row) for row in grid))
+    total_lit = sum((sum(row) for row in grid_v1))
     total_brightness = sum((sum(row) for row in grid_v2))
     return total_lit, total_brightness
 
