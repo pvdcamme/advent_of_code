@@ -267,6 +267,9 @@ def solve_day_7_part_ab():
 
     return solved_scope['a'][0], scope_v2['a'][0]
 
+def solve_day_8_part_ab():
+  return 0,0
+
 def solve():
     day1_a, day1_b = solve_day_1_part_ab()
     print(f"Day1a: Santa is at floor {day1_a}")
@@ -296,6 +299,7 @@ def solve():
     print(f"Day7a: Wire 'a' has value {day7_a}")
     print(f"Day7b: In the second run wire 'a' has value {day7_b}")
 
+    day8_a, day8_b = solve_day_8_part_ab()
 
 if __name__ == "__main__":
     solve()
