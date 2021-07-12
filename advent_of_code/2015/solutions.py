@@ -180,36 +180,85 @@ def solve_day_6_part_ab():
 
 
 def solve_day_7_part_ab():
-    def eval_line(line,scope):
+    def and_fun(a,b):
+      return a & b
+    def or_fun(a,b):
+      return a | b
+    def make_lshift_fun(cnt):
+      return  lambda a: (a << cnt) & 0xFFFF
+    def make_rshift_fun(cnt):
+      return  lambda a: (a >> cnt) & 0xFFFF
+    def not_fun(a):
+      return 0xFFFF ^ a
+    def make_identity(a):
+      return lambda :a
+    def setter_fun(a):
+      return a
+
+    def compile_line(line):
         line =line.strip()
         ternary = re.match(
-            "(\w+) (AND|RSHIFT|LSHIFT|OR) (\w+) -> (\w+)",line)
+            "([a-z]+) (AND|RSHIFT|LSHIFT|OR) (\w+) -> (\w+)",line)
         binary= re.match(
-            "NOT (\w+) -> (\w+)", line)
+            "NOT ([a-z]+) -> ([a-z]+)", line)
         constant= re.match(
             "(\d+) -> (\w+)", line)
         setter = re.match(
             "([a-z]+) -> (\w+)", line)
 
-        if ternary:
-          arg1, op, arg2, trg = ternary.groups() 
+        ternary_const = re.match(
+            "(\d+) (AND|OR) (\w+) -> (\w+)",line)
+
+        target = None
+        result = None
+        if ternary_const:
+          val, op, arg2, target= ternary_const.groups() 
+          val = int(val)
+          if "AND" == op:
+            result = (lambda a: and_fun(val, a), arg2)
+          elif "OR" == op:
+            result = (lambda a: or_fun(val, a), arg2)
+        elif ternary:
+          arg1, op, arg2, target= ternary.groups() 
+          if "AND" == op:
+            result = (and_fun, arg1, arg2)
+          elif "RSHIFT" == op:
+            result = (make_rshift_fun(int(arg2)), arg1)
+          elif "LSHIFT" == op:
+            result = (make_lshift_fun(int(arg2))), arg1
+          elif "OR" == op:
+            result = (or_fun, arg1, arg2)
         elif binary:
-          arg1, trg = binary.groups()
+          arg, target= binary.groups()
+          result = (not_fun, arg) 
         elif constant:
-          val, trg = constant.groups()
+          val, target= constant.groups()
+          result = (int(val),)
         elif setter:
-          arg, trg = setter.groups()
-          
-        return ternary or binary or constant or setter
+          arg, target = setter.groups()
+          result = (setter_fun, arg)
+        else:
+          print(f"Unknown operand {line}")
+        return target, result          
 
-
-    scope = collections.defaultdict(lambda: 0)
+    scope = collections.defaultdict(lambda: (0,))
     with open("day_7.txt", "r") as f:
         for line in f:
-            if not eval_line(line,scope):
-              print(f"Can't parse {line}")
+            target, res = compile_line(line)
+            scope[target] = res
 
-    return 0,0
+    while len(scope['a']) > 1:
+      for name in list(scope.keys()):
+        act, *depend = scope[name]
+        if not depend:
+          continue
+        resolved = all((len(scope[dd]) == 1 for dd in depend))
+        if not resolved:
+          continue
+        vals = [scope[dd][0] for dd in depend]
+        scope[name] = (act(*vals),)
+
+    return scope['a'],0
 
 def solve():
     day1_a, day1_b = solve_day_1_part_ab()
