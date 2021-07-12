@@ -3,7 +3,6 @@ import hashlib
 import re
 import copy
 
-
 def solve_day_1_part_ab():
     position = 0
     current_char = 0
@@ -272,7 +271,15 @@ def solve_day_7_part_ab():
 
 
 def solve_day_8_part_ab():
-    return 0, 0
+    total_original = 0
+    total_memory = 0
+    with open("day_8.txt", "r") as f:
+        for line in f:
+          line = line.strip()
+          total_original += len(line)
+          total_memory += len(eval(line))
+
+    return total_original - total_memory, 0
 
 
 def solve():
@@ -305,6 +312,7 @@ def solve():
     print(f"Day7b: In the second run wire 'a' has value {day7_b}")
 
     day8_a, day8_b = solve_day_8_part_ab()
+    print(f"Day7a: The file has {day8_a} additional formatting characters")
 
 
 if __name__ == "__main__":
