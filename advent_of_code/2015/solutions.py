@@ -1,6 +1,7 @@
 import collections
 import hashlib
 import re
+import copy
 
 
 def solve_day_1_part_ab():
@@ -246,19 +247,22 @@ def solve_day_7_part_ab():
         for line in f:
             target, res = compile_line(line)
             scope[target] = res
+    def solve(scope):
+      while not all((len(op) == 1 for op in scope.values())):
+        for name in list(scope.keys()):
+          act, *depend = scope[name]
+          if not depend:
+            continue
+          resolved = all((len(scope[dd]) == 1 for dd in depend))
+          if not resolved:
+            continue
+          vals = [scope[dd][0] for dd in depend]
+          scope[name] = (act(*vals),)
+      return scope          
 
-    while len(scope['a']) > 1:
-      for name in list(scope.keys()):
-        act, *depend = scope[name]
-        if not depend:
-          continue
-        resolved = all((len(scope[dd]) == 1 for dd in depend))
-        if not resolved:
-          continue
-        vals = [scope[dd][0] for dd in depend]
-        scope[name] = (act(*vals),)
+    solved_scope= solve(copy.deepcopy(scope))
 
-    return scope['a'],0
+    return solved_scope['a'][0],0
 
 def solve():
     day1_a, day1_b = solve_day_1_part_ab()
