@@ -271,15 +271,20 @@ def solve_day_7_part_ab():
 
 
 def solve_day_8_part_ab():
+    def escape_str(line):
+      return (line.replace("\\", "\\\\")
+                  .replace('"', '\\"'))
     total_original = 0
     total_memory = 0
+    total_more_escaped = 0
     with open("day_8.txt", "r") as f:
         for line in f:
           line = line.strip()
           total_original += len(line)
           total_memory += len(eval(line))
+          total_more_escaped += len(escape_str(line)) + 2
 
-    return total_original - total_memory, 0
+    return total_original - total_memory, total_more_escaped - total_original
 
 
 def solve():
@@ -312,7 +317,8 @@ def solve():
     print(f"Day7b: In the second run wire 'a' has value {day7_b}")
 
     day8_a, day8_b = solve_day_8_part_ab()
-    print(f"Day7a: The file has {day8_a} additional formatting characters")
+    print(f"Day8a: The file has {day8_a} additional formatting characters")
+    print(f"Day9a: The file has {day8_b} too few formatting characters")
 
 
 if __name__ == "__main__":
