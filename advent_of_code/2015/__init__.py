@@ -6,3 +6,7 @@
   better.
 
 """
+from .week1 import solve_week_1
+
+if __name__ == '__main__':
+  solve_week_1()
