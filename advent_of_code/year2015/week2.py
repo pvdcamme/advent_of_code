@@ -85,13 +85,15 @@ def solve_day_10_part_ab():
 
     puzzle_input = [int(d) for d in "1113122113"]
     
+    v1_step_count = 40
+    v2_step_count = 50
     updated_v1 = iter(puzzle_input)
-    for _ in range(40):
+    for _ in range(v1_step_count):
       updated_v1 = look_and_say_step(updated_v1)
 
     updated_v1 = list(updated_v1)
     updated_v2 = iter(updated_v1)
-    for _ in range(50- 40):
+    for _ in range(v2_step_count- v1_step_count):
       updated_v2 = look_and_say_step(updated_v2)
  
     return len(list(updated_v1)), len(list(updated_v2))
