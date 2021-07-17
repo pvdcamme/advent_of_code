@@ -2,6 +2,7 @@ import collections
 import hashlib
 import re
 import copy
+import itertools
 
 def solve_day_1_part_ab():
     position = 0
@@ -291,13 +292,29 @@ def solve_day_9_part_ab():
     matched = re.match("(\w+) to (\w+) = (\d+)", line)
     return matched.group(1), matched.group(2), int(matched.group(3))
 
+  def path_cost(path, distances):
+    total_cost = 0
+    for current_city, next_city in zip(path, path[1:]):
+      total_cost += distances[(current_city, next_city)]
+    return total_cost      
+      
+  def calc_shortest_path(cities, distances):
+    cheapest = sum(distances.values())
+    for path in itertools.permutations(cities):
+      current_cost = path_cost(path, distances)
+      cheapest = min(cheapest, current_cost)
+    return cheapest 
   distances = {}    
+  cities = set()
   with open("day_9.txt", "r") as f:
     for line in f:
       src, dst, cost = parse(line)
       distances[(src, dst)] = cost
       distances[(dst, src)] = cost
-  return 0,0
+      cities.add(src)
+      cities.add(dst)
+        
+  return calc_shortest_path(cities, distances),0
 
 def solve():
     day1_a, day1_b = solve_day_1_part_ab()
