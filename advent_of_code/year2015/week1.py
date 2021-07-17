@@ -3,12 +3,15 @@ import hashlib
 import re
 import copy
 import itertools
+import pathlib
 
+def get_filepath(name):
+  return pathlib.Path(__file__).parent.joinpath(name).resolve()
 def solve_day_1_part_ab():
     position = 0
     current_char = 0
     first_basement = 1e9
-    with open("day_1.txt", "r") as f:
+    with open(get_filepath("day_1.txt"), "r") as f:
         for l in f:
             for ch in l:
                 current_char += 1
@@ -37,7 +40,7 @@ def solve_day_2_part_ab():
 
     total_area = 0
     total_ribbon = 0
-    with open("day_2.txt", "r") as f:
+    with open(get_filepath("day_2.txt"), "r") as f:
         for line in f:
             l, w, h = parse_box(line)
             total_area += wrapping_paper(l, w, h)
@@ -64,7 +67,7 @@ def solve_day_3_part_ab():
     been_there = collections.defaultdict(int)
     been_there[position] += 1
 
-    with open("day_3.txt", "r") as f:
+    with open(get_filepath("day_3.txt"), "r") as f:
         for line in f:
             for ch in line:
                 position = new_position(position, ch)
@@ -73,7 +76,7 @@ def solve_day_3_part_ab():
     santa_position = (0, 0)
     robo_position = (0, 0)
     next_been = collections.defaultdict(int)
-    with open("day_3.txt", "r") as f:
+    with open(get_filepath("day_3.txt"), "r") as f:
         santa_move = True
         for line in f:
             for ch in line:
@@ -127,7 +130,7 @@ def solve_day_5_part_ab():
 
     nice_strings = 0
     nice_strings_v2 = 0
-    with open("day_5.txt", "r") as f:
+    with open(get_filepath("day_5.txt"), "r") as f:
         for line in f:
             nice_strings += is_nice(line)
             nice_strings_v2 += is_nice_v2(line)
@@ -165,7 +168,7 @@ def solve_day_6_part_ab():
                 old_val = row[x]
                 row[x] = action(old_val)
 
-    with open("day_6.txt", "r") as f:
+    with open(get_filepath("day_6.txt"), "r") as f:
         for line in f:
             current_action, start, end = parse_line(line)
             action_v1 = actions_v1[current_action]
@@ -244,7 +247,7 @@ def solve_day_7_part_ab():
         return target, result
 
     scope = collections.defaultdict(lambda: (0, ))
-    with open("day_7.txt", "r") as f:
+    with open(get_filepath("day_7.txt"), "r") as f:
         for line in f:
             target, res = compile_line(line)
             scope[target] = res
