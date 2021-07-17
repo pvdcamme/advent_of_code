@@ -287,6 +287,9 @@ def solve_day_8_part_ab():
     return total_original - total_memory, total_more_escaped - total_original
 
 
+def solve_day_9_part_ab():
+  return 0,0
+
 def solve():
     day1_a, day1_b = solve_day_1_part_ab()
     print(f"Day1a: Santa is at floor {day1_a}")
@@ -318,7 +321,11 @@ def solve():
 
     day8_a, day8_b = solve_day_8_part_ab()
     print(f"Day8a: The file has {day8_a} additional formatting characters")
-    print(f"Day9a: The file has {day8_b} too few formatting characters")
+    print(f"Day8a: The file has {day8_b} too few formatting characters")
+
+    day9_a, day9_b = solve_day_9_part_ab()
+    print(f"Day9a: The shortest route is {day9_a} units")
+
 
 
 if __name__ == "__main__":
