@@ -68,8 +68,34 @@ def solve_day_9_part_ab():
 
 
 def solve_day_10_part_ab():
+    def look_and_say_step(start_list):
+      result = []
+      prev = start_list[0]
+      cnt = 1
+      for idx in start_list[1:]:
+        if v == prev:
+          cnt += 1
+        else:
+          result.append(cnt)
+          result.append(prev)
+          prev = v
+          cnt = 1
+      result.append(cnt)
+      result.append(prev)
+      return result
+
     puzzle_input = [int(d) for d in "1113122113"]
-    return 0,0
+    
+    updated_v1 = puzzle_input
+    for _ in range(40):
+      updated_v1 = look_and_say_step(updated_v1)
+
+    print("Done with v1")
+    updated_v2 = updated_v1
+    for _ in range(50 -40):
+      updated_v2 = look_and_say_step(updated_v2)
+ 
+    return len(updated_v1), len(updated_v2)
 
 def solve():
     day8_a, day8_b = solve_day_8_part_ab()
@@ -80,8 +106,12 @@ def solve():
     print(f"Day9a: The shortest route is {day9_a} units")
     print(f"Day9b: The longest route is {day9_b} units")
 
+    import time
+    start = time.time()
     day10_a, day10_b = solve_day_10_part_ab()
     print(f"Day10a: The length grows to {day10_a} after applying 40 times")
+    print(f"Day10b: The length grows to {day10_b} after applying 50 times")
+    print(f"Done in {time.time() - start}")
 
 if __name__ == "__main__":
     solve()
