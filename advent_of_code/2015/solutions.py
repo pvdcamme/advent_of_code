@@ -290,9 +290,13 @@ def solve_day_9_part_ab():
   def parse(line):
     matched = re.match("(\w+) to (\w+) = (\d+)", line)
     return matched.group(1), matched.group(2), int(matched.group(3))
+
+  distances = {}    
   with open("day_9.txt", "r") as f:
     for line in f:
       src, dst, cost = parse(line)
+      distances[(src, dst)] = cost
+      distances[(dst, src)] = cost
   return 0,0
 
 def solve():
