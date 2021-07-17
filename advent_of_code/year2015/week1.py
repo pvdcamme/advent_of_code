@@ -5,8 +5,10 @@ import copy
 import itertools
 import pathlib
 
-def get_filepath(name):
-  return pathlib.Path(__file__).parent.joinpath(name).resolve()
+def get_filepath(file_name):
+  """ Returns the full path of the file_name"""
+  return pathlib.Path(__file__).parent.joinpath(file_name).resolve()
+
 def solve_day_1_part_ab():
     position = 0
     current_char = 0

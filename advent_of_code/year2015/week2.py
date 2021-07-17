@@ -5,8 +5,9 @@ import copy
 import itertools
 import pathlib
 
-def get_filepath(name):
-  return pathlib.Path(__file__).parent.joinpath(name).resolve()
+def get_filepath(file_name):
+  """ Returns the full path of the file_name"""
+  return pathlib.Path(__file__).parent.joinpath(file_name).resolve()
 
 def solve_day_8_part_ab():
     def escape_str(line):
@@ -49,7 +50,6 @@ def solve_day_9_part_ab():
       current_cost = path_cost(path, distances)
       longest= max(longest, current_cost)
     return longest 
-
 
   distances = {}    
   cities = set()
