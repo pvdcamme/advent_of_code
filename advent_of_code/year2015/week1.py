@@ -5,9 +5,11 @@ import copy
 import itertools
 import pathlib
 
+
 def get_filepath(file_name):
-  """ Returns the full path of the file_name"""
-  return pathlib.Path(__file__).parent.joinpath(file_name).resolve()
+    """ Returns the full path of the file_name"""
+    return pathlib.Path(__file__).parent.joinpath(file_name).resolve()
+
 
 def solve_day_1_part_ab():
     position = 0
@@ -24,6 +26,7 @@ def solve_day_1_part_ab():
                 if position == -1:
                     first_basement = min(first_basement, current_char)
     return (position, first_basement)
+
 
 def solve_day_2_part_ab():
     def parse_box(line):
@@ -274,6 +277,7 @@ def solve_day_7_part_ab():
 
     return solved_scope['a'][0], scope_v2['a'][0]
 
+
 def solve():
     day1_a, day1_b = solve_day_1_part_ab()
     print(f"Day1a: Santa is at floor {day1_a}")
@@ -302,6 +306,7 @@ def solve():
     day7_a, day7_b = solve_day_7_part_ab()
     print(f"Day7a: Wire 'a' has value {day7_a}")
     print(f"Day7b: In the second run wire 'a' has value {day7_b}")
+
 
 if __name__ == "__main__":
     solve_week_1()
