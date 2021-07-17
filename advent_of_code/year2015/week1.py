@@ -272,7 +272,7 @@ def solve_day_7_part_ab():
 
     return solved_scope['a'][0], scope_v2['a'][0]
 
-def solve_week_1():
+def solve():
     day1_a, day1_b = solve_day_1_part_ab()
     print(f"Day1a: Santa is at floor {day1_a}")
     print(f"Day1b: Santa enters the basement at {day1_b}")

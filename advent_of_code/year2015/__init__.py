@@ -6,8 +6,10 @@
   better.
 
 """
-from .week1 import solve_week_1
+from .week1 import solve as solve_week_1
+from .week2 import solve as solve_week_2
 
 def solve():
   solve_week_1()
+  solve_week_2()
 
