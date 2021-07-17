@@ -8,5 +8,6 @@
 """
 from .week1 import solve_week_1
 
-if __name__ == '__main__':
+def solve():
   solve_week_1()
+
