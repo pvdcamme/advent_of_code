@@ -304,6 +304,15 @@ def solve_day_9_part_ab():
       current_cost = path_cost(path, distances)
       cheapest = min(cheapest, current_cost)
     return cheapest 
+  
+  def calc_longest_path(cities, distances):
+    longest = 0
+    for path in itertools.permutations(cities):
+      current_cost = path_cost(path, distances)
+      longest= max(longest, current_cost)
+    return longest 
+
+
   distances = {}    
   cities = set()
   with open("day_9.txt", "r") as f:
@@ -314,7 +323,7 @@ def solve_day_9_part_ab():
       cities.add(src)
       cities.add(dst)
         
-  return calc_shortest_path(cities, distances),0
+  return calc_shortest_path(cities, distances), calc_longest_path(cities, distances)
 
 def solve():
     day1_a, day1_b = solve_day_1_part_ab()
@@ -351,6 +360,7 @@ def solve():
 
     day9_a, day9_b = solve_day_9_part_ab()
     print(f"Day9a: The shortest route is {day9_a} units")
+    print(f"Day9b: The longest route is {day9_b} units")
 
 
 if __name__ == "__main__":
