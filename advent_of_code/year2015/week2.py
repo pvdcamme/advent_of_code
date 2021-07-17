@@ -67,6 +67,10 @@ def solve_day_9_part_ab():
                               distances), calc_longest_path(cities, distances)
 
 
+def solve_day_10_part_ab():
+    puzzle_input = [int(d) for d in "1113122113"]
+    return 0,0
+
 def solve():
     day8_a, day8_b = solve_day_8_part_ab()
     print(f"Day8a: The file has {day8_a} additional formatting characters")
@@ -76,6 +80,8 @@ def solve():
     print(f"Day9a: The shortest route is {day9_a} units")
     print(f"Day9b: The longest route is {day9_b} units")
 
+    day10_a, day10_b = solve_day_10_part_ab()
+    print(f"Day10a: The length grows to {day10_a} after applying 40 times")
 
 if __name__ == "__main__":
     solve()
