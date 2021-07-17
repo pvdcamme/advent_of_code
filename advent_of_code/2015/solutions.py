@@ -330,7 +330,7 @@ def solve():
 
     day8_a, day8_b = solve_day_8_part_ab()
     print(f"Day8a: The file has {day8_a} additional formatting characters")
-    print(f"Day8a: The file has {day8_b} too few formatting characters")
+    print(f"Day8b: The file has {day8_b} too few formatting characters")
 
     day9_a, day9_b = solve_day_9_part_ab()
     print(f"Day9a: The shortest route is {day9_a} units")
