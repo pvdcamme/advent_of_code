@@ -99,6 +99,23 @@ def solve_day_10_part_ab():
     return len(list(updated_v1)), len(list(updated_v2))
 
 def solve_day_11_part_ab():
+  def next_word(val):
+    alphabet = "abcdefghijklmnopqrstuvwxyz"
+    new_val = val[:]
+    for idx,char in reversed(list(enumerate(val))):
+      pos = alphabet.find(char) + 1
+      if pos < len(alphabet):
+        new_val[idx] = alphabet[pos]
+        break
+      else:
+        new_val[idx] = alphabet[0]
+    return new_val
+    
+  start_input = list("cqjxjnds")
+  print(start_input)
+  print(next_word(start_input))
+  print(next_word(list("azzz")))
+
   return 0,0
 
 def solve():
