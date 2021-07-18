@@ -98,6 +98,9 @@ def solve_day_10_part_ab():
  
     return len(list(updated_v1)), len(list(updated_v2))
 
+def solve_day_11_part_ab():
+  return 0,0
+
 def solve():
     day8_a, day8_b = solve_day_8_part_ab()
     print(f"Day8a: The file has {day8_a} additional formatting characters")
@@ -110,6 +113,10 @@ def solve():
     day10_a, day10_b = solve_day_10_part_ab()
     print(f"Day10a: The length grows to {day10_a} after applying 40 times")
     print(f"Day10b: The length grows to {day10_b} after applying 50 times")
+
+    day11_a, day11_b = solve_day_11_part_ab()
+    print(f"Day11a: Santa's next password is {day11_a}")
+
 
 if __name__ == "__main__":
     solve()
