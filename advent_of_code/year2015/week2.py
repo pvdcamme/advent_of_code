@@ -101,7 +101,7 @@ def solve_day_10_part_ab():
 def solve_day_11_part_ab():
   alphabet = "abcdefghijklmnopqrstuvwxyz"
   def next_word(val):
-    new_val = val[:]
+    new_val = list(val)
     for idx,char in reversed(list(enumerate(val))):
       pos = alphabet.find(char) + 1
       if pos < len(alphabet):
@@ -109,6 +109,8 @@ def solve_day_11_part_ab():
         break
       else:
         new_val[idx] = alphabet[0]
+    else:
+      return list(alphabet[0] * (len(val) + 1))
     return new_val
   
   def good_pass(val):
@@ -131,7 +133,8 @@ def solve_day_11_part_ab():
     return password      
 
   password_v1= search_next_pass(list("cqjxjnds"))
-  return "".join(password_v1),"TODO"
+  password_v2= search_next_pass(password_v1)
+  return "".join(password_v1), "".join(password_v2)
 
 def solve():
     day8_a, day8_b = solve_day_8_part_ab()
@@ -148,7 +151,7 @@ def solve():
 
     day11_a, day11_b = solve_day_11_part_ab()
     print(f"Day11a: Santa's next password is {day11_a}")
-    print(f"Day112: And after that Santa's next password one is {day11_b}")
+    print(f"Day11b: And after that Santa's next password one is {day11_b}")
 
 
 if __name__ == "__main__":
