@@ -136,6 +136,10 @@ def solve_day_11_part_ab():
   password_v2= search_next_pass(password_v1)
   return "".join(password_v1), "".join(password_v2)
 
+
+def solve_day_12_part_ab():
+  return 0,0
+  
 def solve():
     day8_a, day8_b = solve_day_8_part_ab()
     print(f"Day8a: The file has {day8_a} additional formatting characters")
@@ -153,6 +157,9 @@ def solve():
     print(f"Day11a: Santa's next password is {day11_a}")
     print(f"Day11b: And after that Santa's next password one is {day11_b}")
 
+
+    day12_a, day12_b = solve_day_12_part_ab()
+    print(f"Day12a: Accounting all numbers, added together the give {day12_a}")
 
 if __name__ == "__main__":
     solve()
