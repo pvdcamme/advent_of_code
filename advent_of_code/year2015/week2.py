@@ -187,7 +187,7 @@ def solve_day_13_part_ab():
   
     return summed
       
-  happiness_matrix = {}
+  happiness_matrix = collections.defaultdict(lambda: 0)
   family= set()
   with open(get_filepath("day_13.txt"), "r") as f:
     for line in f:
@@ -199,7 +199,14 @@ def solve_day_13_part_ab():
   most_hapiness = -1e9
   for seating in itertools.permutations(family):
     most_hapiness = max(total_happiness(seating, happiness_matrix), most_hapiness)
-  return most_hapiness,0
+
+
+  family.add("me")
+  most_hapiness_with_me = -1e9
+  for seating in itertools.permutations(family):
+    most_hapiness_with_me= max(total_happiness(seating, happiness_matrix), most_hapiness_with_me)
+
+  return most_hapiness, most_hapiness_with_me - most_hapiness
   
 def solve():
     day8_a, day8_b = solve_day_8_part_ab()
@@ -224,6 +231,7 @@ def solve():
 
     day13_a, day13_b = solve_day_13_part_ab()
     print(f"Day13a: Best happiness reachable is {day13_a}")
+    print(f"Day13b: With me included, the best happiness changes with {day13_b}")
 
 
 if __name__ == "__main__":
