@@ -164,6 +164,9 @@ def solve_day_12_part_ab():
     data = json.load(f)
   
   return recursively_add(data),recursively_add(data, "red")
+
+def solve_day_13_part_ab():
+  return 0,0
   
 def solve():
     day8_a, day8_b = solve_day_8_part_ab()
@@ -182,10 +185,13 @@ def solve():
     print(f"Day11a: Santa's next password is {day11_a}")
     print(f"Day11b: And after that Santa's next password one is {day11_b}")
 
-
     day12_a, day12_b = solve_day_12_part_ab()
     print(f"Day12a: Accounting all numbers, added together gives {day12_a}")
     print(f"Day12a: Fixed accounting for red, now added together gives {day12_b}")
+
+    day13_a, day13_b = solve_day_13_part_ab()
+    print(f"Day13a: Best happiness reachable is {day13_a}")
+
 
 if __name__ == "__main__":
     solve()
