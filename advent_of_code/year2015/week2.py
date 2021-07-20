@@ -99,8 +99,8 @@ def solve_day_10_part_ab():
     return len(list(updated_v1)), len(list(updated_v2))
 
 def solve_day_11_part_ab():
+  alphabet = "abcdefghijklmnopqrstuvwxyz"
   def next_word(val):
-    alphabet = "abcdefghijklmnopqrstuvwxyz"
     new_val = val[:]
     for idx,char in reversed(list(enumerate(val))):
       pos = alphabet.find(char) + 1
@@ -110,13 +110,26 @@ def solve_day_11_part_ab():
       else:
         new_val[idx] = alphabet[0]
     return new_val
+  
+  def good_pass(val):
+    bad_letters = any((bad in val for bad in "iol"))
+    succession = any((a+b+c in alphabet for a,b,c in zip(val, val[1:], val[2:]))) 
+    repetition_count= 0
+    repeated_just_before = False
+    for a,b in zip(val, val[1:]):
+      if not repeated_just_before and a == b:
+        repeated_just_before = True
+        repetition_count+= 1
+      else:
+        repeated_just_before = False
+    return succession and repetition_count >= 2 and not bad_letters
     
-  start_input = list("cqjxjnds")
-  print(start_input)
-  print(next_word(start_input))
-  print(next_word(list("azzz")))
+  password_v1= next_word(list("cqjxjnds"))
+  while not good_pass(password_v1):
+    password_v1= next_word(password_v1)
+  
 
-  return 0,0
+  return "".join(password_v1),"TODO"
 
 def solve():
     day8_a, day8_b = solve_day_8_part_ab()
@@ -133,6 +146,7 @@ def solve():
 
     day11_a, day11_b = solve_day_11_part_ab()
     print(f"Day11a: Santa's next password is {day11_a}")
+    print(f"Day112: And after that Santa's next password one is {day11_b}")
 
 
 if __name__ == "__main__":
