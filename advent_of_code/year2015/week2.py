@@ -100,7 +100,7 @@ def solve_day_10_part_ab():
 
 def solve_day_11_part_ab():
   alphabet = "abcdefghijklmnopqrstuvwxyz"
-  def next_word(val):
+  def next_pass(val):
     new_val = list(val)
     for idx,char in reversed(list(enumerate(val))):
       pos = alphabet.find(char) + 1
@@ -127,9 +127,9 @@ def solve_day_11_part_ab():
     return succession and repetition_count >= 2 and not bad_letters
     
   def search_next_pass(password):
-    password = next_word(password)
+    password = next_pass(password)
     while not good_pass(password):
-      password= next_word(password)
+      password= next_pass(password)
     return password      
 
   password_v1= search_next_pass(list("cqjxjnds"))
