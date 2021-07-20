@@ -140,14 +140,27 @@ def solve_day_11_part_ab():
 
 def solve_day_12_part_ab():
   def recursively_add(data):
+    # EAFP: let's just try and see which type works
     try:
       return int(data)
+    except:
+      pass
     try:
-      return sum((recursively_add(d) for d in data.values()))
+      keys = data.keys()
+      vals = data.values()
+      return recursively_add(keys) + recursively_add(vals)
+    except:
+      pass
+    try:
+      return sum(recursively_add(d) for d in data if d != data)
+    except:
+      pass
+
+    return 0      
   with open(get_filepath("day_12.txt"), "r") as f:
     data = json.load(f)
   
-  return 0,0
+  return recursively_add(data),0
   
 def solve():
     day8_a, day8_b = solve_day_8_part_ab()
