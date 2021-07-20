@@ -124,11 +124,14 @@ def solve_day_11_part_ab():
         repeated_just_before = False
     return succession and repetition_count >= 2 and not bad_letters
     
-  password_v1= next_word(list("cqjxjnds"))
-  while not good_pass(password_v1):
-    password_v1= next_word(password_v1)
+  def search_next_pass(password):
+    password = next_word(password)
+    while not good_pass(password):
+      password= next_word(password)
+    return password      
   
 
+    password_v1= search_next_pass(list("cqjxjnds"))
   return "".join(password_v1),"TODO"
 
 def solve():
