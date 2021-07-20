@@ -166,6 +166,14 @@ def solve_day_12_part_ab():
   return recursively_add(data),recursively_add(data, "red")
 
 def solve_day_13_part_ab():
+  def parse_line(line):
+    split = re.match("(\w+) would (gain|lose) (\d+) happiness units by sitting next to (\w+)",line)
+    assert split, f"{line} doesn't match"
+
+  
+  with open(get_filepath("day_13.txt"), "r") as f:
+    for line in f:
+      parse_line(line)
   return 0,0
   
 def solve():
