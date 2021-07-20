@@ -149,13 +149,13 @@ def solve_day_12_part_ab():
     try:
       keys = data.keys()
       vals = data.values()
-      if forbidden_key in vals:
+      if forbidden_key in vals or forbidden_key in keys:
         return 0
-      return recursively_add(keys) + recursively_add(vals)
+      return recursively_add(keys, forbidden_key) + recursively_add(vals, forbidden_key)
     except:
       pass
     try:
-      return sum(recursively_add(d) for d in data if d != data)
+      return sum(recursively_add(d, forbidden_key) for d in data if d != data)
     except:
       pass
 
