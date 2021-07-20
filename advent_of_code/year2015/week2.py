@@ -139,8 +139,14 @@ def solve_day_11_part_ab():
 
 
 def solve_day_12_part_ab():
+  def recursively_add(data):
+    try:
+      return int(data)
+    try:
+      return sum((recursively_add(d) for d in data.values()))
   with open(get_filepath("day_12.txt"), "r") as f:
     data = json.load(f)
+  
   return 0,0
   
 def solve():
