@@ -129,9 +129,8 @@ def solve_day_11_part_ab():
     while not good_pass(password):
       password= next_word(password)
     return password      
-  
 
-    password_v1= search_next_pass(list("cqjxjnds"))
+  password_v1= search_next_pass(list("cqjxjnds"))
   return "".join(password_v1),"TODO"
 
 def solve():
