@@ -4,6 +4,7 @@ import re
 import copy
 import itertools
 import pathlib
+import json
 
 
 def get_filepath(file_name):
@@ -138,6 +139,8 @@ def solve_day_11_part_ab():
 
 
 def solve_day_12_part_ab():
+  with open(get_filepath("day_12.txt"), "r") as f:
+    data = json.load(f)
   return 0,0
   
 def solve():
