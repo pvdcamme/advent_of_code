@@ -170,10 +170,23 @@ def solve_day_13_part_ab():
     split = re.match("(\w+) would (gain|lose) (\d+) happiness units by sitting next to (\w+)",line)
     assert split, f"{line} doesn't match"
 
+    source_person = split.group(1)
+    target_person = split.group(4)
+
+    sign_table= {"gain":1, "lose":-1}
+    happiness = sign_table[split.group(2)] * float(split.group(3))
+
+    return source_person, target_person, happiness 
+
   
+  happiness_matrix = {}
+  family= set()
   with open(get_filepath("day_13.txt"), "r") as f:
     for line in f:
-      parse_line(line)
+      src, trg, happiness = parse_line(line)
+      happiness_matrix[(src, trg)] = happiness
+      family.add(src)
+      family.add(trg)
   return 0,0
   
 def solve():
