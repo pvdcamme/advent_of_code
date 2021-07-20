@@ -174,11 +174,19 @@ def solve_day_13_part_ab():
     target_person = split.group(4)
 
     sign_table= {"gain":1, "lose":-1}
-    happiness = sign_table[split.group(2)] * float(split.group(3))
+    happiness = sign_table[split.group(2)] * int(split.group(3))
 
     return source_person, target_person, happiness 
-
+  def total_happiness(seating, scores):
+    summed = 0
+    for idx, name in enumerate(seating):
+      left = seating[(idx + 1) % len(seating)]
+      right = seating[idx - 1]
+      summed += scores[(name, left)]
+      summed += scores[(name, right)]
   
+    return summed
+      
   happiness_matrix = {}
   family= set()
   with open(get_filepath("day_13.txt"), "r") as f:
@@ -187,7 +195,11 @@ def solve_day_13_part_ab():
       happiness_matrix[(src, trg)] = happiness
       family.add(src)
       family.add(trg)
-  return 0,0
+  
+  most_hapiness = -1e9
+  for seating in itertools.permutations(family):
+    most_hapiness = max(total_happiness(seating, happiness_matrix), most_hapiness)
+  return most_hapiness,0
   
 def solve():
     day8_a, day8_b = solve_day_8_part_ab()
