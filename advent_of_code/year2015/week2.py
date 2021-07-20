@@ -139,7 +139,8 @@ def solve_day_11_part_ab():
 
 
 def solve_day_12_part_ab():
-  def recursively_add(data):
+  IMPOSSIBLE_VAL = "1a"
+  def recursively_add(data, forbidden_key = IMPOSSIBLE_VAL):
     # EAFP: let's just try and see which type works
     try:
       return int(data)
@@ -148,6 +149,8 @@ def solve_day_12_part_ab():
     try:
       keys = data.keys()
       vals = data.values()
+      if forbidden_key in vals:
+        return 0
       return recursively_add(keys) + recursively_add(vals)
     except:
       pass
@@ -160,7 +163,7 @@ def solve_day_12_part_ab():
   with open(get_filepath("day_12.txt"), "r") as f:
     data = json.load(f)
   
-  return recursively_add(data),0
+  return recursively_add(data),recursively_add(data, "red")
   
 def solve():
     day8_a, day8_b = solve_day_8_part_ab()
@@ -181,7 +184,8 @@ def solve():
 
 
     day12_a, day12_b = solve_day_12_part_ab()
-    print(f"Day12a: Accounting all numbers, added together the give {day12_a}")
+    print(f"Day12a: Accounting all numbers, added together gives {day12_a}")
+    print(f"Day12a: Fixed accounting for red, now added together gives {day12_b}")
 
 if __name__ == "__main__":
     solve()
