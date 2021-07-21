@@ -224,9 +224,7 @@ def solve_day_13_part_ab():
 
 def solve_day_14_part_ab():
     def parse_line(line):
-        line_fmt = (
-            "(\w+) can fly (\d+) km/s for (\d+) seconds, but then must rest for (\d+) seconds.",
-        )
+        line_fmt = "(\w+) can fly (\d+) km/s for (\d+) seconds, but then must rest for (\d+) seconds."
         splitted = re.match(line_fmt, line)
         assert splitted, f"Can't parse {line}"
         return (
@@ -235,12 +233,29 @@ def solve_day_14_part_ab():
             int(splitted.group(3)),
             int(splitted.group(4)),
         )
+    def distance(avail_time, speed, travel_period, rest_period):
+      travelled= 0
+      time_past =0
+      while time_past < avail_time:
+        time_for_travel = min(travel_period, avail_time - time_past)
+        time_past += time_for_travel
+        travelled += speed * time_for_travel
+        time_for_rest = min(rest_period, avail_time - time_past)
+        time_past += time_for_rest
+      return travelled        
+      
 
+    reindeers = {}
+    trial_seconds = 2503
     with open(get_filepath("day_14.txt"), "r") as f:
         for line in f:
-            parse_line(line)
+            name, speed, duration, rest_period = parse_line(line)
+            reindeers[name] = (speed, duration, rest_period)
+    furthest = 0
+    for _name, (speed, endurance, rest_period) in reindeers.items():
+      furthest = max(furthest, distance(trial_seconds, speed, endurance, rest_period))
 
-    return 0, 0
+    return furthest, 0
 
 
 def solve():
