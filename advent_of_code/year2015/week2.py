@@ -224,10 +224,10 @@ def solve_day_13_part_ab():
 
 def solve_day_14_part_ab():
     def parse_line(line):
-        splitted = re.match(
+        line_fmt = (
             "(\w+) can fly (\d+) km/s for (\d+) seconds, but then must rest for (\d+) seconds.",
-            line,
         )
+        splitted = re.match(line_fmt, line)
         assert splitted, f"Can't parse {line}"
         return (
             splitted.group(1),
