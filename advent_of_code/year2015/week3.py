@@ -40,25 +40,25 @@ def solve_day_15_part_ab():
         results.append([p] + child)
     return results
   
-  ingredients = {}
+  ingredients = []
   with open(get_filepath("day_15.txt"),"r") as f:
     for line in f:
-      name, stuff = parse_line(line)
-      ingredients[name] = stuff
-  ingredients = ingredients.items()
+      _, stuff = parse_line(line)
+      ingredients.append(stuff)
 
   best_score_v1 = 0
   best_score_v2 = 0
   for parts in split_into_parts(100, len(ingredients)):
-    p = [stuff * quantity for quantity, (_, stuff) in zip(parts, ingredients) if quantity > 0]
-    summed = p[0]
-    for other in p[1:]:
+    recipe = [ingredient * quantity for quantity, ingredient in zip(parts, ingredients) if quantity > 0]
+    summed = recipe[0]
+    for other in recipe[1:]:
       summed += other
     best_score_v1 = max(best_score_v1, summed.score())          
     if summed.calories == 500:
       best_score_v2 = max(best_score_v2, summed.score())
 
   return best_score_v1, best_score_v2
+
 
 def solve():
   day15_a, day15_b = solve_day_15_part_ab()
