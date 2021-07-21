@@ -200,13 +200,26 @@ def solve_day_13_part_ab():
   for seating in itertools.permutations(family):
     most_hapiness = max(total_happiness(seating, happiness_matrix), most_hapiness)
 
-
   family.add("me")
   most_hapiness_with_me = -1e9
   for seating in itertools.permutations(family):
     most_hapiness_with_me= max(total_happiness(seating, happiness_matrix), most_hapiness_with_me)
 
   return most_hapiness, most_hapiness_with_me
+
+def solve_day_14_part_ab():
+  def parse_line(line):
+    splitted = re.match(
+          "(\w+) can fly (\d+) km/s for (\d+) seconds, but then must rest for (\d+) seconds.",
+          line)
+    assert splitted, f"Can't parse {line}"
+
+
+  with open(get_filepath("day_14.txt"), "r") as f:
+    for line in f:
+      parse_line(line)
+ 
+  return 0,0
   
 def solve():
     day8_a, day8_b = solve_day_8_part_ab()
@@ -233,6 +246,8 @@ def solve():
     print(f"Day13a: Best happiness reachable is {day13_a}")
     print(f"Day13b: With me included, the best happiness changes with {day13_b} units")
 
+    day14_a, day14_b = solve_day_14_part_ab()
+    print(f"Day14a: The fastest reindeer would travel {day14_a} km")
 
 if __name__ == "__main__":
     solve()
