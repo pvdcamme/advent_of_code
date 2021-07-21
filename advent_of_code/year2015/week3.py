@@ -7,6 +7,12 @@ def get_filepath(file_name):
 
 def solve_day_15_part_ab():
   class Ingredient(object):
+    """
+      Helper class to easily:
+        - Add ingredients together (= sum)
+        - Take several spoonfulls (= multiple)
+        - And score score the whole.
+    """
     def __init__(self, capacity, durability, flavor, texture, calories):
       self.capacity = capacity
       self.durability = durability
@@ -30,13 +36,16 @@ def solve_day_15_part_ab():
     assert matched, line
     return matched.group(1), Ingredient(int(matched.group(2)), int(matched.group(3)), int(matched.group(4)), int(matched.group(5)), int(matched.group(6)))
   
-  def split_into_parts(total, parts):
-    if parts == 1:
+  def split_into_parts(total, nparts):
+    """
+      Returns a list of nparts whose sum is total.
+    """
+    if nparts == 1:
       return [[total]]
 
     results = []
     for p in range(total + 1):
-      for child in split_into_parts(total - p, parts -1):
+      for child in split_into_parts(total - p, nparts -1):
         results.append([p] + child)
     return results
   
