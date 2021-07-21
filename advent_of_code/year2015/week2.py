@@ -248,9 +248,8 @@ def solve_day_14_part_ab():
     def race_v1(reindeers):
         furthest = 0
         for _name, (speed, endurance, rest_period) in reindeers.items():
-            furthest = max(
-                furthest, distance(trial_seconds, speed, endurance, rest_period)
-            )
+            current_distance = distance(trial_seconds, speed, endurance, rest_period) 
+            furthest = max(furthest, current_distance)
         return furthest
 
     reindeers = {}
