@@ -8,13 +8,13 @@ import json
 
 
 def get_filepath(file_name):
-    """ Returns the full path of the file_name"""
+    """Returns the full path of the file_name"""
     return pathlib.Path(__file__).parent.joinpath(file_name).resolve()
 
 
 def solve_day_8_part_ab():
     def escape_str(line):
-        return (line.replace("\\", "\\\\").replace('"', '\\"'))
+        return line.replace("\\", "\\\\").replace('"', '\\"')
 
     total_original = 0
     total_memory = 0
@@ -64,163 +64,185 @@ def solve_day_9_part_ab():
             cities.add(src)
             cities.add(dst)
 
-    return calc_shortest_path(cities,
-                              distances), calc_longest_path(cities, distances)
+    return calc_shortest_path(cities, distances), calc_longest_path(cities, distances)
 
 
 def solve_day_10_part_ab():
     def look_and_say_step(start):
-      result = []
-      prev = next(start)
-      cnt = 1
-      for v in start:
-        if v == prev:
-          cnt += 1
-        else:
-          yield cnt
-          yield prev
-          prev = v
-          cnt = 1
-      yield cnt
-      yield prev
+        result = []
+        prev = next(start)
+        cnt = 1
+        for v in start:
+            if v == prev:
+                cnt += 1
+            else:
+                yield cnt
+                yield prev
+                prev = v
+                cnt = 1
+        yield cnt
+        yield prev
 
     puzzle_input = [int(d) for d in "1113122113"]
-    
+
     v1_step_count = 40
     v2_step_count = 50
     updated_v1 = iter(puzzle_input)
     for _ in range(v1_step_count):
-      updated_v1 = look_and_say_step(updated_v1)
+        updated_v1 = look_and_say_step(updated_v1)
 
     updated_v1 = list(updated_v1)
     updated_v2 = iter(updated_v1)
-    for _ in range(v2_step_count- v1_step_count):
-      updated_v2 = look_and_say_step(updated_v2)
- 
+    for _ in range(v2_step_count - v1_step_count):
+        updated_v2 = look_and_say_step(updated_v2)
+
     return len(list(updated_v1)), len(list(updated_v2))
 
-def solve_day_11_part_ab():
-  alphabet = "abcdefghijklmnopqrstuvwxyz"
-  def next_pass(val):
-    new_val = list(val)
-    for idx,char in reversed(list(enumerate(val))):
-      pos = alphabet.find(char) + 1
-      if pos < len(alphabet):
-        new_val[idx] = alphabet[pos]
-        break
-      else:
-        new_val[idx] = alphabet[0]
-    else:
-      return list(alphabet[0] * (len(val) + 1))
-    return new_val
-  
-  def good_pass(val):
-    bad_letters = any((bad in val for bad in "iol"))
-    succession = any((a+b+c in alphabet for a,b,c in zip(val, val[1:], val[2:]))) 
-    repetition_count= 0
-    repeated_just_before = False
-    for a,b in zip(val, val[1:]):
-      if not repeated_just_before and a == b:
-        repeated_just_before = True
-        repetition_count+= 1
-      else:
-        repeated_just_before = False
-    return succession and repetition_count >= 2 and not bad_letters
-    
-  def search_next_pass(password):
-    password = next_pass(password)
-    while not good_pass(password):
-      password= next_pass(password)
-    return password      
 
-  password_v1= search_next_pass(list("cqjxjnds"))
-  password_v2= search_next_pass(password_v1)
-  return "".join(password_v1), "".join(password_v2)
+def solve_day_11_part_ab():
+    alphabet = "abcdefghijklmnopqrstuvwxyz"
+
+    def next_pass(val):
+        new_val = list(val)
+        for idx, char in reversed(list(enumerate(val))):
+            pos = alphabet.find(char) + 1
+            if pos < len(alphabet):
+                new_val[idx] = alphabet[pos]
+                break
+            else:
+                new_val[idx] = alphabet[0]
+        else:
+            return list(alphabet[0] * (len(val) + 1))
+        return new_val
+
+    def good_pass(val):
+        bad_letters = any((bad in val for bad in "iol"))
+        succession = any(
+            (a + b + c in alphabet for a, b, c in zip(val, val[1:], val[2:]))
+        )
+        repetition_count = 0
+        repeated_just_before = False
+        for a, b in zip(val, val[1:]):
+            if not repeated_just_before and a == b:
+                repeated_just_before = True
+                repetition_count += 1
+            else:
+                repeated_just_before = False
+        return succession and repetition_count >= 2 and not bad_letters
+
+    def search_next_pass(password):
+        password = next_pass(password)
+        while not good_pass(password):
+            password = next_pass(password)
+        return password
+
+    password_v1 = search_next_pass(list("cqjxjnds"))
+    password_v2 = search_next_pass(password_v1)
+    return "".join(password_v1), "".join(password_v2)
 
 
 def solve_day_12_part_ab():
-  IMPOSSIBLE_VAL = "1a"
-  def recursively_add(data, forbidden_key = IMPOSSIBLE_VAL):
-    # EAFP: let's just try and see which type works
-    try:
-      return int(data)
-    except:
-      pass
-    try:
-      keys = data.keys()
-      vals = data.values()
-      if forbidden_key in vals or forbidden_key in keys:
-        return 0
-      return recursively_add(keys, forbidden_key) + recursively_add(vals, forbidden_key)
-    except:
-      pass
-    try:
-      return sum(recursively_add(d, forbidden_key) for d in data if d != data)
-    except:
-      pass
+    IMPOSSIBLE_VAL = "1a"
 
-    return 0      
-  with open(get_filepath("day_12.txt"), "r") as f:
-    data = json.load(f)
-  
-  return recursively_add(data),recursively_add(data, "red")
+    def recursively_add(data, forbidden_key=IMPOSSIBLE_VAL):
+        # EAFP: let's just try and see which type works
+        try:
+            return int(data)
+        except:
+            pass
+        try:
+            keys = data.keys()
+            vals = data.values()
+            if forbidden_key in vals or forbidden_key in keys:
+                return 0
+            return recursively_add(keys, forbidden_key) + recursively_add(
+                vals, forbidden_key
+            )
+        except:
+            pass
+        try:
+            return sum(recursively_add(d, forbidden_key) for d in data if d != data)
+        except:
+            pass
+
+        return 0
+
+    with open(get_filepath("day_12.txt"), "r") as f:
+        data = json.load(f)
+
+    return recursively_add(data), recursively_add(data, "red")
+
 
 def solve_day_13_part_ab():
-  def parse_line(line):
-    split = re.match("(\w+) would (gain|lose) (\d+) happiness units by sitting next to (\w+)",line)
-    assert split, f"{line} doesn't match"
+    def parse_line(line):
+        split = re.match(
+            "(\w+) would (gain|lose) (\d+) happiness units by sitting next to (\w+)",
+            line,
+        )
+        assert split, f"{line} doesn't match"
 
-    source_person = split.group(1)
-    target_person = split.group(4)
+        source_person = split.group(1)
+        target_person = split.group(4)
 
-    sign_table= {"gain":1, "lose":-1}
-    happiness = sign_table[split.group(2)] * int(split.group(3))
+        sign_table = {"gain": 1, "lose": -1}
+        happiness = sign_table[split.group(2)] * int(split.group(3))
 
-    return source_person, target_person, happiness 
-  def total_happiness(seating, scores):
-    summed = 0
-    for idx, name in enumerate(seating):
-      left = seating[(idx + 1) % len(seating)]
-      right = seating[idx - 1]
-      summed += scores[(name, left)]
-      summed += scores[(name, right)]
-  
-    return summed
-      
-  happiness_matrix = collections.defaultdict(lambda: 0)
-  family= set()
-  with open(get_filepath("day_13.txt"), "r") as f:
-    for line in f:
-      src, trg, happiness = parse_line(line)
-      happiness_matrix[(src, trg)] = happiness
-      family.add(src)
-      family.add(trg)
-  
-  most_hapiness = -1e9
-  for seating in itertools.permutations(family):
-    most_hapiness = max(total_happiness(seating, happiness_matrix), most_hapiness)
+        return source_person, target_person, happiness
 
-  family.add("me")
-  most_hapiness_with_me = -1e9
-  for seating in itertools.permutations(family):
-    most_hapiness_with_me= max(total_happiness(seating, happiness_matrix), most_hapiness_with_me)
+    def total_happiness(seating, scores):
+        summed = 0
+        for idx, name in enumerate(seating):
+            left = seating[(idx + 1) % len(seating)]
+            right = seating[idx - 1]
+            summed += scores[(name, left)]
+            summed += scores[(name, right)]
 
-  return most_hapiness, most_hapiness_with_me
+        return summed
+
+    happiness_matrix = collections.defaultdict(lambda: 0)
+    family = set()
+    with open(get_filepath("day_13.txt"), "r") as f:
+        for line in f:
+            src, trg, happiness = parse_line(line)
+            happiness_matrix[(src, trg)] = happiness
+            family.add(src)
+            family.add(trg)
+
+    most_hapiness = -1e9
+    for seating in itertools.permutations(family):
+        most_hapiness = max(total_happiness(seating, happiness_matrix), most_hapiness)
+
+    family.add("me")
+    most_hapiness_with_me = -1e9
+    for seating in itertools.permutations(family):
+        most_hapiness_with_me = max(
+            total_happiness(seating, happiness_matrix), most_hapiness_with_me
+        )
+
+    return most_hapiness, most_hapiness_with_me
+
 
 def solve_day_14_part_ab():
-  def parse_line(line):
-    splitted = re.match(
-          "(\w+) can fly (\d+) km/s for (\d+) seconds, but then must rest for (\d+) seconds.",
-          line)
-    assert splitted, f"Can't parse {line}"
+    def parse_line(line):
+        splitted = re.match(
+            "(\w+) can fly (\d+) km/s for (\d+) seconds, but then must rest for (\d+) seconds.",
+            line,
+        )
+        assert splitted, f"Can't parse {line}"
+        return (
+            splitted.group(1),
+            int(splitted.group(2)),
+            int(splitted.group(3)),
+            int(splitted.group(4)),
+        )
+
+    with open(get_filepath("day_14.txt"), "r") as f:
+        for line in f:
+            parse_line(line)
+
+    return 0, 0
 
 
-  with open(get_filepath("day_14.txt"), "r") as f:
-    for line in f:
-      parse_line(line)
- 
-  return 0,0
-  
 def solve():
     day8_a, day8_b = solve_day_8_part_ab()
     print(f"Day8a: The file has {day8_a} additional formatting characters")
@@ -248,6 +270,7 @@ def solve():
 
     day14_a, day14_b = solve_day_14_part_ab()
     print(f"Day14a: The fastest reindeer would travel {day14_a} km")
+
 
 if __name__ == "__main__":
     solve()
