@@ -245,12 +245,25 @@ def solve_day_14_part_ab():
             time_past += time_for_rest
         return travelled
 
-    def race_v1(reindeers):
+    def race_v1(trial,reindeers):
         furthest = 0
         for _name, (speed, endurance, rest_period) in reindeers.items():
-            current_distance = distance(trial_seconds, speed, endurance, rest_period) 
+            current_distance = distance(trial, speed, endurance, rest_period) 
             furthest = max(furthest, current_distance)
-        return furthest
+            return furthest
+    def race_v2(trial, reindeers):
+      scores = collections.defaultdict(int)
+      for time_in_race in range(1, trial):
+        furthest = 0
+        current_second = {}
+        for name, (speed, endurance, rest_period) in reindeers.items():
+            current_distance = distance(time_in_race, speed, endurance, rest_period) 
+            current_second[name] = current_distance
+            furthest = max(furthest, current_distance)
+        for name, dist in current_second.items():
+          if dist == furthest:
+            scores[name] += 1
+      return max(scores.values())
 
     reindeers = {}
     trial_seconds = 2503
@@ -258,7 +271,7 @@ def solve_day_14_part_ab():
         for line in f:
             name, speed, duration, rest_period = parse_line(line)
             reindeers[name] = (speed, duration, rest_period)
-    return race_v1(reindeers), 0
+    return race_v1(trial_seconds, reindeers), race_v2(trial_seconds, reindeers)
 
 
 def solve():
@@ -288,6 +301,7 @@ def solve():
 
     day14_a, day14_b = solve_day_14_part_ab()
     print(f"Day14a: The fastest reindeer would travel {day14_a} km")
+    print(f"Day14b: The highest scoring reindeer gets now {day14_b} points")
 
 
 if __name__ == "__main__":
