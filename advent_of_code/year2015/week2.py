@@ -233,17 +233,25 @@ def solve_day_14_part_ab():
             int(splitted.group(3)),
             int(splitted.group(4)),
         )
+
     def distance(avail_time, speed, travel_period, rest_period):
-      travelled= 0
-      time_past =0
-      while time_past < avail_time:
-        time_for_travel = min(travel_period, avail_time - time_past)
-        time_past += time_for_travel
-        travelled += speed * time_for_travel
-        time_for_rest = min(rest_period, avail_time - time_past)
-        time_past += time_for_rest
-      return travelled        
-      
+        travelled = 0
+        time_past = 0
+        while time_past < avail_time:
+            time_for_travel = min(travel_period, avail_time - time_past)
+            time_past += time_for_travel
+            travelled += speed * time_for_travel
+            time_for_rest = min(rest_period, avail_time - time_past)
+            time_past += time_for_rest
+        return travelled
+
+    def race_v1(reindeers):
+        furthest = 0
+        for _name, (speed, endurance, rest_period) in reindeers.items():
+            furthest = max(
+                furthest, distance(trial_seconds, speed, endurance, rest_period)
+            )
+        return furthest
 
     reindeers = {}
     trial_seconds = 2503
@@ -251,11 +259,7 @@ def solve_day_14_part_ab():
         for line in f:
             name, speed, duration, rest_period = parse_line(line)
             reindeers[name] = (speed, duration, rest_period)
-    furthest = 0
-    for _name, (speed, endurance, rest_period) in reindeers.items():
-      furthest = max(furthest, distance(trial_seconds, speed, endurance, rest_period))
-
-    return furthest, 0
+    return race_v1(reindeers), 0
 
 
 def solve():
