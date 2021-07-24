@@ -166,22 +166,27 @@ def solve_day_17_part_ab():
     def calc_combos(total, containers):
         if len(containers) == 1:
             [size] = containers
-            return total == size
-
-        first_size = containers[0]
-        other_sizes = containers[1:]
-        return (
-            (total == first_size)
-            + calc_sizes(total, other_sizes)
-            + (total > first_size and calc_sizes(total - first_size, other_sizes))
-        )
+            if size == total:
+              yield [size] 
+        else:
+    
+            first_size = containers[0]
+            other_sizes = containers[1:]
+            if total == first_size:
+              yield [first_size]
+            if total > first_size:
+              for other in calc_combos(total - first_size, other_sizes):
+                yield [first_size] + other 
+            for other in calc_combos(total, other_sizes):
+              yield other
 
     with open(get_filepath("day_17.txt"), "r") as f:
         container_sizes = tuple(sorted([int(c) for c in f]))
-    print(container_sizes)
 
     total_eggnog = 150
-    return calc_combos(total_eggnog, container_sizes), 0
+    combos = list(calc_combos(total_eggnog, container_sizes))
+
+    return len(combos), 0
 
 
 def solve():
