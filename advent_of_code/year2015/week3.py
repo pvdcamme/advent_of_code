@@ -113,12 +113,14 @@ def solve_day_16_part_ab():
             part, count = identifier.split(":")
             character[part] = int(count)
         return sue_number, character
-    def is_sub_dict(sub_dict, super_dict):
+
+    def equal_cmp(key, sub_value, super_value):
+      return sub_value == super_value
+    def is_sub_dict(sub_dict, super_dict, value_compare=equal_cmp):
       for k,v in sub_dict.items():
-        if v != super_dict.get(k):
+        if k not in super_dict or not equal_cmp(k, v, super_dict[k]):
           return False
       return True          
-
     to_match = {
         "children": 3,
         "cats": 7,
