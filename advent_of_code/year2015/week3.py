@@ -146,14 +146,18 @@ def solve_day_16_part_ab():
     }
 
     gifting_sue_v1 = -1
+    gifting_sue_v2 = -1
     with open(get_filepath("day_16.txt"), "r") as f:
         for line in f:
             sue_number, identifiers = parse_line(line)
             if is_sub_dict(identifiers, to_match):
                 assert gifting_sue_v1 == -1
                 gifting_sue_v1 = sue_number
+            if is_sub_dict(identifiers, to_match, fuzzy_compare):
+                assert gifting_sue_v2 == -1
+                gifting_sue_v2 = sue_number
 
-    return gifting_sue_v1, 0
+    return gifting_sue_v1, gifting_sue_v2
 
 
 def solve():
