@@ -159,6 +159,8 @@ def solve_day_16_part_ab():
 
     return gifting_sue_v1, gifting_sue_v2
 
+def solve_day_17_part_ab():
+    return 0,0
 
 def solve():
     day15_a, day15_b = solve_day_15_part_ab()
@@ -168,6 +170,9 @@ def solve():
     day16_a, day16_b = solve_day_16_part_ab()
     print(f"Day16a: Sue {day16_a} was the one, she sent the gift.")
     print(f"Day16b: But the real Sue is {day16_b}")
+
+    day17_a, day17_b = solve_day_17_part_ab()
+    print(f"Day17a: There {day17_a} combinations")
 
 
 if __name__ == "__main__":
