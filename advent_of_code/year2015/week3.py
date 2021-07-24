@@ -108,11 +108,16 @@ def solve_day_16_part_ab():
         matched = re.match("Sue (\d+): (.*)", line)
         assert matched, line
         sue_number = int(matched.group(1))
-        character = set()
+        character = {}
         for identifier in matched.group(2).split(", "):
             part, count = identifier.split(":")
-            character.add((part, int(count)))
+            character[part] = int(count)
         return sue_number, character
+    def is_sub_dict(sub_dict, super_dict):
+      for k,v in sub_dict.items():
+        if v != super_dict.get(k):
+          return False
+      return True          
 
     to_match = {
         "children": 3,
@@ -126,13 +131,12 @@ def solve_day_16_part_ab():
         "cars": 2,
         "perfumes": 1,
     }
-    to_match = set(to_match.items())
 
     gifting_sue = -1
     with open(get_filepath("day_16.txt"), "r") as f:
         for line in f:
             sue_number, identifiers = parse_line(line)
-            if identifiers <= to_match:
+            if is_sub_dict(identifiers, to_match):
                 assert gifting_sue == -1
                 gifting_sue = sue_number
 
