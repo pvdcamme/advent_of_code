@@ -1,4 +1,5 @@
 import pathlib
+import functools
 import re
 
 
@@ -115,23 +116,24 @@ def solve_day_16_part_ab():
         return sue_number, character
 
     def equal_cmp(key, sub_value, super_value):
-      return sub_value == super_value
-    def fuzzy_compare(key, sub_value, super_value):
-      sub_too_low = {"trees", "cats"}
-      sub_too_high = {"pomeranians", "goldfish"}
-      if key in sub_too_low:
-        return sub_value > super_value
-      elif key in sub_too_high:
-        return sub_value < super_value
-      else:
         return sub_value == super_value
 
-      
+    def fuzzy_compare(key, sub_value, super_value):
+        sub_too_low = {"trees", "cats"}
+        sub_too_high = {"pomeranians", "goldfish"}
+        if key in sub_too_low:
+            return sub_value > super_value
+        elif key in sub_too_high:
+            return sub_value < super_value
+        else:
+            return sub_value == super_value
+
     def is_sub_dict(sub_dict, super_dict, value_compare=equal_cmp):
-      for k,v in sub_dict.items():
-        if k not in super_dict or not value_compare(k, v, super_dict[k]):
-          return False
-      return True          
+        for k, v in sub_dict.items():
+            if k not in super_dict or not value_compare(k, v, super_dict[k]):
+                return False
+        return True
+
     to_match = {
         "children": 3,
         "cats": 7,
@@ -159,8 +161,28 @@ def solve_day_16_part_ab():
 
     return gifting_sue_v1, gifting_sue_v2
 
+
 def solve_day_17_part_ab():
-    return 0,0
+    def calc_combos(total, containers):
+        if len(containers) == 1:
+            [size] = containers
+            return total == size
+
+        first_size = containers[0]
+        other_sizes = containers[1:]
+        return (
+            (total == first_size)
+            + calc_sizes(total, other_sizes)
+            + (total > first_size and calc_sizes(total - first_size, other_sizes))
+        )
+
+    with open(get_filepath("day_17.txt"), "r") as f:
+        container_sizes = tuple(sorted([int(c) for c in f]))
+    print(container_sizes)
+
+    total_eggnog = 150
+    return calc_combos(total_eggnog, container_sizes), 0
+
 
 def solve():
     day15_a, day15_b = solve_day_15_part_ab()
