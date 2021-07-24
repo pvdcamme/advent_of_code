@@ -120,16 +120,16 @@ def solve_day_16_part_ab():
       sub_too_low = {"trees", "cats"}
       sub_too_high = {"pomeranians", "goldfish"}
       if key in sub_too_low:
-        return sub_value < super_value
-      elif key in sub_too_high:
         return sub_value > super_value
+      elif key in sub_too_high:
+        return sub_value < super_value
       else:
         return sub_value == super_value
 
       
     def is_sub_dict(sub_dict, super_dict, value_compare=equal_cmp):
       for k,v in sub_dict.items():
-        if k not in super_dict or not equal_cmp(k, v, super_dict[k]):
+        if k not in super_dict or not value_compare(k, v, super_dict[k]):
           return False
       return True          
     to_match = {
@@ -167,6 +167,7 @@ def solve():
 
     day16_a, day16_b = solve_day_16_part_ab()
     print(f"Day16a: Sue {day16_a} was the one, she sent the gift.")
+    print(f"Day16b: But the real Sue is {day16_b}")
 
 
 if __name__ == "__main__":
