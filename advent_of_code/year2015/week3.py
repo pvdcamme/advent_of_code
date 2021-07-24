@@ -185,8 +185,10 @@ def solve_day_17_part_ab():
 
     total_eggnog = 150
     combos = list(calc_combos(total_eggnog, container_sizes))
+    least_containers = min(map(len, combos))
+    minimal_count= list(filter(lambda cc: len(cc) == least_containers, combos))
 
-    return len(combos), 0
+    return len(combos), len(minimal_count)
 
 
 def solve():
@@ -199,7 +201,8 @@ def solve():
     print(f"Day16b: But the real Sue is {day16_b}")
 
     day17_a, day17_b = solve_day_17_part_ab()
-    print(f"Day17a: There {day17_a} combinations")
+    print(f"Day17a: There {day17_a} combinations to store the eggnog")
+    print(f"Day17a: With as few as feasible, there are {day17_b} combinations")
 
 
 if __name__ == "__main__":
