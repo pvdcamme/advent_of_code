@@ -195,7 +195,7 @@ def solve_day_18_part_ab():
   def neighbours(x,y, max_c=100):
     return [(nx,ny) for nx in range(x-1, x+2) for ny in range(y-1, y+2) 
               if (0 <= nx < max_c and 0<= ny <max_c and (nx != x or ny != y))]
-  def lights_on(grid):
+  def count_lights(grid):
     total = 0
     for row in grid:
       total += sum(row)
@@ -223,7 +223,7 @@ def solve_day_18_part_ab():
   for _ in range(100):
     grid = update_grid(grid)
 
-  return lights_on(grid),0
+  return count_lights(grid),0
 
   
 
