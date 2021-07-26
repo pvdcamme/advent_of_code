@@ -192,8 +192,33 @@ def solve_day_17_part_ab():
 
 
 def solve_day_18_part_ab():
-   with open(get_filepath("day_18.txt"), "r") as f:
-      pass
+  def neighbours(x,y, max_c=100):
+    return [(nx,ny) for nx in range(x-1, x+2) for ny in range(y-1, y+2) 
+              if (0 <= nx < max_c and 0<= ny <max_c and (nx != x or ny != y))]
+  def update_grid(old_grid):
+    new_grid = []
+    for x, old_row in enumerate(old_grid):
+      new_row = []
+      for y, val in enumerate(old_row):
+        nvals = sum(map(lambda cor: old_grid[cor[0]][cor[1]], neighbours(x,y)))
+        next_val =  ((val and (nvals == 2 or nvals == 3)) or
+                     (not val and nvals == 3))
+        new_row.append(next_val)                     
+      new_grid.append(new_row)        
+    return new_grid      
+  def show_grid(grid):
+    for row in grid:
+      print("".join([{True: "x", False:"."}[c] for c in row]))
+  grid = []
+  with open(get_filepath("day_18.txt"), "r") as f:
+    for line in f:
+      grid.append(["#" == c for c in line.strip()])
+  
+  show_grid(grid)
+  print()
+  show_grid(update_grid(grid))
+  update_grid(grid)
+
   return 0,0
 
   
