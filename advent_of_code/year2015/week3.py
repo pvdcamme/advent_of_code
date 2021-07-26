@@ -191,6 +191,13 @@ def solve_day_17_part_ab():
     return len(combos), len(minimal_count)
 
 
+def solve_day_18_part_ab():
+   with open(get_filepath("day_18.txt"), "r") as f:
+      pass
+  return 0,0
+
+  
+
 def solve():
     day15_a, day15_b = solve_day_15_part_ab()
     print(f"Day15a: Highest scoring cookie reaches {day15_a} points")
@@ -201,9 +208,12 @@ def solve():
     print(f"Day16b: But the real Sue is {day16_b}")
 
     day17_a, day17_b = solve_day_17_part_ab()
-    print(f"Day17a: There {day17_a} combinations to store the eggnog")
+    print(f"Day17a: There are {day17_a} combinations to store the eggnog")
     print(f"Day17a: With as few as feasible, there are {day17_b} combinations")
 
+
+    day18_a, day18_b = solve_day_18_part_ab()
+    print(f"Day18a: {day18_a} are on after 100 steps.")
 
 if __name__ == "__main__":
     solve()
