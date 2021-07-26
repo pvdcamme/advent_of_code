@@ -193,8 +193,13 @@ def solve_day_17_part_ab():
 
 def solve_day_18_part_ab():
   def neighbours(x,y, max_c=100):
-    return [(nx,ny) for nx in range(x-1, x+2) for ny in range(y-1, y+2) 
-              if (0 <= nx < max_c and 0<= ny <max_c and (nx != x or ny != y))]
+    lower_x = max(0, x -1)
+    upper_x = min(x+ 2, max_c)
+
+    lower_y = max(0, y -1)
+    upper_y = min(y + 2, max_c)
+    all_neighbours = ((nx, ny) for nx in range(lower_x, upper_x) for ny in range(lower_y, upper_y))
+    return [(nx,ny) for nx,ny in all_neighbours if nx != x or ny != y]
   def count_lights(grid):
     total = 0
     for row in grid:
