@@ -207,19 +207,17 @@ def solve_day_18_part_ab():
       new_row = []
       for y, val in enumerate(old_row):
         nvals = sum(map(lambda cor: old_grid[cor[0]][cor[1]], neighbours(x,y)))
-        next_val =  ((val and (nvals == 2 or nvals == 3)) or
-                     (not val and nvals == 3))
+        next_val =  (nvals == 3 or (val and nvals == 2))
         new_row.append(next_val)                     
       new_grid.append(new_row)        
     return new_grid      
-  def show_grid(grid):
-    for row in grid:
-      print("".join([{True: "x", False:"."}[c] for c in row]))
+
   grid = []
   with open(get_filepath("day_18.txt"), "r") as f:
     for line in f:
       grid.append(["#" == c for c in line.strip()])
   
+  original_grid = grid
   for _ in range(100):
     grid = update_grid(grid)
 
