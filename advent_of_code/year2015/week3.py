@@ -195,6 +195,12 @@ def solve_day_18_part_ab():
   def neighbours(x,y, max_c=100):
     return [(nx,ny) for nx in range(x-1, x+2) for ny in range(y-1, y+2) 
               if (0 <= nx < max_c and 0<= ny <max_c and (nx != x or ny != y))]
+  def lights_on(grid):
+    total = 0
+    for row in grid:
+      total += sum(row)
+    return total
+
   def update_grid(old_grid):
     new_grid = []
     for x, old_row in enumerate(old_grid):
@@ -214,12 +220,10 @@ def solve_day_18_part_ab():
     for line in f:
       grid.append(["#" == c for c in line.strip()])
   
-  show_grid(grid)
-  print()
-  show_grid(update_grid(grid))
-  update_grid(grid)
+  for _ in range(100):
+    grid = update_grid(grid)
 
-  return 0,0
+  return lights_on(grid),0
 
   
 
