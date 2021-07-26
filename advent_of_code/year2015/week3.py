@@ -228,7 +228,6 @@ def solve_day_18_part_ab():
         grid_v2[99][99] = True
         return grid_v2
 
-
     grid = []
     with open(get_filepath("day_18.txt"), "r") as f:
         for line in f:
@@ -238,13 +237,10 @@ def solve_day_18_part_ab():
     for _ in range(100):
         grid_v1 = update_grid(grid_v1)
 
-
     grid_v2 = light_up_the_corner(grid)
     for _ in range(100):
-      grid_v2 = update_grid(grid_v2)
-      grid_v2 = light_up_the_corner(grid_v2)
-
-
+        grid_v2 = update_grid(grid_v2)
+        grid_v2 = light_up_the_corner(grid_v2)
 
     return count_lights(grid_v1), count_lights(grid_v2)
 
