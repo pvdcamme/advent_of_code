@@ -167,18 +167,18 @@ def solve_day_17_part_ab():
         if len(containers) == 1:
             [size] = containers
             if size == total:
-              yield [size] 
+                yield [size]
         else:
-    
+
             first_size = containers[0]
             other_sizes = containers[1:]
             if total == first_size:
-              yield [first_size]
+                yield [first_size]
             if total > first_size:
-              for other in calc_combos(total - first_size, other_sizes):
-                yield [first_size] + other 
+                for other in calc_combos(total - first_size, other_sizes):
+                    yield [first_size] + other
             for other in calc_combos(total, other_sizes):
-              yield other
+                yield other
 
     with open(get_filepath("day_17.txt"), "r") as f:
         container_sizes = tuple(sorted([int(c) for c in f]))
@@ -186,49 +186,52 @@ def solve_day_17_part_ab():
     total_eggnog = 150
     combos = list(calc_combos(total_eggnog, container_sizes))
     least_containers = min(map(len, combos))
-    minimal_count= list(filter(lambda cc: len(cc) == least_containers, combos))
+    minimal_count = list(filter(lambda cc: len(cc) == least_containers, combos))
 
     return len(combos), len(minimal_count)
 
 
 def solve_day_18_part_ab():
-  def neighbours(x,y, max_c=100):
-    lower_x = max(0, x -1)
-    upper_x = min(x+ 2, max_c)
+    def neighbours(x, y, max_c=100):
+        lower_x = max(0, x - 1)
+        upper_x = min(x + 2, max_c)
 
-    lower_y = max(0, y -1)
-    upper_y = min(y + 2, max_c)
-    all_neighbours = ((nx, ny) for nx in range(lower_x, upper_x) for ny in range(lower_y, upper_y))
-    return [(nx,ny) for nx,ny in all_neighbours if nx != x or ny != y]
-  def count_lights(grid):
-    total = 0
-    for row in grid:
-      total += sum(row)
-    return total
+        lower_y = max(0, y - 1)
+        upper_y = min(y + 2, max_c)
 
-  def update_grid(old_grid):
-    new_grid = []
-    for x, old_row in enumerate(old_grid):
-      new_row = []
-      for y, val in enumerate(old_row):
-        nvals = sum(map(lambda cor: old_grid[cor[0]][cor[1]], neighbours(x,y)))
-        next_val =  (nvals == 3 or (val and nvals == 2))
-        new_row.append(next_val)                     
-      new_grid.append(new_row)        
-    return new_grid      
+        all_neighbours = (
+            (nx, ny) for nx in range(lower_x, upper_x) for ny in range(lower_y, upper_y)
+        )
+        return [(nx, ny) for nx, ny in all_neighbours if nx != x or ny != y]
 
-  grid = []
-  with open(get_filepath("day_18.txt"), "r") as f:
-    for line in f:
-      grid.append(["#" == c for c in line.strip()])
-  
-  original_grid = grid
-  for _ in range(100):
-    grid = update_grid(grid)
+    def count_lights(grid):
+        total = 0
+        for row in grid:
+            total += sum(row)
+        return total
 
-  return count_lights(grid),0
+    def update_grid(old_grid):
+        new_grid = []
+        for x, old_row in enumerate(old_grid):
+            new_row = []
+            for y, val in enumerate(old_row):
+                nvals = sum(map(lambda cor: old_grid[cor[0]][cor[1]], neighbours(x, y)))
+                next_val = nvals == 3 or (val and nvals == 2)
+                new_row.append(next_val)
+            new_grid.append(new_row)
+        return new_grid
 
-  
+    grid = []
+    with open(get_filepath("day_18.txt"), "r") as f:
+        for line in f:
+            grid.append(["#" == c for c in line.strip()])
+
+    original_grid = grid
+    for _ in range(100):
+        grid = update_grid(grid)
+
+    return count_lights(grid), 0
+
 
 def solve():
     day15_a, day15_b = solve_day_15_part_ab()
@@ -243,9 +246,9 @@ def solve():
     print(f"Day17a: There are {day17_a} combinations to store the eggnog")
     print(f"Day17a: With as few as feasible, there are {day17_b} combinations")
 
-
     day18_a, day18_b = solve_day_18_part_ab()
     print(f"Day18a: {day18_a} are on after 100 steps.")
+
 
 if __name__ == "__main__":
     solve()
