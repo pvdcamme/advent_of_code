@@ -246,6 +246,24 @@ def solve_day_18_part_ab():
 
 
 def solve_day_19_part_ab():
+  def read_replacement(line):
+    matched = re.match("(\w+) => (\w+)", line)
+    if matched:
+      return matched.group(1), matched.group(2)
+    
+  replacements = {}
+  target = ""
+  with open(get_filepath("day_19.txt"), "r") as f:
+    for line in f:
+      line=line.strip()
+      conversion= read_replacement(line)
+      if conversion:
+        start, end = conversion
+        replacements[start] = end
+      elif line:
+        target = line
+
+  print(f"Target: {target}")
   return 0,0
 
 def solve():
