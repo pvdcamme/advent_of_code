@@ -250,8 +250,15 @@ def solve_day_19_part_ab():
     matched = re.match("(\w+) => (\w+)", line)
     if matched:
       return matched.group(1), matched.group(2)
+
+  def step_replacements(line, replacement):
+    for start, end in replacement:
+      for idx, _ in enumerate(line):
+        if line[idx:].startswith(start):
+          new_line = line[:idx] + end + line[idx + len(start):]
+          yield new_line
     
-  replacements = {}
+  replacements = []
   target = ""
   with open(get_filepath("day_19.txt"), "r") as f:
     for line in f:
@@ -259,12 +266,12 @@ def solve_day_19_part_ab():
       conversion= read_replacement(line)
       if conversion:
         start, end = conversion
-        replacements[start] = end
+        replacements.append((start, end))
       elif line:
         target = line
 
-  print(f"Target: {target}")
-  return 0,0
+  all_replacements = set(step_replacements(target, replacements))
+  return len(all_replacements),0
 
 def solve():
     day15_a, day15_b = solve_day_15_part_ab()
