@@ -245,6 +245,9 @@ def solve_day_18_part_ab():
     return count_lights(grid_v1), count_lights(grid_v2)
 
 
+def solve_day_19_part_ab():
+  return 0,0
+
 def solve():
     day15_a, day15_b = solve_day_15_part_ab()
     print(f"Day15a: Highest scoring cookie reaches {day15_a} points")
@@ -262,6 +265,9 @@ def solve():
     print(f"Day18a: {day18_a} are on after 100 steps.")
     print(f"Day18a: With the corners stuck there {day18_b} lights lit")
 
+    day19_a, day19_b = solve_day_19_part_ab()
+    print(f"Day19a: {day19_a} distinct molecules from a single replacement.")
+ 
 
 if __name__ == "__main__":
     solve()
