@@ -1,6 +1,7 @@
 import pathlib
 import functools
 import re
+import heapq
 
 
 def get_filepath(file_name):
@@ -251,13 +252,26 @@ def solve_day_19_part_ab():
     if matched:
       return matched.group(1), matched.group(2)
 
-  def step_replacements(line, replacement):
-    for start, end in replacement:
-      for idx, _ in enumerate(line):
-        if line[idx:].startswith(start):
-          new_line = line[:idx] + end + line[idx + len(start):]
-          yield new_line
-    
+  def step_replacements(line, replacements):
+    for start, end in replacements:
+      idx = line.find(start)
+      while idx > -1:
+        new_line = line[:idx] + end + line[idx + len(start):]
+        yield new_line
+        idx = line.find(start, idx+1)
+  
+  def best_first_search(start, end , replacements):
+    results = [(len(start), 1, start)]
+    seen = set()
+    while True:
+      best_score, steps, best_val = heapq.heappop(results)
+      for a in step_replacements(best_val, replacements):
+        if a == end:
+          return steps
+        if a not in seen:
+          heapq.heappush(results, (len(a), steps + 1, a))
+
+          
   replacements = []
   target = ""
   with open(get_filepath("day_19.txt"), "r") as f:
@@ -271,7 +285,8 @@ def solve_day_19_part_ab():
         target = line
 
   all_replacements = set(step_replacements(target, replacements))
-  return len(all_replacements),0
+  reverse_replace = [(end, start) for start,end in replacements]
+  return len(all_replacements), best_first_search(target, 'e', reverse_replace)
 
 def solve():
     day15_a, day15_b = solve_day_15_part_ab()
@@ -284,14 +299,15 @@ def solve():
 
     day17_a, day17_b = solve_day_17_part_ab()
     print(f"Day17a: There are {day17_a} combinations to store the eggnog")
-    print(f"Day17a: With as few as feasible, there are {day17_b} combinations")
+    print(f"Day17b: With as few as feasible, there are {day17_b} combinations")
 
     day18_a, day18_b = solve_day_18_part_ab()
     print(f"Day18a: {day18_a} are on after 100 steps.")
-    print(f"Day18a: With the corners stuck there {day18_b} lights lit")
+    print(f"Day18b: With the corners stuck there {day18_b} lights lit")
 
     day19_a, day19_b = solve_day_19_part_ab()
     print(f"Day19a: {day19_a} distinct molecules from a single replacement.")
+    print(f"Day19b: Frabricating the medicine will take {day19_b} steps.")
  
 
 if __name__ == "__main__":
