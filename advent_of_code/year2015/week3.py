@@ -2,7 +2,8 @@ import pathlib
 import functools
 import re
 import heapq
-
+import itertools
+import collections
 
 def get_filepath(file_name):
     """Returns the full path of the file_name"""
@@ -288,6 +289,42 @@ def solve_day_19_part_ab():
     return len(all_replacements), best_first_search(target, "e", reverse_replace)
 
 
+def solve_day_20_part_ab():
+    def adding():
+      houses = collections.defaultdict(list)
+      for idx in itertools.count(1):
+        current = houses[idx]
+        current.append(idx)
+        summed = 0
+        for c in current:
+          houses[idx + c].append(c)
+          summed += c
+        del houses[idx]          
+        yield summed * 10          
+        
+    def limited_adding():
+      houses = collections.defaultdict(list)
+      for idx in itertools.count(1):
+        current = houses[idx]
+        current.append((idx, 50))
+        summed = 0
+        for elf_idx, count in current:
+          summed += elf_idx
+          if count > 1:
+            houses[idx + elf_idx].append((elf_idx, count - 1))
+        del houses[idx]          
+        yield summed * 11          
+ 
+    many_presents = 34000000
+    for idx_v1, presents in enumerate(adding(), start = 1):
+      if presents >= many_presents:
+        break
+    for idx_v2, presents in enumerate(limited_adding(), start = 1):
+      if presents >= many_presents:
+        break
+
+    return idx_v1, idx_v2
+
 def solve():
     day15_a, day15_b = solve_day_15_part_ab()
     print(f"Day15a: Highest scoring cookie reaches {day15_a} points")
@@ -309,6 +346,8 @@ def solve():
     print(f"Day19a: {day19_a} distinct molecules from a single replacement.")
     print(f"Day19b: Frabricating the medicine will take {day19_b} steps.")
 
-
+    day20_a, day20_b = solve_day_20_part_ab()
+    print(f"Day20a: House {day20_a} gets a lot of presents from infinite elves")
+    print(f"Day20b: House {day20_b} gets a lot of presents from finite elves")
 if __name__ == "__main__":
     solve()
