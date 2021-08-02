@@ -247,46 +247,46 @@ def solve_day_18_part_ab():
 
 
 def solve_day_19_part_ab():
-  def read_replacement(line):
-    matched = re.match("(\w+) => (\w+)", line)
-    if matched:
-      return matched.group(1), matched.group(2)
+    def read_replacement(line):
+        matched = re.match("(\w+) => (\w+)", line)
+        if matched:
+            return matched.group(1), matched.group(2)
 
-  def step_replacements(line, replacements):
-    for start, end in replacements:
-      idx = line.find(start)
-      while idx > -1:
-        new_line = line[:idx] + end + line[idx + len(start):]
-        yield new_line
-        idx = line.find(start, idx+1)
-  
-  def best_first_search(start, end , replacements):
-    results = [(len(start), 1, start)]
-    seen = set()
-    while True:
-      best_score, steps, best_val = heapq.heappop(results)
-      for a in step_replacements(best_val, replacements):
-        if a == end:
-          return steps
-        if a not in seen:
-          heapq.heappush(results, (len(a), steps + 1, a))
+    def step_replacements(line, replacements):
+        for start, end in replacements:
+            idx = line.find(start)
+            while idx > -1:
+                new_line = line[:idx] + end + line[idx + len(start) :]
+                yield new_line
+                idx = line.find(start, idx + 1)
 
-          
-  replacements = []
-  target = ""
-  with open(get_filepath("day_19.txt"), "r") as f:
-    for line in f:
-      line=line.strip()
-      conversion= read_replacement(line)
-      if conversion:
-        start, end = conversion
-        replacements.append((start, end))
-      elif line:
-        target = line
+    def best_first_search(start, end, replacements):
+        results = [(len(start), 1, start)]
+        seen = set()
+        while True:
+            best_score, steps, best_val = heapq.heappop(results)
+            for a in step_replacements(best_val, replacements):
+                if a == end:
+                    return steps
+                if a not in seen:
+                    heapq.heappush(results, (len(a), steps + 1, a))
 
-  all_replacements = set(step_replacements(target, replacements))
-  reverse_replace = [(end, start) for start,end in replacements]
-  return len(all_replacements), best_first_search(target, 'e', reverse_replace)
+    replacements = []
+    target = ""
+    with open(get_filepath("day_19.txt"), "r") as f:
+        for line in f:
+            line = line.strip()
+            conversion = read_replacement(line)
+            if conversion:
+                start, end = conversion
+                replacements.append((start, end))
+            elif line:
+                target = line
+
+    all_replacements = set(step_replacements(target, replacements))
+    reverse_replace = [(end, start) for start, end in replacements]
+    return len(all_replacements), best_first_search(target, "e", reverse_replace)
+
 
 def solve():
     day15_a, day15_b = solve_day_15_part_ab()
@@ -308,7 +308,7 @@ def solve():
     day19_a, day19_b = solve_day_19_part_ab()
     print(f"Day19a: {day19_a} distinct molecules from a single replacement.")
     print(f"Day19b: Frabricating the medicine will take {day19_b} steps.")
- 
+
 
 if __name__ == "__main__":
     solve()
