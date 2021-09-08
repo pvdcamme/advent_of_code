@@ -5,6 +5,7 @@ import heapq
 import itertools
 import collections
 
+
 def get_filepath(file_name):
     """Returns the full path of the file_name"""
     return pathlib.Path(__file__).parent.joinpath(file_name).resolve()
@@ -291,39 +292,85 @@ def solve_day_19_part_ab():
 
 def solve_day_20_part_ab():
     def adding():
-      houses = collections.defaultdict(list)
-      for idx in itertools.count(1):
-        current = houses[idx]
-        current.append(idx)
-        summed = 0
-        for c in current:
-          houses[idx + c].append(c)
-          summed += c
-        del houses[idx]          
-        yield summed * 10          
-        
+        houses = collections.defaultdict(list)
+        for idx in itertools.count(1):
+            current = houses[idx]
+            current.append(idx)
+            summed = 0
+            for c in current:
+                houses[idx + c].append(c)
+                summed += c
+            del houses[idx]
+            yield summed * 10
+
     def limited_adding():
-      houses = collections.defaultdict(list)
-      for idx in itertools.count(1):
-        current = houses[idx]
-        current.append((idx, 50))
-        summed = 0
-        for elf_idx, count in current:
-          summed += elf_idx
-          if count > 1:
-            houses[idx + elf_idx].append((elf_idx, count - 1))
-        del houses[idx]          
-        yield summed * 11          
- 
+        houses = collections.defaultdict(list)
+        for idx in itertools.count(1):
+            current = houses[idx]
+            current.append((idx, 50))
+            summed = 0
+            for elf_idx, count in current:
+                summed += elf_idx
+                if count > 1:
+                    houses[idx + elf_idx].append((elf_idx, count - 1))
+            del houses[idx]
+            yield summed * 11
+
     many_presents = 34000000
-    for idx_v1, presents in enumerate(adding(), start = 1):
-      if presents >= many_presents:
-        break
-    for idx_v2, presents in enumerate(limited_adding(), start = 1):
-      if presents >= many_presents:
-        break
+    for idx_v1, presents in enumerate(adding(), start=1):
+        if presents >= many_presents:
+            break
+    for idx_v2, presents in enumerate(limited_adding(), start=1):
+        if presents >= many_presents:
+            break
 
     return idx_v1, idx_v2
+
+
+def solve_day_21_part_ab():
+    weapons = [(8, 4, 0), (10, 5, 0), (25, 6, 0), (40, 7, 0), (74, 8, 0)]
+    armors = [(0, 0, 0), (13, 0, 1), (31, 0, 2), (53, 0, 3), (75, 0, 4), (102, 0, 5)]
+    rings = [(25, 1, 0), (50, 2, 0), (100, 3, 0), (20, 0, 1), (40, 0, 2), (80, 0, 3)]
+
+    def combine(*items):
+        total_attack, total_defense = (0, 0)
+        total_price = 0
+        for price, attack, defense in items:
+            total_price += price
+            total_attack += attack
+            total_defense += defense
+        return (total_price, total_attack, total_defense)
+
+    def iteratre_outfit():
+        for weapon in weapons:
+            for armor in armors:
+                yield combine(weapon, armor)
+                for r in rings:
+                    yield combine(weapon, armor, r)
+                for r1, r2 in itertools.product(rings, rings):
+                    if r1 == r2:
+                        continue
+                    yield combine(weapon, armor, r1, r2)
+
+    def play(attack, defense):
+        player_health = 100
+        boss_health = 100
+        boss_attack = 8
+        boss_def = 2
+        while True:
+            boss_health -= max(1, attack - boss_def)
+            if boss_health <= 0:
+                return True
+            player_health -= max(1, boss_attack - defense)
+            if player_health <= 0:
+                return False
+
+    def search():
+        lowest_price = min((price for price, att, defen in iteratre_outfit() if play(att, defen)))
+        return lowest_price 
+
+    return search(), 0
+
 
 def solve():
     day15_a, day15_b = solve_day_15_part_ab()
@@ -349,5 +396,10 @@ def solve():
     day20_a, day20_b = solve_day_20_part_ab()
     print(f"Day20a: House {day20_a} gets a lot of presents from infinite elves")
     print(f"Day20b: House {day20_b} gets a lot of presents from finite elves")
+
+    day21_a, day21_b = solve_day_21_part_ab()
+    print(f"Day21a: Winning for only {day21_a} gold")
+
+
 if __name__ == "__main__":
     solve()
