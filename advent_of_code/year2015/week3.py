@@ -365,11 +365,14 @@ def solve_day_21_part_ab():
             if player_health <= 0:
                 return False
 
-    def search():
+    def cheapest_win():
         lowest_price = min((price for price, att, defen in iteratre_outfit() if play(att, defen)))
         return lowest_price 
-
-    return search(), 0
+    
+    def most_expensive_loss():
+        highest_price = max((price for price, att, defen in iteratre_outfit() if not play(att, defen)))
+        return highest_price
+    return cheapest_win(), most_expensive_loss()
 
 
 def solve():
@@ -399,6 +402,7 @@ def solve():
 
     day21_a, day21_b = solve_day_21_part_ab()
     print(f"Day21a: Winning for only {day21_a} gold")
+    print(f"Day21b: Most expensive loss costs {day21_b} gold")
 
 
 if __name__ == "__main__":
