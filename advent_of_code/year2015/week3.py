@@ -341,7 +341,7 @@ def solve_day_21_part_ab():
             total_defense += defense
         return (total_price, total_attack, total_defense)
 
-    def iteratre_outfit():
+    def outfits():
         for weapon in weapons:
             for armor in armors:
                 yield combine(weapon, armor)
@@ -366,11 +366,11 @@ def solve_day_21_part_ab():
                 return False
 
     def cheapest_win():
-        wins = (price for price, att, defen in iteratre_outfit() if play(att, defen))
+        wins = (price for price, att, defen in outfits() if play(att, defen))
         return min(wins)
     
     def most_expensive_loss():
-        loses = (price for price, att, defen in iteratre_outfit() if not play(att, defen))
+        loses = (price for price, att, defen in outfits() if not play(att, defen))
         return max(loses)
     return cheapest_win(), most_expensive_loss()
 
