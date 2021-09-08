@@ -366,12 +366,12 @@ def solve_day_21_part_ab():
                 return False
 
     def cheapest_win():
-        lowest_price = min((price for price, att, defen in iteratre_outfit() if play(att, defen)))
-        return lowest_price 
+        wins = (price for price, att, defen in iteratre_outfit() if play(att, defen))
+        return min(wins)
     
     def most_expensive_loss():
-        highest_price = max((price for price, att, defen in iteratre_outfit() if not play(att, defen)))
-        return highest_price
+        loses = (price for price, att, defen in iteratre_outfit() if not play(att, defen))
+        return max(loses)
     return cheapest_win(), most_expensive_loss()
 
 
