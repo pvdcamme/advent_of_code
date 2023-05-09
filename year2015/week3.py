@@ -376,6 +376,61 @@ def solve_day_21_part_ab():
     return cheapest_win(), most_expensive_loss()
 
 
+def solve_day_22_part_ab():
+    boss_hit_points= 51
+    boss_damage= 9
+    
+    player = {'hit_points': 50, 'mana':500, 'effects': [], 'armor': 0}
+    def boss_turn(player, boss):
+      player['hit_points'] -= max(boss_damage - player['armor'], 0)
+ 
+    def magic_missle(player, boss):
+      player['mana'] -= 53
+      boss['hit_points'] -= 4
+    
+    def drain(player, boss):
+      player['mana'] -= 73
+      boss['hit_points'] -= 2
+      player['hit_points'] += 2
+      
+    def shield(player, boss):
+      player['mana'] -= 113
+      player['armor'] += 7
+      count = 6
+      def apply_effect(player, boss):
+        count -= 1 
+        if count == 0:
+          player['armor'] -= 7
+        return count > 0
+      player['effects'].append(apply_effect) 
+
+    def poison(player, boss):
+      player['mana'] -= 173
+      count = 6
+      def apply_effect(player, boss):
+        boss['hit_points'] -= 3
+        count -= 1 
+        return count > 0
+      player['effects'].append(apply_effect) 
+
+    def recharge(player, boss):
+      player['mana'] -= 229
+      count = 5
+      def apply_effect(player, boss):
+        boss['mana'] += 101
+        count -= 1 
+        return count > 0
+      player['effects'].append(apply_effect) 
+
+    plays = [
+    while True:
+      
+
+
+
+
+ 
+
 def solve():
     day15_a, day15_b = solve_day_15_part_ab()
     print(f"Day15a: Highest scoring cookie reaches {day15_a} points")
@@ -406,5 +461,6 @@ def solve():
     print(f"Day21b: Most expensive loss costs {day21_b} gold")
 
 
+    solve_day_22_part_ab()
 if __name__ == "__main__":
     solve()
