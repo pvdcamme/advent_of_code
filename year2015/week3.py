@@ -377,54 +377,88 @@ def solve_day_21_part_ab():
 
 
 def solve_day_22_part_ab():
+    import copy
     boss_hit_points= 51
     boss_damage= 9
     
     player = {'hit_points': 50, 'mana':500, 'effects': [], 'armor': 0}
-    def boss_turn(player, boss):
+    boss = {'hit_points': boss_hit_points, 'mana':0, 'effects': [], 'armor': 0}
+    world = {"timer": 0, "player": player, "boss": boss}
+
+    def boss_turn(timer, player, boss):
       player['hit_points'] -= max(boss_damage - player['armor'], 0)
  
-    def magic_missle(player, boss):
+    def magic_missle(timer, player, boss):
       player['mana'] -= 53
       boss['hit_points'] -= 4
     
-    def drain(player, boss):
+    def drain(timer, player, boss):
       player['mana'] -= 73
       boss['hit_points'] -= 2
       player['hit_points'] += 2
       
-    def shield(player, boss):
+    def shield(timer, player, boss):
       player['mana'] -= 113
       player['armor'] += 7
-      count = 6
-      def apply_effect(player, boss):
-        count -= 1 
-        if count == 0:
+      until = timer + 6
+      def apply_effect(timer, player, boss):
+        should_stop = timer >= until
+        if should_stop:
           player['armor'] -= 7
-        return count > 0
+        return not should_stop
       player['effects'].append(apply_effect) 
 
-    def poison(player, boss):
+    def poison(timer, player, boss):
       player['mana'] -= 173
       count = 6
-      def apply_effect(player, boss):
+      until = timer + 6 
+      def apply_effect(timer, player, boss):
         boss['hit_points'] -= 3
-        count -= 1 
-        return count > 0
+        return timer < until
       player['effects'].append(apply_effect) 
 
-    def recharge(player, boss):
+    def recharge(timer, player, boss):
       player['mana'] -= 229
-      count = 5
-      def apply_effect(player, boss):
+      until = timer + 5
+      def apply_effect(timer, player, boss):
         boss['mana'] += 101
-        count -= 1 
-        return count > 0
+        return timer < until
       player['effects'].append(apply_effect) 
 
-    plays = [
-    while True:
+
+    moves = [(0 , world)]
+    while moves:
+      print(moves)
+      mana_cost, best_world = heapq.heappop(moves) 
       
+      new_effects = []
+      for effect in best_world["player"]["effects"]:
+        result = effect(**best_world)
+        if result:
+          new_effects.append(effect)
+
+      best_world["player"]["effects"] = new_effects
+
+      is_boss_turn = (world["timer"] % 2) == 0
+      if is_boss_turn:
+        boss_turn(**best_world)
+        if best_world["player"]["hit_points"] > 0:
+          heapq.heappush(moves, (mana_cost, best_world))
+      else:
+        for pick in [magic_missle, drain, shield, poison, recharge]:
+          new_world = copy.deepcopy(best_world)
+          old_mana = new_world["player"]["mana"]
+          pick(**new_world)
+          new_mana_cost = mana_cost + (old_mana - new_world["player"]["mana"])
+          if new_world["player"]["mana"] < 0:
+            continue
+          elif new_world["boss"]["hit_points"] <= 0:
+            return new_mana_cost
+          else:
+            heapq.heappush(moves, (new_mana_cost, new_world))
+ 
+
+
 
 
 
@@ -461,6 +495,6 @@ def solve():
     print(f"Day21b: Most expensive loss costs {day21_b} gold")
 
 
-    solve_day_22_part_ab()
+    print(solve_day_22_part_ab())
 if __name__ == "__main__":
     solve()
