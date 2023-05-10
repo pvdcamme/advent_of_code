@@ -379,24 +379,26 @@ def solve_day_21_part_ab():
 def solve_day_22_part_ab():
     import copy
     import random
-    boss_hit_points= 51
-    boss_damage= 9
-    
-    player = {'hit_points': 50, 'mana':500, 'effects': {}, 'armor': 0}
-    boss = {'hit_points': boss_hit_points}
-    world = {"timer": 1, "player": player, "boss": boss}
+
+    CAST_ANY_TIME = -1
 
     def boss_turn(timer, player, boss):
-      player['hit_points'] -= max(boss_damage - player['armor'], 1)
+      MINIMUM_DAMAGE = 1 
+      player_damage = max(boss_damage - player['armor'], MINIMUM_DAMAGE)
+      player['hit_points'] -= player_damage
+      return CAST_ANY_TIME
  
     def magic_missle(timer, player, boss):
       player['mana'] -= 53
       boss['hit_points'] -= 4
+      return CAST_ANY_TIME
     
     def drain(timer, player, boss):
       player['mana'] -= 73
       boss['hit_points'] -= 2
       player['hit_points'] += 2
+      return CAST_ANY_TIME
+
       
     def shield(timer, player, boss):
       player['mana'] -= 113 if not "shield" in player['effects'] else 1e9
@@ -408,6 +410,7 @@ def solve_day_22_part_ab():
           player['armor'] -= 7
         return not should_stop
       player['effects']['shield'] = apply_effect
+      return CAST_ANY_TIME
 
     def poison(timer, player, boss):
       player['mana'] -= 173 if 'poison' not in player['effects'] else 1e9
@@ -417,6 +420,8 @@ def solve_day_22_part_ab():
         boss['hit_points'] -= 3
         return timer < until
       player['effects']['poison'] =apply_effect
+      return CAST_ANY_TIME
+
 
     def recharge(timer, player, boss):
       player['mana'] -= 229 if 'recharge' not in player['effects'] else 1e9
@@ -425,7 +430,19 @@ def solve_day_22_part_ab():
         player['mana'] += 101
         return timer < until
       player['effects']['recharge'] = apply_effect
+      return CAST_ANY_TIME
 
+    boss_hit_points= 51
+    boss_damage= 9
+
+    player = {'hit_points': 50, 'mana':500, 'effects': {}, 'armor': 0}
+    boss = {'hit_points': boss_hit_points}
+    world = {"timer": 1, "player": player, "boss": boss}
+
+    spells = [(CAST_ANY_TIME, magic_missle), (CAST_ANY_TIME, drain),
+              (CAST_ANY_TIME, shield), (CAST_ANY_TIME, poison),
+              (CAST_ANY_TIME, recharge) ]
+    
 
     moves = [(0 , world)]
     while moves:
