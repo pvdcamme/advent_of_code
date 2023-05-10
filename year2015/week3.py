@@ -378,15 +378,16 @@ def solve_day_21_part_ab():
 
 def solve_day_22_part_ab():
     import copy
+    import random
     boss_hit_points= 51
     boss_damage= 9
     
     player = {'hit_points': 50, 'mana':500, 'effects': [], 'armor': 0}
     boss = {'hit_points': boss_hit_points, 'mana':0, 'effects': [], 'armor': 0}
-    world = {"timer": 0, "player": player, "boss": boss}
+    world = {"timer": 1, "player": player, "boss": boss}
 
     def boss_turn(timer, player, boss):
-      player['hit_points'] -= max(boss_damage - player['armor'], 0)
+      player['hit_points'] -= max(boss_damage - player['armor'], 1)
  
     def magic_missle(timer, player, boss):
       player['mana'] -= 53
@@ -400,7 +401,7 @@ def solve_day_22_part_ab():
     def shield(timer, player, boss):
       player['mana'] -= 113
       player['armor'] += 7
-      until = timer + 6
+      until = timer + 5
       def apply_effect(timer, player, boss):
         should_stop = timer >= until
         if should_stop:
@@ -411,7 +412,7 @@ def solve_day_22_part_ab():
     def poison(timer, player, boss):
       player['mana'] -= 173
       count = 6
-      until = timer + 6 
+      until = timer + 5 
       def apply_effect(timer, player, boss):
         boss['hit_points'] -= 3
         return timer < until
@@ -419,17 +420,20 @@ def solve_day_22_part_ab():
 
     def recharge(timer, player, boss):
       player['mana'] -= 229
-      until = timer + 5
+      until = timer + 4
       def apply_effect(timer, player, boss):
-        boss['mana'] += 101
+        player['mana'] += 101
         return timer < until
       player['effects'].append(apply_effect) 
 
 
     moves = [(0 , world)]
     while moves:
-      print(moves)
       mana_cost, best_world = heapq.heappop(moves) 
+      best_world = copy.deepcopy(best_world)
+
+
+      assert best_world["player"]["hit_points"] > 0
       
       new_effects = []
       for effect in best_world["player"]["effects"]:
@@ -439,20 +443,26 @@ def solve_day_22_part_ab():
 
       best_world["player"]["effects"] = new_effects
 
-      is_boss_turn = (world["timer"] % 2) == 0
+      is_boss_turn = (best_world["timer"] % 2) == 0
+      best_world["timer"] += 1
+
       if is_boss_turn:
-        boss_turn(**best_world)
-        if best_world["player"]["hit_points"] > 0:
-          heapq.heappush(moves, (mana_cost, best_world))
+        bb = copy.deepcopy(best_world)
+        boss_turn(**bb)
+        if bb["player"]["hit_points"] > 0:
+          heapq.heappush(moves, (mana_cost, bb))
       else:
         for pick in [magic_missle, drain, shield, poison, recharge]:
           new_world = copy.deepcopy(best_world)
           old_mana = new_world["player"]["mana"]
           pick(**new_world)
+          current_cost = (old_mana - new_world["player"]["mana"])
+
           new_mana_cost = mana_cost + (old_mana - new_world["player"]["mana"])
+          new_mana_cost += random.random() / 1e3 # Make every value unique 
           if new_world["player"]["mana"] < 0:
             continue
-          elif new_world["boss"]["hit_points"] <= 0:
+          elif new_world["boss"]["hit_points"] < 0:
             return new_mana_cost
           else:
             heapq.heappush(moves, (new_mana_cost, new_world))
