@@ -382,8 +382,8 @@ def solve_day_22_part_ab():
     boss_hit_points= 51
     boss_damage= 9
     
-    player = {'hit_points': 50, 'mana':500, 'effects': [], 'armor': 0}
-    boss = {'hit_points': boss_hit_points, 'mana':0, 'effects': [], 'armor': 0}
+    player = {'hit_points': 50, 'mana':500, 'effects': {}, 'armor': 0}
+    boss = {'hit_points': boss_hit_points, 'mana':0, 'effects': {}, 'armor': 0}
     world = {"timer": 1, "player": player, "boss": boss}
 
     def boss_turn(timer, player, boss):
@@ -399,7 +399,7 @@ def solve_day_22_part_ab():
       player['hit_points'] += 2
       
     def shield(timer, player, boss):
-      player['mana'] -= 113
+      player['mana'] -= 113 if not "shield" in player['effects'] else 1e9
       player['armor'] += 7
       until = timer + 5
       def apply_effect(timer, player, boss):
@@ -407,24 +407,24 @@ def solve_day_22_part_ab():
         if should_stop:
           player['armor'] -= 7
         return not should_stop
-      player['effects'].append(apply_effect) 
+      player['effects']['shield'] = apply_effect
 
     def poison(timer, player, boss):
-      player['mana'] -= 173
+      player['mana'] -= 173 if 'poison' not in player['effects'] else 1e9
       count = 6
       until = timer + 5 
       def apply_effect(timer, player, boss):
         boss['hit_points'] -= 3
         return timer < until
-      player['effects'].append(apply_effect) 
+      player['effects']['poison'] =apply_effect
 
     def recharge(timer, player, boss):
-      player['mana'] -= 229
+      player['mana'] -= 229 if 'recharge' not in player['effects'] else 1e9
       until = timer + 4
       def apply_effect(timer, player, boss):
         player['mana'] += 101
         return timer < until
-      player['effects'].append(apply_effect) 
+      player['effects']['recharge'] = apply_effect
 
 
     moves = [(0 , world)]
@@ -435,11 +435,11 @@ def solve_day_22_part_ab():
 
       assert best_world["player"]["hit_points"] > 0
       
-      new_effects = []
-      for effect in best_world["player"]["effects"]:
+      new_effects = {}
+      for key, effect in best_world["player"]["effects"].items():
         result = effect(**best_world)
         if result:
-          new_effects.append(effect)
+          new_effects[key] = effect
 
       best_world["player"]["effects"] = new_effects
 
