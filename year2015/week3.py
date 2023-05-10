@@ -383,7 +383,7 @@ def solve_day_22_part_ab():
     boss_damage= 9
     
     player = {'hit_points': 50, 'mana':500, 'effects': {}, 'armor': 0}
-    boss = {'hit_points': boss_hit_points, 'mana':0, 'effects': {}, 'armor': 0}
+    boss = {'hit_points': boss_hit_points}
     world = {"timer": 1, "player": player, "boss": boss}
 
     def boss_turn(timer, player, boss):
@@ -432,7 +432,6 @@ def solve_day_22_part_ab():
       mana_cost, best_world = heapq.heappop(moves) 
       best_world = copy.deepcopy(best_world)
 
-
       assert best_world["player"]["hit_points"] > 0
       
       new_effects = {}
@@ -447,10 +446,9 @@ def solve_day_22_part_ab():
       best_world["timer"] += 1
 
       if is_boss_turn:
-        bb = copy.deepcopy(best_world)
-        boss_turn(**bb)
-        if bb["player"]["hit_points"] > 0:
-          heapq.heappush(moves, (mana_cost, bb))
+        boss_turn(**best_world)
+        if best_world["player"]["hit_points"] > 0:
+          heapq.heappush(moves, (mana_cost, best_world))
       else:
         for pick in [magic_missle, drain, shield, poison, recharge]:
           new_world = copy.deepcopy(best_world)
@@ -468,12 +466,6 @@ def solve_day_22_part_ab():
             heapq.heappush(moves, (new_mana_cost, new_world))
  
 
-
-
-
-
-
- 
 
 def solve():
     day15_a, day15_b = solve_day_15_part_ab()
@@ -505,6 +497,8 @@ def solve():
     print(f"Day21b: Most expensive loss costs {day21_b} gold")
 
 
-    print(solve_day_22_part_ab())
+    day22_a = solve_day_22_part_ab()
+    print(f"Day22a: Winning takes {int(day22_a)} mana")
+
 if __name__ == "__main__":
     solve()
