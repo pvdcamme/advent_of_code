@@ -398,7 +398,6 @@ def solve_day_22_part_ab():
       boss['hit_points'] -= 2
       player['hit_points'] += 2
       return CAST_ANY_TIME
-
       
     def shield(timer, player, boss):
       player['mana'] -= 113
@@ -434,7 +433,6 @@ def solve_day_22_part_ab():
 
     boss_hit_points= 51
     boss_damage= 9
-
 
     default_spells = [(CAST_ANY_TIME, magic_missle), (CAST_ANY_TIME, drain),
                       (CAST_ANY_TIME, shield), (CAST_ANY_TIME, poison),
