@@ -393,6 +393,7 @@ def solve_day_22_part_ab():
       boss['hit_points'] -= 4
       return CAST_ANY_TIME
     
+      
     def drain(timer, player, boss):
       player['mana'] -= 73
       boss['hit_points'] -= 2
@@ -442,47 +443,49 @@ def solve_day_22_part_ab():
     boss = {'hit_points': boss_hit_points}
     world = {"timer": 1, "player": player, "boss": boss}
 
-    moves = [(0 , world)]
-    while moves:
-      mana_cost, best_world = heapq.heappop(moves) 
-      best_world = copy.deepcopy(best_world)
-
-      assert best_world["player"]["hit_points"] > 0
-      
-      new_effects = []
-      for effect in best_world["player"]["effects"]:
-        result = effect(**best_world)
-        if result:
-          new_effects.append(effect)
-
-      best_world["player"]["effects"] = new_effects
-
-      is_boss_turn = (best_world["timer"] % 2) == 0
-      best_world["timer"] += 1
-
-      if is_boss_turn:
-        boss_turn(**best_world)
-        if best_world["player"]["hit_points"] > 0:
-          heapq.heappush(moves, (mana_cost, best_world))
-      else:
-        for idx, (until, pick) in enumerate(best_world["player"]["spells"]):
-          if until < best_world["timer"]:
-            new_world = copy.deepcopy(best_world)
-            old_mana = new_world["player"]["mana"]
-            new_until = pick(**new_world)
-            new_world["player"]["spells"][idx] = (new_until, pick)
-            current_cost = (old_mana - new_world["player"]["mana"])
-
-            new_mana_cost = mana_cost + (old_mana - new_world["player"]["mana"])
-            new_mana_cost += random.random() / 1e3 # Make every value unique 
-            if new_world["player"]["mana"] < 0:
-              continue
-            elif new_world["boss"]["hit_points"] < 0:
-              return new_mana_cost
-            else:
-              heapq.heappush(moves, (new_mana_cost, new_world))
- 
-
+    def search(world):
+      moves = [(0 , world)]
+      while moves:
+        mana_cost, best_world = heapq.heappop(moves) 
+        best_world = copy.deepcopy(best_world)
+  
+        assert best_world["player"]["hit_points"] > 0
+        
+        new_effects = []
+        for effect in best_world["player"]["effects"]:
+          result = effect(**best_world)
+          if result:
+            new_effects.append(effect)
+  
+        best_world["player"]["effects"] = new_effects
+  
+        is_boss_turn = (best_world["timer"] % 2) == 0
+        best_world["timer"] += 1
+  
+        if is_boss_turn:
+          boss_turn(**best_world)
+          if best_world["player"]["hit_points"] > 0:
+            heapq.heappush(moves, (mana_cost, best_world))
+        else:
+          for idx, (until, pick) in enumerate(best_world["player"]["spells"]):
+            if until < best_world["timer"]:
+              new_world = copy.deepcopy(best_world)
+              old_mana = new_world["player"]["mana"]
+              new_until = pick(**new_world)
+              new_world["player"]["spells"][idx] = (new_until, pick)
+              current_cost = (old_mana - new_world["player"]["mana"])
+  
+              new_mana_cost = mana_cost + (old_mana - new_world["player"]["mana"])
+              new_mana_cost += random.random() / 1e3 # Make every value unique 
+              if new_world["player"]["mana"] < 0:
+                continue
+              elif new_world["boss"]["hit_points"] < 0:
+                return new_mana_cost
+              else:
+                heapq.heappush(moves, (new_mana_cost, new_world))
+       
+    return search(world)
+  
 
 def solve():
     day15_a, day15_b = solve_day_15_part_ab()
