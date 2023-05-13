@@ -401,48 +401,48 @@ def solve_day_22_part_ab():
 
       
     def shield(timer, player, boss):
-      player['mana'] -= 113 if not "shield" in player['effects'] else 1e9
+      player['mana'] -= 113
       player['armor'] += 7
       until = timer + 5
       def apply_effect(timer, player, boss):
         should_stop = timer >= until
         if should_stop:
           player['armor'] -= 7
-        return not should_stop
-      player['effects']['shield'] = apply_effect
-      return CAST_ANY_TIME
+        return timer <= until
+      player['effects'].append(apply_effect)
+      return until 
 
     def poison(timer, player, boss):
-      player['mana'] -= 173 if 'poison' not in player['effects'] else 1e9
+      player['mana'] -= 173 
       count = 6
       until = timer + 5 
       def apply_effect(timer, player, boss):
         boss['hit_points'] -= 3
-        return timer < until
-      player['effects']['poison'] =apply_effect
-      return CAST_ANY_TIME
+        return timer <= until
+      player['effects'].append(apply_effect)
+      return until 
 
 
     def recharge(timer, player, boss):
-      player['mana'] -= 229 if 'recharge' not in player['effects'] else 1e9
+      player['mana'] -= 229
       until = timer + 4
       def apply_effect(timer, player, boss):
         player['mana'] += 101
-        return timer < until
-      player['effects']['recharge'] = apply_effect
-      return CAST_ANY_TIME
+        return timer <= until
+      player['effects'].append(apply_effect)
+      return until 
 
     boss_hit_points= 51
     boss_damage= 9
 
-    player = {'hit_points': 50, 'mana':500, 'effects': {}, 'armor': 0}
+
+    default_spells = [(CAST_ANY_TIME, magic_missle), (CAST_ANY_TIME, drain),
+                      (CAST_ANY_TIME, shield), (CAST_ANY_TIME, poison),
+                      (CAST_ANY_TIME, recharge) ]
+
+    player = {'hit_points': 50, 'mana':500, 'spells': default_spells, 'effects': [], 'armor': 0}
     boss = {'hit_points': boss_hit_points}
     world = {"timer": 1, "player": player, "boss": boss}
-
-    spells = [(CAST_ANY_TIME, magic_missle), (CAST_ANY_TIME, drain),
-              (CAST_ANY_TIME, shield), (CAST_ANY_TIME, poison),
-              (CAST_ANY_TIME, recharge) ]
-    
 
     moves = [(0 , world)]
     while moves:
@@ -451,11 +451,11 @@ def solve_day_22_part_ab():
 
       assert best_world["player"]["hit_points"] > 0
       
-      new_effects = {}
-      for key, effect in best_world["player"]["effects"].items():
+      new_effects = []
+      for effect in best_world["player"]["effects"]:
         result = effect(**best_world)
         if result:
-          new_effects[key] = effect
+          new_effects.append(effect)
 
       best_world["player"]["effects"] = new_effects
 
@@ -467,20 +467,22 @@ def solve_day_22_part_ab():
         if best_world["player"]["hit_points"] > 0:
           heapq.heappush(moves, (mana_cost, best_world))
       else:
-        for pick in [magic_missle, drain, shield, poison, recharge]:
-          new_world = copy.deepcopy(best_world)
-          old_mana = new_world["player"]["mana"]
-          pick(**new_world)
-          current_cost = (old_mana - new_world["player"]["mana"])
+        for idx, (until, pick) in enumerate(best_world["player"]["spells"]):
+          if until < best_world["timer"]:
+            new_world = copy.deepcopy(best_world)
+            old_mana = new_world["player"]["mana"]
+            new_until = pick(**new_world)
+            new_world["player"]["spells"][idx] = (new_until, pick)
+            current_cost = (old_mana - new_world["player"]["mana"])
 
-          new_mana_cost = mana_cost + (old_mana - new_world["player"]["mana"])
-          new_mana_cost += random.random() / 1e3 # Make every value unique 
-          if new_world["player"]["mana"] < 0:
-            continue
-          elif new_world["boss"]["hit_points"] < 0:
-            return new_mana_cost
-          else:
-            heapq.heappush(moves, (new_mana_cost, new_world))
+            new_mana_cost = mana_cost + (old_mana - new_world["player"]["mana"])
+            new_mana_cost += random.random() / 1e3 # Make every value unique 
+            if new_world["player"]["mana"] < 0:
+              continue
+            elif new_world["boss"]["hit_points"] < 0:
+              return new_mana_cost
+            else:
+              heapq.heappush(moves, (new_mana_cost, new_world))
  
 
 
@@ -512,7 +514,6 @@ def solve():
     day21_a, day21_b = solve_day_21_part_ab()
     print(f"Day21a: Winning for only {day21_a} gold")
     print(f"Day21b: Most expensive loss costs {day21_b} gold")
-
 
     day22_a = solve_day_22_part_ab()
     print(f"Day22a: Winning takes {int(day22_a)} mana")
