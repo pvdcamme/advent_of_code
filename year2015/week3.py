@@ -389,19 +389,15 @@ def solve_day_22_part_ab():
       return CAST_ANY_TIME
  
     def magic_missle(timer, player, boss):
-      player['mana'] -= 53
       boss['hit_points'] -= 4
       return CAST_ANY_TIME
-    
       
     def drain(timer, player, boss):
-      player['mana'] -= 73
       boss['hit_points'] -= 2
       player['hit_points'] += 2
       return CAST_ANY_TIME
       
     def shield(timer, player, boss):
-      player['mana'] -= 113
       player['armor'] += 7
       until = timer + 5
       def apply_effect(timer, player, boss):
@@ -413,8 +409,6 @@ def solve_day_22_part_ab():
       return until 
 
     def poison(timer, player, boss):
-      player['mana'] -= 173 
-      count = 6
       until = timer + 5 
       def apply_effect(timer, player, boss):
         boss['hit_points'] -= 3
@@ -422,9 +416,7 @@ def solve_day_22_part_ab():
       player['effects'].append(apply_effect)
       return until 
 
-
     def recharge(timer, player, boss):
-      player['mana'] -= 229
       until = timer + 4
       def apply_effect(timer, player, boss):
         player['mana'] += 101
@@ -435,13 +427,24 @@ def solve_day_22_part_ab():
     boss_hit_points= 51
     boss_damage= 9
 
-    default_spells = [(CAST_ANY_TIME, magic_missle), (CAST_ANY_TIME, drain),
-                      (CAST_ANY_TIME, shield), (CAST_ANY_TIME, poison),
-                      (CAST_ANY_TIME, recharge) ]
+    default_spells = [(CAST_ANY_TIME, 53, magic_missle), (CAST_ANY_TIME, 73, drain),
+                      (CAST_ANY_TIME, 113, shield), (CAST_ANY_TIME, 173, poison),
+                      (CAST_ANY_TIME, 229, recharge) ]
 
     player = {'hit_points': 50, 'mana':500, 'spells': default_spells, 'effects': [], 'armor': 0}
     boss = {'hit_points': boss_hit_points}
     world = {"timer": 1, "player": player, "boss": boss}
+
+
+    def apply_effects(world, effects):
+        new_effects = []
+        for effect in effects:
+          result = effect(**world)
+          if result:
+            new_effects.append(effect)
+        return new_effects
+ 
+
 
     def search(world):
       moves = [(0 , world)]
@@ -451,13 +454,7 @@ def solve_day_22_part_ab():
   
         assert best_world["player"]["hit_points"] > 0
         
-        new_effects = []
-        for effect in best_world["player"]["effects"]:
-          result = effect(**best_world)
-          if result:
-            new_effects.append(effect)
-  
-        best_world["player"]["effects"] = new_effects
+        best_world["player"]["effects"] = apply_effects(best_world, best_world["player"]["effects"])
   
         is_boss_turn = (best_world["timer"] % 2) == 0
         best_world["timer"] += 1
@@ -467,19 +464,16 @@ def solve_day_22_part_ab():
           if best_world["player"]["hit_points"] > 0:
             heapq.heappush(moves, (mana_cost, best_world))
         else:
-          for idx, (until, pick) in enumerate(best_world["player"]["spells"]):
-            if until < best_world["timer"]:
+          for idx, (until, spell_cost, pick) in enumerate(best_world["player"]["spells"]):
+            if until < best_world["timer"] and spell_cost <= best_world["player"]["mana"]:
               new_world = copy.deepcopy(best_world)
-              old_mana = new_world["player"]["mana"]
               new_until = pick(**new_world)
-              new_world["player"]["spells"][idx] = (new_until, pick)
-              current_cost = (old_mana - new_world["player"]["mana"])
+              new_world["player"]["spells"][idx] = (new_until, spell_cost, pick)
+              new_world["player"]['mana'] -= spell_cost
   
-              new_mana_cost = mana_cost + (old_mana - new_world["player"]["mana"])
+              new_mana_cost = mana_cost + spell_cost
               new_mana_cost += random.random() / 1e3 # Make every value unique 
-              if new_world["player"]["mana"] < 0:
-                continue
-              elif new_world["boss"]["hit_points"] < 0:
+              if new_world["boss"]["hit_points"] < 0:
                 return new_mana_cost
               else:
                 heapq.heappush(moves, (new_mana_cost, new_world))
