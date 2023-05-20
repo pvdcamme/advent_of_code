@@ -524,9 +524,5 @@ def solve():
     print(f"Day21a: Winning for only {day21_a} gold")
     print(f"Day21b: Most expensive loss costs {day21_b} gold")
 
-    day22_a, day22_b = solve_day_22_part_ab()
-    print(f"Day22a: Winning takes {int(day22_a)} mana")
-    print(f"Day22b: On hard mode winning takes {int(day22_b)} mana")
-
 if __name__ == "__main__":
     solve()
