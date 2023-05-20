@@ -401,10 +401,10 @@ def solve_day_22_part_ab():
       player['armor'] += 7
       until = timer + 5
       def apply_effect(timer, player, boss):
-        should_stop = timer >= until
-        if should_stop:
+        should_continue= timer <= until
+        if not should_continue:
           player['armor'] -= 7
-        return timer <= until
+        return should_continue 
       player['effects'].append(apply_effect)
       return until 
 
@@ -436,24 +436,38 @@ def solve_day_22_part_ab():
     world = {"timer": 1, "player": player, "boss": boss}
 
 
-    def apply_effects(world, effects):
+    def apply_effects(world, effects) -> list:
         new_effects = []
         for effect in effects:
           result = effect(**world)
           if result:
             new_effects.append(effect)
         return new_effects
- 
 
+    def default_turn_effect(timer, player, boss):
+      pass
 
-    def search(world):
+    def hard_mode(timer, player, boss):
+      #if timer % 2 == 1:
+      player["hit_points"] -= 1
+
+    def search(world, difficulty=default_turn_effect):
       moves = [(0 , world)]
       while moves:
         mana_cost, best_world = heapq.heappop(moves) 
         best_world = copy.deepcopy(best_world)
   
-        assert best_world["player"]["hit_points"] > 0
         
+        difficulty(**best_world)
+
+        if  best_world["player"]["hit_points"] <= 0:
+          continue
+
+        if  best_world["boss"]["hit_points"] < 0:
+          return mana_cost
+
+
+
         best_world["player"]["effects"] = apply_effects(best_world, best_world["player"]["effects"])
   
         is_boss_turn = (best_world["timer"] % 2) == 0
@@ -461,11 +475,11 @@ def solve_day_22_part_ab():
   
         if is_boss_turn:
           boss_turn(**best_world)
-          if best_world["player"]["hit_points"] > 0:
+          if best_world["player"]["hit_points"] >= 0:
             heapq.heappush(moves, (mana_cost, best_world))
         else:
           for idx, (until, spell_cost, pick) in enumerate(best_world["player"]["spells"]):
-            if until < best_world["timer"] and spell_cost <= best_world["player"]["mana"]:
+            if until <= best_world["timer"] and spell_cost < best_world["player"]["mana"]:
               new_world = copy.deepcopy(best_world)
               new_until = pick(**new_world)
               new_world["player"]["spells"][idx] = (new_until, spell_cost, pick)
@@ -473,12 +487,12 @@ def solve_day_22_part_ab():
   
               new_mana_cost = mana_cost + spell_cost
               new_mana_cost += random.random() / 1e3 # Make every value unique 
-              if new_world["boss"]["hit_points"] < 0:
+              if new_world["boss"]["hit_points"] <= 0:
                 return new_mana_cost
               else:
                 heapq.heappush(moves, (new_mana_cost, new_world))
        
-    return search(world)
+    return search(world), search(world, hard_mode)
   
 
 def solve():
@@ -510,8 +524,9 @@ def solve():
     print(f"Day21a: Winning for only {day21_a} gold")
     print(f"Day21b: Most expensive loss costs {day21_b} gold")
 
-    day22_a = solve_day_22_part_ab()
+    day22_a, day22_b = solve_day_22_part_ab()
     print(f"Day22a: Winning takes {int(day22_a)} mana")
+    print(f"Day22b: On hard mode winning takes {int(day22_b)} mana")
 
 if __name__ == "__main__":
     solve()
