@@ -128,6 +128,10 @@ def solve_day_22_part_ab():
                 heapq.heappush(moves, (new_mana_cost, new_world))
        
     return search(world), search(world, hard_mode)
+
+
+def solve_day_23():
+  return 0,0 
   
 
 def solve():
@@ -135,6 +139,10 @@ def solve():
     day22_a, day22_b = solve_day_22_part_ab()
     print(f"Day22a: Winning takes {int(day22_a)} mana")
     print(f"Day22b: On hard mode winning takes {int(day22_b)} mana")
+
+    day23_a, day23_b = solve_day_23()
+    print(f"Day23a: the value of register b is TODO")
+
 
 if __name__ == "__main__":
     solve()
