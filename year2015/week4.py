@@ -191,13 +191,12 @@ def solve_day_24():
       return [int(line) for line in f]
  
   def search_for(target_weight, n_packets, weights):
-    NOT_FOUND = []
-
+    solutions = []
     
     for combo in itertools.combinations(weights, n_packets):
       if sum(combo) == target_weight:
-        return combo
-    return []
+        solutions.append(combo)
+    return solutions
 
   weights = load_weights()
   total_weight = sum(weights)
@@ -213,14 +212,22 @@ def solve_day_24():
 
   for r in range(1, len(weights)):
     center_pos = search_for(target_weight, r, weights)
-    if center_pos:
-      remaining_pcks = remove_values(weights, center_pos)
-      has_other_solution = False
-      for r in range(1, len(remaining_pcks)):
-        has_other_solution = (has_other_solution or 
-                              search_for(target_weight, r, remaining_pcks))
+    if not center_pos:
+      continue
 
-      print(f"Found: {center_pos} with other {has_other_solution}")
+    print(f"Has {len(center_pos)} initial results")
+    accepted_results = []
+    for ctr, a_result in enumerate(center_pos):
+      remaining_pcks = remove_values(weights, a_result)
+
+      for r in range(1, len(remaining_pcks)):
+        if search_for(target_weight, r, remaining_pcks):
+          accepted_results.append(a_result)
+          break
+
+
+    print(f"Has {len(accepted_results)} remain after culling")
+    if accepted_results:
       break
 
   
