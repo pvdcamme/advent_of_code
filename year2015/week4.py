@@ -144,7 +144,7 @@ def solve_day_23():
       prog_counter = state["prog_counter"]
       if prog_counter < 0 or prog_counter >= len(program):
         return state
-      instr = program[prog_counter]
+      inst = program[prog_counter]
       cmd = inst[0]
       if "hlf" == cmd:
         r = inst[1]
@@ -170,7 +170,7 @@ def solve_day_23():
         state["prog_counter"] += offset
       elif "jio" == cmd:
         r = inst[1][0]
-        if state[r] % 2 == 1:
+        if state[r] == 1:
           offset = int(inst[2])
         else:
           offset = 1
@@ -180,8 +180,9 @@ def solve_day_23():
         return
    
   program = load_program("day_23.txt")
-  print(program)
-  return 0,0 
+  result = evaluate(program)
+
+  return result["b"],0 
   
 
 def solve():
@@ -191,7 +192,7 @@ def solve():
     print(f"Day22b: On hard mode winning takes {int(day22_b)} mana")
 
     day23_a, day23_b = solve_day_23()
-    print(f"Day23a: the value of register b is TODO")
+    print(f"Day23a: the value of register b is {day23_a}")
 
 
 if __name__ == "__main__":
