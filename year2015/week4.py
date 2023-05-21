@@ -141,7 +141,10 @@ def solve_day_23():
   def evaluate(program):
     state = {"a": 0, "b": 0, "prog_counter": 0}
     while True:
-      instr = program[state["prog_counter"]]
+      prog_counter = state["prog_counter"]
+      if prog_counter < 0 or prog_counter >= len(program):
+        return state
+      instr = program[prog_counter]
       cmd = inst[0]
       if "hlf" == cmd:
         r = inst[1]
@@ -172,6 +175,9 @@ def solve_day_23():
         else:
           offset = 1
         state["prog_counter"] += offset
+      else:
+        print(f"Unknown instruction: {inst}")
+        return
    
   program = load_program("day_23.txt")
   print(program)
