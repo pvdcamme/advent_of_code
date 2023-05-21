@@ -190,6 +190,11 @@ def solve_day_24():
     with open(get_filepath("day_24.txt"), "r") as f:
       return [int(line) for line in f]
  
+  weights = load_weights()
+  total_weight = sum(weights)
+  assert total_weight % 3 == 0
+  target_weight = total_weight // 3
+  print(f"Target weight: {target_weight}")
   return 0, 0
 
 def solve():
