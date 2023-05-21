@@ -213,10 +213,6 @@ def solve_day_24():
                 solutions.append(combo)
         return solutions
 
-    weights = load_weights()
-    total_weight = sum(weights)
-    assert total_weight % 3 == 0
-    target_weight = total_weight // 3
 
     def remove_values(original, to_remove):
         copied = original[:]
@@ -230,7 +226,9 @@ def solve_day_24():
             result *= a
         return result
 
-    def calculate():
+    def calculate(groups, weights):
+        assert sum(weights) % groups == 0
+        target_weight = sum(weights) // groups
         for r in range(1, len(weights)):
             center_pos = search_for(target_weight,
                                     r,
@@ -251,8 +249,11 @@ def solve_day_24():
             if accepted_results:
                 return sorted(accepted_results, key=quantum_entanglement)
 
-    part_a = calculate()
-    return quantum_entanglement(part_a[0]), 0
+
+    weights = load_weights()
+    part_a = calculate(3, weights)
+    part_b = calculate(4, weights)
+    return quantum_entanglement(part_a[0]), quantum_entanglement(part_b[0])
 
 
 def solve():
