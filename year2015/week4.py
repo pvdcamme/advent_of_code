@@ -186,6 +186,10 @@ def solve_day_23():
 
 
 def solve_day_24():
+  def load_weights():
+    with open(get_filepath("day_24.txt"), "r") as f:
+      return [int(line) for line in f]
+ 
   return 0, 0
 
 def solve():
