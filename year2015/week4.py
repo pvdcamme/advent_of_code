@@ -138,8 +138,7 @@ def solve_day_23():
     with open(get_filepath(file_name), "r") as f:
       return [tokenize(line.strip()) for line in f]
   
-  def evaluate(program):
-    state = {"a": 0, "b": 0, "prog_counter": 0}
+  def evaluate(program, state):
     while True:
       prog_counter = state["prog_counter"]
       if prog_counter < 0 or prog_counter >= len(program):
@@ -180,10 +179,11 @@ def solve_day_23():
         return
    
   program = load_program("day_23.txt")
-  result = evaluate(program)
+  first_state = {"a": 0, "b": 0, "prog_counter": 0}
+  second_state = {"a": 1, "b": 0, "prog_counter": 0}
 
-  return result["b"],0 
-  
+  return evaluate(program, first_state)["b"], evaluate(program, second_state)["b"]
+
 
 def solve():
 
@@ -193,6 +193,7 @@ def solve():
 
     day23_a, day23_b = solve_day_23()
     print(f"Day23a: the value of register b is {day23_a}")
+    print(f"Day23b: With A=1, the value of register b is now {day23_b}")
 
 
 if __name__ == "__main__":
