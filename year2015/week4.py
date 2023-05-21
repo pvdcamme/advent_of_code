@@ -131,6 +131,9 @@ def solve_day_22_part_ab():
 
 
 def solve_day_23():
+  with open(get_filepath("day_23.txt"), "r") as f:
+    for line in f:
+      print(line, end="")
   return 0,0 
   
 
