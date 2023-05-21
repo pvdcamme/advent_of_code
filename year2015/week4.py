@@ -185,6 +185,9 @@ def solve_day_23():
   return evaluate(program, first_state)["b"], evaluate(program, second_state)["b"]
 
 
+def solve_day_24():
+  return 0, 0
+
 def solve():
 
     day22_a, day22_b = solve_day_22_part_ab()
@@ -195,6 +198,8 @@ def solve():
     print(f"Day23a: the value of register b is {day23_a}")
     print(f"Day23b: With A=1, the value of register b is now {day23_b}")
 
+    day24_a, day24_b = solve_day_24()
+    print(f"Day24a: Quantum entanglement measures {day24_a}")
 
 if __name__ == "__main__":
     solve()
