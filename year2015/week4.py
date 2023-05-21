@@ -190,11 +190,40 @@ def solve_day_24():
     with open(get_filepath("day_24.txt"), "r") as f:
       return [int(line) for line in f]
  
+  def search_for(target_weight, n_packets, weights):
+    NOT_FOUND = []
+
+    
+    for combo in itertools.combinations(weights, n_packets):
+      if sum(combo) == target_weight:
+        return combo
+    return []
+
   weights = load_weights()
   total_weight = sum(weights)
   assert total_weight % 3 == 0
   target_weight = total_weight // 3
-  print(f"Target weight: {target_weight}")
+
+  def remove_values(original, to_remove):
+    copied = original[:]
+    for a in to_remove:
+      copied.remove(a)
+    return copied
+
+
+  for r in range(1, len(weights)):
+    center_pos = search_for(target_weight, r, weights)
+    if center_pos:
+      remaining_pcks = remove_values(weights, center_pos)
+      has_other_solution = False
+      for r in range(1, len(remaining_pcks)):
+        has_other_solution = (has_other_solution or 
+                              search_for(target_weight, r, remaining_pcks))
+
+      print(f"Found: {center_pos} with other {has_other_solution}")
+      break
+
+  
   return 0, 0
 
 def solve():
