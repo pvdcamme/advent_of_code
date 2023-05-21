@@ -190,7 +190,7 @@ def solve_day_24():
     with open(get_filepath("day_24.txt"), "r") as f:
       return [int(line) for line in f]
  
-  def search_for(target_weight, n_packets, weights):
+  def search_for(target_weight, n_packets, weights, stop_first=True):
     solutions = []
     
     for combo in itertools.combinations(weights, n_packets):
@@ -208,30 +208,34 @@ def solve_day_24():
     for a in to_remove:
       copied.remove(a)
     return copied
+  def quantum_entanglement(vals):
+    result = 1
+    for a in vals:
+      result *= a
+    return result
 
 
-  for r in range(1, len(weights)):
-    center_pos = search_for(target_weight, r, weights)
-    if not center_pos:
-      continue
-
-    print(f"Has {len(center_pos)} initial results")
-    accepted_results = []
-    for ctr, a_result in enumerate(center_pos):
-      remaining_pcks = remove_values(weights, a_result)
-
-      for r in range(1, len(remaining_pcks)):
-        if search_for(target_weight, r, remaining_pcks):
-          accepted_results.append(a_result)
-          break
-
-
-    print(f"Has {len(accepted_results)} remain after culling")
-    if accepted_results:
-      break
-
-  
-  return 0, 0
+  def calculate():
+      for r in range(1, len(weights)):
+        center_pos = search_for(target_weight, r, weights, stop_first=False)
+        if not center_pos:
+          continue
+    
+        accepted_results = []
+        for ctr, a_result in enumerate(center_pos):
+          remaining_pcks = remove_values(weights, a_result)
+    
+          for side_cnt in range(r, len(remaining_pcks)):
+            if search_for(target_weight, side_cnt, remaining_pcks):
+              accepted_results.append(a_result)
+              break
+    
+    
+        if accepted_results:
+          return sorted(accepted_results, key=quantum_entanglement)
+    
+  part_a = calculate()
+  return quantum_entanglement(part_a[0]), 0
 
 def solve():
 
