@@ -138,7 +138,43 @@ def solve_day_23():
     with open(get_filepath(file_name), "r") as f:
       return [tokenize(line.strip()) for line in f]
   
+  def evaluate(program):
+    state = {"a": 0, "b": 0, "prog_counter": 0}
+    while True:
+      instr = program[state["prog_counter"]]
+      cmd = inst[0]
+      if "hlf" == cmd:
+        r = inst[1]
+        state[r] = state[r] // 2
+        state["prog_counter"] += 1
+      elif "tpl" == cmd:
+        r = inst[1]
+        state[r] = state[r] * 3
+        state["prog_counter"] += 1
+      elif "inc" == cmd:
+        r = inst[1]
+        state[r] = state[r] + 1
+        state["prog_counter"] += 1
+      elif "jmp" == cmd:
+        offset = int(inst[1])
+        state["prog_counter"] += offset
+      elif "jie" == cmd:
+        r = inst[1][0]
+        if state[r] % 2 == 0:
+          offset = int(inst[2])
+        else:
+          offset = 1
+        state["prog_counter"] += offset
+      elif "jio" == cmd:
+        r = inst[1][0]
+        if state[r] % 2 == 1:
+          offset = int(inst[2])
+        else:
+          offset = 1
+        state["prog_counter"] += offset
+   
   program = load_program("day_23.txt")
+  print(program)
   return 0,0 
   
 
