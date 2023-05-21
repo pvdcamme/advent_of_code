@@ -131,14 +131,14 @@ def solve_day_22_part_ab():
 
 
 def solve_day_23():
-  def tokenize(line):
-    return line.split(" ")
+  def load_program(file_name):
+    def tokenize(line):
+      return line.split(" ")
 
-
-  with open(get_filepath("day_23.txt"), "r") as f:
-    for line in f:
-      line=line.strip()
-      print(tokenize(line))
+    with open(get_filepath(file_name), "r") as f:
+      return [tokenize(line.strip()) for line in f]
+  
+  program = load_program("day_23.txt")
   return 0,0 
   
 
