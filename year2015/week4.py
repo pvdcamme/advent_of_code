@@ -213,7 +213,6 @@ def solve_day_24():
                 solutions.append(combo)
         return solutions
 
-
     def remove_values(original, to_remove):
         copied = original[:]
         for a in to_remove:
@@ -249,7 +248,6 @@ def solve_day_24():
             if accepted_results:
                 return sorted(accepted_results, key=quantum_entanglement)
 
-
     weights = load_weights()
     part_a = calculate(3, weights)
     part_b = calculate(4, weights)
@@ -257,48 +255,47 @@ def solve_day_24():
 
 
 def solve_day_25():
-
     def start_column():
-      value = 1
-      inc = 1
-      while True:
-        yield value, inc
-        value += inc
-        inc += 1
-    
-        
-    
-    def row(start = 1, inc=2):
-      value = start
-      while True:
-        yield value
-        value += inc
-        inc += 1
-    
+        value = 1
+        inc = 1
+        while True:
+            yield value, inc
+            value += inc
+            inc += 1
+
+    def row(start=1, inc=2):
+        value = start
+        while True:
+            yield value
+            value += inc
+            inc += 1
+
     def get_value(row_idx, col_idx):
-      for walked_row_idx, (start_val, row_inc) in enumerate(start_column(), start=1):
-        if walked_row_idx== col_idx:
-          break
-    
-      for walked_col_idx, val in enumerate(row(start=start_val, inc=row_inc + 1), start=1):
-        if walked_col_idx == row_idx:
-          return val
-    
-          
+        for walked_row_idx, (start_val, row_inc) in enumerate(start_column(),
+                                                              start=1):
+            if walked_row_idx == col_idx:
+                break
+
+        for walked_col_idx, val in enumerate(row(start=start_val,
+                                                 inc=row_inc + 1),
+                                             start=1):
+            if walked_col_idx == row_idx:
+                return val
+
     def hash_vals(seed=1):
-      val = seed
-      while True:
-        yield val
-        val = (val * 252533) % 33554393 
-     
+        val = seed
+        while True:
+            yield val
+            val = (val * 252533) % 33554393
+
     def get_hash(row_idx, col_idx):
-      cnt = get_value(row_idx, col_idx)
-      for _, val in zip(range(cnt), hash_vals(seed=20151125)):
-        pass
-      return val
-    
-    return get_hash(3075,2981), 0
-        
+        cnt = get_value(row_idx, col_idx)
+        for _, val in zip(range(cnt), hash_vals(seed=20151125)):
+            pass
+        return val
+
+    return get_hash(3075, 2981), 0
+
 
 def solve():
 
@@ -312,10 +309,13 @@ def solve():
 
     day24_a, day24_b = solve_day_24()
     print(f"Day24a: Quantum entanglement measures {day24_a}")
-    print(f"Day24a: Including the trunk, the Quantum entanglement measures {day24_b}")
+    print(
+        f"Day24a: Including the trunk, the Quantum entanglement measures {day24_b}"
+    )
 
-    day25_a, day25_b =  solve_day_25()
+    day25_a, day25_b = solve_day_25()
     print(f"Day25a: To unlock use {day25_a}")
+
 
 if __name__ == "__main__":
     solve()
