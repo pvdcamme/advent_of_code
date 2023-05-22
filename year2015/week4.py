@@ -284,9 +284,21 @@ def solve_day_25():
         if walked_col_idx == row_idx:
           return val
     
-    unhashed = get_value(3075,2981)
-    return unhashed, 0
-         
+          
+    def hash_vals(seed=1):
+      val = seed
+      while True:
+        yield val
+        val = (val * 252533) % 33554393 
+     
+    def get_hash(row_idx, col_idx):
+      cnt = get_value(row_idx, col_idx)
+      for _, val in zip(range(cnt), hash_vals(seed=20151125)):
+        pass
+      return val
+    
+    return get_hash(3075,2981), 0
+        
 
 def solve():
 
@@ -302,8 +314,8 @@ def solve():
     print(f"Day24a: Quantum entanglement measures {day24_a}")
     print(f"Day24a: Including the trunk, the Quantum entanglement measures {day24_b}")
 
-    deay25_a, day25_b =  solve_day_25()
-    print(f"Day25a: To unlock use {day24_a}")
+    day25_a, day25_b =  solve_day_25()
+    print(f"Day25a: To unlock use {day25_a}")
 
 if __name__ == "__main__":
     solve()
