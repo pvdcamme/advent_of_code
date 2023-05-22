@@ -268,6 +268,7 @@ def solve():
 
     day24_a, day24_b = solve_day_24()
     print(f"Day24a: Quantum entanglement measures {day24_a}")
+    print(f"Day24a: Including the trunk, the Quantum entanglement measures {day24_b}")
 
 
 if __name__ == "__main__":
