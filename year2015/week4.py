@@ -294,7 +294,7 @@ def solve_day_25():
             pass
         return val
 
-    return get_hash(3075, 2981), 0
+    return get_hash(3075, 2981)
 
 
 def solve():
@@ -311,7 +311,7 @@ def solve():
     print(f"Day24a: Quantum entanglement measures {day24_a}")
     print(f"Day24a: With 4 spaces, the Quantum entanglement measures {day24_b}")
 
-    day25_a, day25_b = solve_day_25()
+    day25_a = solve_day_25()
     print(f"Day25a: To unlock use {day25_a}")
 
 
