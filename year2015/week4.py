@@ -256,8 +256,37 @@ def solve_day_24():
     return quantum_entanglement(part_a[0]), quantum_entanglement(part_b[0])
 
 
-def solve_day_25()
-  return 0,0
+def solve_day_25():
+
+    def start_column():
+      value = 1
+      inc = 1
+      while True:
+        yield value, inc
+        value += inc
+        inc += 1
+    
+        
+    
+    def row(start = 1, inc=2):
+      value = start
+      while True:
+        yield value
+        value += inc
+        inc += 1
+    
+    def get_value(row_idx, col_idx):
+      for walked_row_idx, (start_val, row_inc) in enumerate(start_column(), start=1):
+        if walked_row_idx== col_idx:
+          break
+    
+      for walked_col_idx, val in enumerate(row(start=start_val, inc=row_inc + 1), start=1):
+        if walked_col_idx == row_idx:
+          return val
+    
+    unhashed = get_value(3075,2981)
+    return unhashed, 0
+         
 
 def solve():
 
