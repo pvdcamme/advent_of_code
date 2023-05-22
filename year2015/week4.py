@@ -256,6 +256,9 @@ def solve_day_24():
     return quantum_entanglement(part_a[0]), quantum_entanglement(part_b[0])
 
 
+def solve_day_25()
+  return 0,0
+
 def solve():
 
     day22_a, day22_b = solve_day_22_part_ab()
@@ -270,6 +273,8 @@ def solve():
     print(f"Day24a: Quantum entanglement measures {day24_a}")
     print(f"Day24a: Including the trunk, the Quantum entanglement measures {day24_b}")
 
+    deay25_a, day25_b =  solve_day_25()
+    print(f"Day25a: To unlock use {day24_a}")
 
 if __name__ == "__main__":
     solve()
