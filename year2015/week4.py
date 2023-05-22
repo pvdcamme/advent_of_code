@@ -309,9 +309,7 @@ def solve():
 
     day24_a, day24_b = solve_day_24()
     print(f"Day24a: Quantum entanglement measures {day24_a}")
-    print(
-        f"Day24a: Including the trunk, the Quantum entanglement measures {day24_b}"
-    )
+    print(f"Day24a: With 4 spaces, the Quantum entanglement measures {day24_b}")
 
     day25_a, day25_b = solve_day_25()
     print(f"Day25a: To unlock use {day25_a}")
