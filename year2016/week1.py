@@ -14,8 +14,38 @@ def get_filepath(file_name):
 def solve_day_1_part_ab():
    with open(get_filepath("day_1.txt"), "r") as f:
     line = f.read()
-   print(line) 
-   return 0,0 
+
+   def split(directive):
+    return directive[:1], int(directive[1:])
+
+   def go_left(x,y, steps):
+      return x - steps, y
+   def go_right(x,y, steps):
+      return x + steps, y
+   def rotate(start_x, start_y, direction):
+      if direction == "L":
+        return start_y, -start_x
+      else:
+        return -start_y, start_x
+      
+   def walk(x, y, steps):
+      return x, y + steps
+
+
+   def distance(x,y):
+    return abs(x) + abs(y)
+   def travel(instructions):
+     x = 0
+     y = 0
+     for direction, steps in instructions:
+        x, y = rotate(x,y, direction)
+        x,y = walk(x,y, steps)
+     return x, y
+        
+
+
+   sample = map(split, line.split(", "))
+   return distance(*travel(sample)),0
 
 
 def solve():
