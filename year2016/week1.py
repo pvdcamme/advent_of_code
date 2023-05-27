@@ -18,10 +18,6 @@ def solve_day_1_part_ab():
    def split(directive):
     return directive[:1], int(directive[1:])
 
-   def go_left(x,y, steps):
-      return x - steps, y
-   def go_right(x,y, steps):
-      return x + steps, y
    def rotate(start_x, start_y, direction):
       if direction == "L":
         return start_y, -start_x
@@ -41,16 +37,15 @@ def solve_day_1_part_ab():
         x, y = rotate(x,y, direction)
         x,y = walk(x,y, steps)
      return x, y
-        
-
-
-   sample = map(split, line.split(", "))
-   return distance(*travel(sample)),0
+   
+   sample = list(map(split, line.split(", ")))
+   return distance(*travel(sample)), 0
 
 
 def solve():
     day1_a, day1_b = solve_day_1_part_ab()
     print(f"Day1a: Santa is at {day1_a} blocks away")
+    print(f"Day1a: Following the instructions, Santa is at {day1_b} blocks away")
 
 if __name__ == "__main__":
     solve()
