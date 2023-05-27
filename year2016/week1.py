@@ -12,9 +12,10 @@ def get_filepath(file_name):
 
 
 def solve_day_1_part_ab():
+   with open(get_filepath("day_1.txt"), "r") as f:
+    line = f.read()
+   print(line) 
    return 0,0 
-
-
 
 
 def solve():
@@ -22,4 +23,4 @@ def solve():
     print(f"Day1a: Santa is at {day1_a} blocks away")
 
 if __name__ == "__main__":
-    solve_week_1()
+    solve()
