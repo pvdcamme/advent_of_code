@@ -49,10 +49,29 @@ def solve_day_1_part_ab():
 
         x, y = ORIENTATIONS[orientation](x,y, steps)
      return x, y
-   
+
+   def travel_without_repeat(instructions):
+     x = 0
+     y = 0
+     orientation= 0
+     been_there = set()
+     been_there.add((x,y))
+     for direction, steps in instructions:
+        if 'L' == direction:
+          orientation = go_left(orientation)
+        else:
+          orientation = go_right(orientation)
+
+        for _ in range(steps):
+          x, y = ORIENTATIONS[orientation](x,y, 1)
+          if (x,y) in been_there:
+            return (x,y)
+
+          been_there.add((x,y))
+     return x, y
 
    sample = list(map(split, line.split(", ")))
-   return distance(*travel(sample)), 0
+   return distance(*travel(sample)), distance(*travel_without_repeat(sample))
 
 
 def solve():
