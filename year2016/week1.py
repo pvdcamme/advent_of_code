@@ -15,29 +15,42 @@ def solve_day_1_part_ab():
    with open(get_filepath("day_1.txt"), "r") as f:
     line = f.read()
 
+
    def split(directive):
     return directive[:1], int(directive[1:])
 
-   def rotate(start_x, start_y, direction):
-      if direction == "L":
-        return start_y, -start_x
-      else:
-        return -start_y, start_x
-      
-   def walk(x, y, steps):
-      return x, y + steps
-
+   ORIENTATIONS= [
+          lambda x,y,s: (x, y+s)  ,
+          lambda x,y,s: (x+s, y)  ,
+          lambda x,y,s: (x, y -s) ,
+          lambda x,y,s: (x-s, y)  ,
+   ]
+    
+   def go_left(orientation):
+      new_orient = orientation -1
+      if new_orient < 0:
+        new_orient += len(ORIENTATIONS)
+      return new_orient
+   def go_right(orientation):
+     return (orientation + 1) % len(ORIENTATIONS)
 
    def distance(x,y):
     return abs(x) + abs(y)
+
    def travel(instructions):
      x = 0
      y = 0
+     orientation= 0
      for direction, steps in instructions:
-        x, y = rotate(x,y, direction)
-        x,y = walk(x,y, steps)
+        if 'L' == direction:
+          orientation = go_left(orientation)
+        else:
+          orientation = go_right(orientation)
+
+        x, y = ORIENTATIONS[orientation](x,y, steps)
      return x, y
    
+
    sample = list(map(split, line.split(", ")))
    return distance(*travel(sample)), 0
 
