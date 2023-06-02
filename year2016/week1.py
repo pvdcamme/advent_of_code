@@ -74,6 +74,11 @@ def solve_day_1_part_ab():
    return distance(*travel(sample)), distance(*travel_without_repeat(sample))
 
 def solve_day_2_part_ab():
+  with open(get_filepath("day_2.txt"), "r") as f:
+    instructions = [line.strip() for line in f]
+  print(instructions)
+
+
   return 0,0
 
 def solve():
