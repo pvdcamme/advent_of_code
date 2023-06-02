@@ -73,11 +73,17 @@ def solve_day_1_part_ab():
    sample = list(map(split, line.split(", ")))
    return distance(*travel(sample)), distance(*travel_without_repeat(sample))
 
+def solve_day_2_part_ab():
+  return 0,0
 
 def solve():
     day1_a, day1_b = solve_day_1_part_ab()
     print(f"Day1a: Santa is at {day1_a} blocks away")
     print(f"Day1a: Following the instructions, Santa is at {day1_b} blocks away")
+
+    day2_a, day1_b = solve_day_2_part_ab()
+    print(f"Day2a: The code for the keypad is {day2_a}")
+
 
 if __name__ == "__main__":
     solve()
