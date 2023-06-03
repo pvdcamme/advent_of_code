@@ -105,8 +105,6 @@ def solve_day_2_part_ab():
       (2,4): 'D',
   }
 
-
-
   directions = {
     "U": lambda x,y: (x, y-1),
     "R": lambda x,y: (x+1, y),
@@ -132,6 +130,16 @@ def solve_day_2_part_ab():
     
   return solve_code(*instructions, keypad=keypad_part1), solve_code(*instructions, keypad=complex_keypad, start=(0,2))
   
+def solve_day_3_part_ab():
+    def split_triangle(line):
+        string_edges = filter(lambda x: x, line.split(" "))
+        return [int(d) for d in string_edges]
+    with open(get_filepath("day_3.txt"), "r") as f:
+      triangles= [split_triangle(line) for line in f]
+    print(triangles)
+
+    return 0,0
+
 
 def solve():
     day1_a, day1_b = solve_day_1_part_ab()
@@ -141,6 +149,8 @@ def solve():
     day2_a, day2_b = solve_day_2_part_ab()
     print(f"Day2a: The code for the simple keypad is {day2_a}")
     print(f"Day2a: The code for the complex keypad is {day2_b}")
+
+    day3_a, day3_b = solve_day_3_part_ab()
 
 if __name__ == "__main__":
     solve()
