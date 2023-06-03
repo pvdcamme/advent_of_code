@@ -162,6 +162,37 @@ def solve_day_3_part_ab():
 
     return sum(map(is_triangle, triangles)), sum(map(is_triangle, rotate_triangle_list(triangles)))
 
+def solve_day_4_part_ab():
+  with open(get_filepath("day_4.txt"), "r") as f:
+    instructions = [line.strip() for line in f]
+  
+  def split(line):
+    parts = line.split("-")
+    sector_id, hash_code = parts[-1].split("[")
+    hash_code = hash_code[:-1]
+    sector_id = int(sector_id)
+    letters = "".join(parts[:-1])
+
+    return letters, sector_id, hash_code
+
+  def calc_hash(letters):
+    count = collections.Counter(letters)
+    most_often = sorted(count.items(), key=lambda r: (-r[1], r[0]))
+
+    result =""
+    for letter, _ in most_often[:5]:
+      result += letter
+    return result
+  
+  def count_valid(rooms):
+    total = 0
+    for name, sector_id, hash_code in rooms:
+      if hash_code == calc_hash(name):
+        total += sector_id
+    return total
+
+  return count_valid(map(split, instructions)),0
+
 
 def solve():
     day1_a, day1_b = solve_day_1_part_ab()
@@ -175,6 +206,9 @@ def solve():
     day3_a, day3_b = solve_day_3_part_ab()
     print(f"Day3a: The list has {day3_a} triangles when read horizontal")
     print(f"Day3b: The list has {day3_b} triangles when read vertically")
+
+    day4_a, day4_b = solve_day_4_part_ab()
+    print(f"Day5b: The sectors sum up to {day4_a}")
 
 if __name__ == "__main__":
     solve()
