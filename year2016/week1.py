@@ -226,16 +226,41 @@ def solve_day_5():
     import hashlib
     salt = b"reyedfim"
 
-    def do_many_hashes():
+    def first_key_code():
+      key_code = ""
       base = hashlib.md5(salt, usedforsecurity=False)
-      for idx in range(10000000):
+      for idx in itertools.count():
         extra = base.copy()
         extra.update(str(idx).encode())
-        extra.hexdigest()
+        hex_vals = extra.hexdigest()
+        if hex_vals.startswith("00000"):
+          key_code += hex_vals[5]
+        if len(key_code) == 8:
+          return key_code
 
-    do_many_hashes()
+    def second_key_code():
+      NOT_DISCOVERED = 'z'
+      key_code = list(NOT_DISCOVERED * 8)
+      base = hashlib.md5(salt, usedforsecurity=False)
+      for idx in itertools.count():
+        extra = base.copy()
+        extra.update(str(idx).encode())
+        hex_vals = extra.hexdigest()
+        if hex_vals.startswith("00000"):
+          key_letter = hex_vals[6]
+          key_position = int(hex_vals[5], base=16)
 
-    return 0, 0
+          if key_position < len(key_code) and key_code[key_position] == NOT_DISCOVERED:
+            key_code[key_position] = key_letter
+
+          if NOT_DISCOVERED not in key_code:
+            return "".join(key_code)
+
+
+
+
+
+    return first_key_code(), second_key_code()
         
 
 def solve():
@@ -256,6 +281,8 @@ def solve():
     print(f"Day4b: The sector id of the North pole is {day4_b}")
 
     day5_a, day5_b = solve_day_5()
+    print(f"Day5a: The keycode for the first door is {day5_a}")
+    print(f"Day5b: The keycode for the second door is {day5_b}")
 
 if __name__ == "__main__":
     solve()
