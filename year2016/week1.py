@@ -88,6 +88,25 @@ def solve_day_2_part_ab():
       (1,2): 8,
       (2,2): 9,
   }
+
+  complex_keypad= {
+      (2,0): 1,
+      (1,1): 2,
+      (2,1): 3,
+      (3,1): 4,
+      (0,2): 5,
+      (1,2): 6,
+      (2,2): 7,
+      (3,2): 8,
+      (4,2): 9,
+      (1,3): 'A',
+      (2,3): 'B',
+      (3,3): 'C',
+      (2,4): 'D',
+  }
+
+
+
   directions = {
     "U": lambda x,y: (x, y-1),
     "R": lambda x,y: (x+1, y),
@@ -103,16 +122,15 @@ def solve_day_2_part_ab():
         y = next_y
     return x,y
 
-  def solve_code(*instructions, keypad):
-    x = 1
-    y = 1
+  def solve_code(*instructions, keypad, start= (1,1)):
+    x,y = start
     code = ""
     for line in instructions:
       x,y = solve_line(x,y, line, keypad=keypad)
       code += str(keypad[(x,y)])
     return code
     
-  return solve_code(*instructions, keypad=keypad_part1), 0
+  return solve_code(*instructions, keypad=keypad_part1), solve_code(*instructions, keypad=complex_keypad, start=(0,2))
   
 
 def solve():
@@ -120,8 +138,9 @@ def solve():
     print(f"Day1a: Santa is at {day1_a} blocks away")
     print(f"Day1a: Following the instructions, Santa is at {day1_b} blocks away")
 
-    day2_a, day1_b = solve_day_2_part_ab()
-    print(f"Day2a: The code for the keypad is {day2_a}")
+    day2_a, day2_b = solve_day_2_part_ab()
+    print(f"Day2a: The code for the simple keypad is {day2_a}")
+    print(f"Day2a: The code for the complex keypad is {day2_b}")
 
 if __name__ == "__main__":
     solve()
