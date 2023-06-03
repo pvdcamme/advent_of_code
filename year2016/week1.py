@@ -212,11 +212,15 @@ def solve_day_4_part_ab():
         decoded_name += letter
     return decoded_name
 
-      
-  for l in map(split, instructions):
-    print(decode_name(l))
+  def search_north_pole_sector(rooms):
+    for a_room in rooms:
+      original_name = decode_name(a_room)
+      if "north" in original_name and "pole" in original_name:
+        return a_room[1] 
+    return 0
 
-  return count_valid(map(split, instructions)),0
+  rooms = [split(line) for line in instructions]
+  return count_valid(rooms), search_north_pole_sector(rooms)
 
 
 def solve():
