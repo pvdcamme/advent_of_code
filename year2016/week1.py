@@ -222,6 +222,21 @@ def solve_day_4_part_ab():
   rooms = [split(line) for line in instructions]
   return count_valid(rooms), search_north_pole_sector(rooms)
 
+def solve_day_5():
+    import hashlib
+    salt = b"reyedfim"
+
+    def do_many_hashes():
+      base = hashlib.md5(salt, usedforsecurity=False)
+      for idx in range(10000000):
+        extra = base.copy()
+        extra.update(str(idx).encode())
+        extra.hexdigest()
+
+    do_many_hashes()
+
+    return 0, 0
+        
 
 def solve():
     day1_a, day1_b = solve_day_1_part_ab()
@@ -239,6 +254,8 @@ def solve():
     day4_a, day4_b = solve_day_4_part_ab()
     print(f"Day4a: The sectors sum up to {day4_a}")
     print(f"Day4b: The sector id of the North pole is {day4_b}")
+
+    day5_a, day5_b = solve_day_5()
 
 if __name__ == "__main__":
     solve()
