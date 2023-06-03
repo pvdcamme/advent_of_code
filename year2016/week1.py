@@ -134,11 +134,33 @@ def solve_day_3_part_ab():
     def split_triangle(line):
         string_edges = filter(lambda x: x, line.split(" "))
         return [int(d) for d in string_edges]
+
     with open(get_filepath("day_3.txt"), "r") as f:
       triangles= [split_triangle(line) for line in f]
-    print(triangles)
 
-    return 0,0
+    def is_triangle(edges):
+      for a,b,c in itertools.permutations(edges):
+        if a + b <= c:
+          return False
+      return True
+
+    def rotate_triangle_list(lob_sided_triangles):
+      collected = []
+      t1 = []
+      t2 = []
+      t3 = []
+      for a,b,c in lob_sided_triangles:
+        t1.append(a)
+        t2.append(b)
+        t3.append(c)
+        if len(t1) == 3:
+          collected.extend([t1, t2, t3])
+          t1 = []
+          t2 = []
+          t3 = []
+      return collected
+
+    return sum(map(is_triangle, triangles)), sum(map(is_triangle, rotate_triangle_list(triangles)))
 
 
 def solve():
@@ -151,6 +173,8 @@ def solve():
     print(f"Day2a: The code for the complex keypad is {day2_b}")
 
     day3_a, day3_b = solve_day_3_part_ab()
+    print(f"Day3a: The list has {day3_a} triangles when read horizontal")
+    print(f"Day3b: The list has {day3_b} triangles when read vertically")
 
 if __name__ == "__main__":
     solve()
