@@ -192,6 +192,30 @@ def solve_day_4_part_ab():
         total += sector_id
     return total
 
+  def rotate_letter(letter, count):
+      LETTERS = "abcdefghijklmnopqrstuvwxyz"
+      count = count % len(LETTERS)
+      
+      next_pos = ord(letter) - ord('a') + count
+      while next_pos >= len(LETTERS):
+        next_pos -= len(LETTERS)
+      return LETTERS[next_pos]
+
+  
+  def decode_name(room):
+    name, sector_id, hash_code = room
+    decoded_name = ""
+    if calc_hash(name) == hash_code:
+      for letter in name:
+        if 'a' <= letter <= 'z':
+          letter = rotate_letter(letter, sector_id)
+        decoded_name += letter
+    return decoded_name
+
+      
+  for l in map(split, instructions):
+    print(decode_name(l))
+
   return count_valid(map(split, instructions)),0
 
 
@@ -210,6 +234,7 @@ def solve():
 
     day4_a, day4_b = solve_day_4_part_ab()
     print(f"Day4a: The sectors sum up to {day4_a}")
+    print(f"Day4b: The sector id of the North pole is {day4_b}")
 
 if __name__ == "__main__":
     solve()
