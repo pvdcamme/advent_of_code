@@ -171,12 +171,13 @@ def solve_day_4_part_ab():
     sector_id, hash_code = parts[-1].split("[")
     hash_code = hash_code[:-1]
     sector_id = int(sector_id)
-    letters = "".join(parts[:-1])
+    letters = " ".join(parts[:-1])
 
     return letters, sector_id, hash_code
 
   def calc_hash(letters):
     count = collections.Counter(letters)
+    del count[" "]
     most_often = sorted(count.items(), key=lambda r: (-r[1], r[0]))
 
     result =""
@@ -208,7 +209,7 @@ def solve():
     print(f"Day3b: The list has {day3_b} triangles when read vertically")
 
     day4_a, day4_b = solve_day_4_part_ab()
-    print(f"Day5b: The sectors sum up to {day4_a}")
+    print(f"Day4a: The sectors sum up to {day4_a}")
 
 if __name__ == "__main__":
     solve()
