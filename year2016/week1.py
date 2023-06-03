@@ -77,7 +77,7 @@ def solve_day_2_part_ab():
   with open(get_filepath("day_2.txt"), "r") as f:
     instructions = [line.strip() for line in f]
 
-  keypad = {
+  keypad_part1 = {
       (0,0): 1,
       (1,0): 2,
       (2,0): 3,
@@ -95,25 +95,24 @@ def solve_day_2_part_ab():
     "D": lambda x,y: (x, y+1),
   }
 
-  def solve_line(x, y, instructions):
+  def solve_line(x, y, instructions, keypad):
     for i in instructions:
       next_x, next_y = directions.get(i)(x,y)
       if (next_x, next_y) in keypad:
         x = next_x
         y = next_y
-
     return x,y
 
-  def solve_code(*instructions):
+  def solve_code(*instructions, keypad):
     x = 1
     y = 1
     code = ""
     for line in instructions:
-      x,y = solve_line(x,y, line)
+      x,y = solve_line(x,y, line, keypad=keypad)
       code += str(keypad[(x,y)])
     return code
     
-  return solve_code(*instructions), 0
+  return solve_code(*instructions, keypad=keypad_part1), 0
   
 
 def solve():
