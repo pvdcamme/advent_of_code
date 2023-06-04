@@ -281,7 +281,19 @@ def solve_day_6():
 
     return decoded_word
 
-  return most_common_letters(rx_words), 0
+  def least_common_letters(words):
+    final_word= collections.defaultdict(collections.Counter)
+    for a_word in words:
+      for idx, letter in enumerate(a_word):
+        final_word[idx].update(letter)
+    
+    decoded_word= ""
+    for _, full_set in sorted(final_word.items()):
+      decoded_letter, _ = full_set.most_common()[-1]
+      decoded_word += decoded_letter
+
+    return decoded_word
+  return most_common_letters(rx_words), least_common_letters(rx_words)
 
 
   
@@ -309,7 +321,8 @@ def solve():
     print(f"Day5b: The keycode for the second door is {day5_b}")
 
     day6_a, day6_b = solve_day_6()
-    print(f"Day6a: Santa sent out {day6_a}")
+    print(f"Day6a: Santa sent out {day6_a} (most common)")
+    print(f"Day6b: Santa actually sent out {day6_b} (least common)")
 
 if __name__ == "__main__":
     solve()
