@@ -296,9 +296,9 @@ def solve_day_6():
 
   rx_letters = letter_distributions(rx_words)
   return most_common_letters(rx_letters), least_common_letters(rx_letters)
-
-
   
+def solve_day_7():
+    return 0,0
 
 
 def solve():
@@ -326,5 +326,7 @@ def solve():
     print(f"Day6a: Santa sent out {day6_a} (most common)")
     print(f"Day6b: Santa actually sent out {day6_b} (least common)")
 
+    day7_a, day7_b = solve_day_7()
+    print(f"Day7a: {day7_a} addresses support snooping")
 if __name__ == "__main__":
     solve()
