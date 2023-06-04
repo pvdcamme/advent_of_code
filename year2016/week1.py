@@ -226,21 +226,24 @@ def solve_day_5():
     import hashlib
     salt = b"reyedfim"
 
-    def generate_hashes(salt):
+    cache = {}
+    def generate_hashes():
       base = hashlib.md5(salt, usedforsecurity=False)
-      for idx in itertools.count():
+      idx = 0
+      for idx, hex_vals in sorted(cache.items()):
+        yield hex_vals
+
+      for idx in itertools.count(idx):
         extra = base.copy()
         extra.update(str(idx).encode())
         hex_vals = extra.hexdigest()
         if hex_vals.startswith("00000"):
+          cache[idx] = hex_vals
           yield hex_vals
-
-
-      
 
     def first_key_code():
       key_code = ""
-      for hex_vals in generate_hashes(salt):
+      for hex_vals in generate_hashes():
         key_code += hex_vals[5]
         if len(key_code) == 8:
           return key_code
@@ -248,7 +251,7 @@ def solve_day_5():
     def second_key_code():
       NOT_DISCOVERED = 'z'
       key_code = list(NOT_DISCOVERED * 8)
-      for hex_vals in generate_hashes(salt):
+      for hex_vals in generate_hashes():
         key_letter = hex_vals[6]
         key_position = int(hex_vals[5], base=16)
 
