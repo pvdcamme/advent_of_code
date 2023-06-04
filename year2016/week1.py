@@ -268,32 +268,34 @@ def solve_day_6():
   with open(get_filepath("day_6.txt"), "r") as f:
     rx_words = [line.strip() for line in f]
 
-  def most_common_letters(words):
-    final_word= collections.defaultdict(collections.Counter)
+
+  def letter_distributions(words):
+    letter_distributions = collections.defaultdict(collections.Counter)
     for a_word in words:
       for idx, letter in enumerate(a_word):
-        final_word[idx].update(letter)
-    
+        letter_distributions[idx].update(letter)
+
+    return letter_distributions
+
+
+  def most_common_letters(rx_letters):
+   
     decoded_word= ""
-    for _, full_set in sorted(final_word.items()):
+    for _, full_set in sorted(rx_letters.items()):
       decoded_letter, _ = full_set.most_common()[0]
       decoded_word += decoded_letter
 
     return decoded_word
 
-  def least_common_letters(words):
-    final_word= collections.defaultdict(collections.Counter)
-    for a_word in words:
-      for idx, letter in enumerate(a_word):
-        final_word[idx].update(letter)
-    
+  def least_common_letters(rx_letters):
     decoded_word= ""
-    for _, full_set in sorted(final_word.items()):
+    for _, full_set in sorted(rx_letters.items()):
       decoded_letter, _ = full_set.most_common()[-1]
       decoded_word += decoded_letter
-
     return decoded_word
-  return most_common_letters(rx_words), least_common_letters(rx_words)
+
+  rx_letters = letter_distributions(rx_words)
+  return most_common_letters(rx_letters), least_common_letters(rx_letters)
 
 
   
