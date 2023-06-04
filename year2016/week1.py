@@ -261,9 +261,31 @@ def solve_day_5():
         if NOT_DISCOVERED not in key_code:
           return "".join(key_code)
 
-
     return first_key_code(), second_key_code()
         
+
+def solve_day_6():
+  with open(get_filepath("day_6.txt"), "r") as f:
+    rx_words = [line.strip() for line in f]
+
+  def most_common_letters(words):
+    final_word= collections.defaultdict(collections.Counter)
+    for a_word in words:
+      for idx, letter in enumerate(a_word):
+        final_word[idx].update(letter)
+    
+    decoded_word= ""
+    for _, full_set in sorted(final_word.items()):
+      decoded_letter, _ = full_set.most_common()[0]
+      decoded_word += decoded_letter
+
+    return decoded_word
+
+  return most_common_letters(rx_words), 0
+
+
+  
+
 
 def solve():
     day1_a, day1_b = solve_day_1_part_ab()
@@ -285,6 +307,9 @@ def solve():
     day5_a, day5_b = solve_day_5()
     print(f"Day5a: The keycode for the first door is {day5_a}")
     print(f"Day5b: The keycode for the second door is {day5_b}")
+
+    day6_a, day6_b = solve_day_6()
+    print(f"Day6a: Santa sent out {day6_a}")
 
 if __name__ == "__main__":
     solve()
