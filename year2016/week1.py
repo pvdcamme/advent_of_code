@@ -298,7 +298,33 @@ def solve_day_6():
   return most_common_letters(rx_letters), least_common_letters(rx_letters)
   
 def solve_day_7():
+    with open(get_filepath("day_7.txt"), "r") as f:
+      addresses = [line.strip() for line in f]
+
+    def split_address(addr):
+      parts = []
+      current_part = ""
+      for letter in addr:
+        if letter == '[':
+          parts.append(current_part)
+          current_part = ""
+        elif letter == ']':
+          parts.append(current_part)
+          letter = ""
+          current_part = ""
+        current_part += letter
+      if current_part:
+        parts.append(current_part)
+      return parts
+
+    for addr in addresses:
+      pass
+      print(f"{addr} -> {split_address(addr)}")
+
+        
+          
     return 0,0
+
 
 
 def solve():
