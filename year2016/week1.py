@@ -298,9 +298,6 @@ def solve_day_6():
   return most_common_letters(rx_letters), least_common_letters(rx_letters)
   
 def solve_day_7():
-    with open(get_filepath("day_7.txt"), "r") as f:
-      addresses = [line.strip() for line in f]
-
     def split_address(addr):
       parts = []
       current_part = ""
@@ -313,17 +310,42 @@ def solve_day_7():
           letter = ""
           current_part = ""
         current_part += letter
+
       if current_part:
         parts.append(current_part)
       return parts
 
-    for addr in addresses:
-      pass
-      print(f"{addr} -> {split_address(addr)}")
+    with open(get_filepath("day_7.txt"), "r") as f:
+      addresses = [split_address(line.strip()) for line in f]
 
-        
-          
-    return 0,0
+    def has_4_palindrome(txt_val):
+      for a,b,c,d in zip(txt_val, txt_val[1:], txt_val[2:], txt_val[3:]):
+        if (a == d) and (b == c) and (a != b) and a and b and c and d:
+          return True
+      return False
+    
+    def is_snoopable(addr_parts):
+      has_good= False
+      has_bad= False
+      for part in addr_parts:
+        if "[" == part[0]:
+          assert "[" not in part[1:]
+          has_bad = has_bad or has_4_palindrome(part) 
+        else:
+          has_good = has_good or has_4_palindrome(part)
+        return has_good and not has_bad
+
+
+    addr_parts = [split_address(l) for l in addresses]
+    with open("check_day7.txt", "w") as f:
+      for p in addr_parts:
+        total = ""
+        for pat in p:
+          total += pat
+          if "[" in pat:
+            total += "]"
+        f.write(total + "\n")
+    return sum(map(is_snoopable, addr_parts)), 0
 
 
 
