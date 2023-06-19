@@ -299,53 +299,38 @@ def solve_day_6():
   
 def solve_day_7():
     def split_address(addr):
-      parts = []
-      current_part = ""
+      results = []
+      current = ""
       for letter in addr:
-        if letter == '[':
-          parts.append(current_part)
-          current_part = ""
-        elif letter == ']':
-          parts.append(current_part)
-          letter = ""
-          current_part = ""
-        current_part += letter
+        if letter == '[' or letter == ']':
+          results.append(current)
+          current = ""
+        current += letter
+      results.append(current)
+      return results
 
-      if current_part:
-        parts.append(current_part)
-      return parts
+    def abba_palindrome(g):
+      for a,b,c,d in zip(g, g[1:], g[2:], g[3:]):
+        if a == d and b == c and a != c:
+          return True
+      return False
+        
+    def is_snoopable(addr):
+      has_good = False
+      has_bad = False
+      for part in addr:
+        if '[' in part:
+          has_bad = has_bad or abba_palindrome(part)
+        else:
+          has_good = has_good or abba_palindrome(part)
+      return has_good and not has_bad
 
+        
     with open(get_filepath("day_7.txt"), "r") as f:
       addresses = [split_address(line.strip()) for line in f]
 
-    def has_4_palindrome(txt_val):
-      for a,b,c,d in zip(txt_val, txt_val[1:], txt_val[2:], txt_val[3:]):
-        if (a == d) and (b == c) and (a != b) and a and b and c and d:
-          return True
-      return False
-    
-    def is_snoopable(addr_parts):
-      has_good= False
-      has_bad= False
-      for part in addr_parts:
-        if "[" == part[0]:
-          assert "[" not in part[1:]
-          has_bad = has_bad or has_4_palindrome(part) 
-        else:
-          has_good = has_good or has_4_palindrome(part)
-        return has_good and not has_bad
 
-
-    addr_parts = [split_address(l) for l in addresses]
-    with open("check_day7.txt", "w") as f:
-      for p in addr_parts:
-        total = ""
-        for pat in p:
-          total += pat
-          if "[" in pat:
-            total += "]"
-        f.write(total + "\n")
-    return sum(map(is_snoopable, addr_parts)), 0
+    return sum(map(is_snoopable, addresses)),0
 
 
 
