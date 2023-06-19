@@ -315,7 +315,7 @@ def solve_day_7():
           return True
       return False
         
-    def is_snoopable(addr):
+    def is_trnasport_snoopable(addr):
       has_good = False
       has_bad = False
       for part in addr:
@@ -330,7 +330,7 @@ def solve_day_7():
       addresses = [split_address(line.strip()) for line in f]
 
 
-    return sum(map(is_snoopable, addresses)),0
+    return sum(map(is_transport_snoopable, addresses)),0
 
 
 
