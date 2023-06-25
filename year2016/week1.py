@@ -315,7 +315,7 @@ def solve_day_7():
           return True
       return False
         
-    def is_trnasport_snoopable(addr):
+    def is_transport_snoopable(addr):
       has_good = False
       has_bad = False
       for part in addr:
@@ -325,12 +325,34 @@ def solve_day_7():
           has_good = has_good or abba_palindrome(part)
       return has_good and not has_bad
 
+    def collect_aba(part):
+      result = set()
+      for a,b,c in zip(part, part[1:], part[2:]):
+        if a == c and a != b:
+          result.add((a,b))
+      return result
+
+
+    def suppots_secret_listening(addr):
+      aba_sentences = set()
+      for part in addr:
+        if '[' not in part:
+          aba_sentences.update(collect_aba(part))
+      for part in addr:
+        if '[' in part:
+          for b,a in collect_aba(part):
+            if (a,b) in aba_sentences:
+              return True
+      return False              
+      
         
     with open(get_filepath("day_7.txt"), "r") as f:
       addresses = [split_address(line.strip()) for line in f]
 
 
-    return sum(map(is_transport_snoopable, addresses)),0
+
+
+    return sum(map(is_transport_snoopable, addresses)), sum(map(suppots_secret_listening, addresses))
 
 
 
@@ -361,5 +383,6 @@ def solve():
 
     day7_a, day7_b = solve_day_7()
     print(f"Day7a: {day7_a} addresses support snooping")
+    print(f"Day7b: {day7_b} support super secret listening")
 if __name__ == "__main__":
     solve()
