@@ -10,7 +10,6 @@ def get_filepath(file_name):
     """Returns the full path of the file_name"""
     return pathlib.Path(__file__).parent.joinpath(file_name).resolve()
 
-
 def solve_day_22_part_ab():
     import copy
     import random
@@ -67,7 +66,6 @@ def solve_day_22_part_ab():
 
     boss_hit_points = 51
     boss_damage = 9
-
     default_spells = [(CAST_ANY_TIME, 53, magic_missle),
                       (CAST_ANY_TIME, 73, drain), (CAST_ANY_TIME, 113, shield),
                       (CAST_ANY_TIME, 173, poison),
@@ -313,6 +311,7 @@ def solve():
 
     day25_a = solve_day_25()
     print(f"Day25a: To unlock use {day25_a}")
+    print(f"Day25b: There is no second question. All done!")
 
 
 if __name__ == "__main__":
