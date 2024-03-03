@@ -12,6 +12,7 @@ def get_filepath(file_name):
 
 
 def solve_day_8_part_ab():
+  """ Decoding the broken LCD """
   with open(get_filepath("day_8.txt"), "r") as f:
     instructions = [line.strip() for line in f]
 
@@ -20,6 +21,7 @@ def solve_day_8_part_ab():
   lcd = [False] * (wide * tall)
 
   def show(lcd):
+    """ Helps with debugging and the 2nd part"""
     for y in range(tall):
       row_str = ""
       for x in range(wide):
@@ -41,6 +43,7 @@ def solve_day_8_part_ab():
     for x in range(a):
       for y in range(b):
         put_pixel(lcd, x,y, True)
+
   def rotate_by_column(x, amt):
     orig_lcd= list(lcd)
     for y in range(tall):
@@ -71,6 +74,7 @@ def solve_day_8_part_ab():
   for ins in instructions:
     eval_instruction(ins)
 
+  show(lcd)
   return sum(lcd),0
 def solve():
     day8_a, day8_b = solve_day_8_part_ab()
