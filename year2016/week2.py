@@ -14,24 +14,45 @@ def get_filepath(file_name):
 def solve_day_8_part_ab():
   with open(get_filepath("day_8.txt"), "r") as f:
     instructions = [line.strip() for line in f]
-  
+
   wide = 50
   tall = 6
   lcd = [False] * (wide * tall)
 
-  def get_pixel(x,y):
+  def show(lcd):
+    for y in range(tall):
+      row_str = ""
+      for x in range(wide):
+        if get_pixel(lcd, x,y):
+          row_str += "#"
+        else:
+          row_str += "."
+      print(row_str)
+
+
+  def get_pixel(lcd, x,y):
     return lcd[x + y * wide]
 
-  def put_pixel(x,y,val):
+  def put_pixel(lcd, x,y,val):
     lcd[x + y * wide] = val
     return val
 
   def rect(a,b):
     for x in range(a):
       for y in range(b):
-        put_pixel(x,y, True)
+        put_pixel(lcd, x,y, True)
+  def rotate_by_column(x, amt):
+    orig_lcd= list(lcd)
+    for y in range(tall):
+      src_val = get_pixel(orig_lcd, x, (y - amt) % tall)
+      put_pixel(lcd, x ,y, src_val)
 
-    
+  def rotate_by_row(y, amt):
+    orig_lcd= list(lcd)
+    for x in range(wide):
+      src_val = get_pixel(orig_lcd, (x - amt) % wide, y)
+      put_pixel(lcd, x ,y, src_val)
+
   def eval_instruction(line):
     rect_instr = "rect (\d+)x(\d+)"
     col_rotate = "rotate column x=(\d+) by (\d+)"
@@ -41,9 +62,11 @@ def solve_day_8_part_ab():
       a,b = rect_val.groups()
       rect(int(a),int(b))
     elif row_val := re.match(row_rotate, line):
-      pass
+      y,amt = row_val.groups()
+      rotate_by_row(int(y), int(amt))
     elif col_val := re.match(col_rotate, line):
-      pass
+      x,amt = col_val.groups()
+      rotate_by_column(int(x), int(amt))
 
   for ins in instructions:
     eval_instruction(ins)
