@@ -34,10 +34,16 @@ def solve_day_8_part_ab():
     
   def eval_instruction(line):
     rect_instr = "rect (\d+)x(\d+)"
+    col_rotate = "rotate column x=(\d+) by (\d+)"
+    row_rotate = "rotate row y=(\d+) by (\d+)"
     
     if rect_val := re.match(rect_instr, line):
       a,b = rect_val.groups()
       rect(int(a),int(b))
+    elif row_val := re.match(row_rotate, line):
+      pass
+    elif col_val := re.match(col_rotate, line):
+      pass
 
   for ins in instructions:
     eval_instruction(ins)
