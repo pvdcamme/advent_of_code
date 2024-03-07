@@ -20,8 +20,9 @@ def solve_day_8_part_ab():
     tall = 6
     lcd = [False] * (wide * tall)
 
-    def show(lcd):
+    def as_text(lcd):
         """ Helps with debugging and the 2nd part"""
+        txt = ""
         for y in range(tall):
             row_str = ""
             for x in range(wide):
@@ -29,7 +30,8 @@ def solve_day_8_part_ab():
                     row_str += "#"
                 else:
                     row_str += "."
-            print(row_str)
+            txt += row_str + "\n"
+        return txt
 
     def get_pixel(lcd, x, y):
         return lcd[x + y * wide]
@@ -73,13 +75,13 @@ def solve_day_8_part_ab():
     for ins in instructions:
         eval_instruction(ins)
 
-    show(lcd)
-    return sum(lcd), 0
+    return sum(lcd), as_text(lcd)
 
 
 def solve():
     day8_a, day8_b = solve_day_8_part_ab()
     print(f"Day8a: There would {day8_a} pixels lit")
+    print(f"Day8b: There lcd looks like \n {day8_b}")
 
 
 if __name__ == "__main__":
