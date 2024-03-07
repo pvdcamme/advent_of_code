@@ -11,7 +11,7 @@ def get_filepath(file_name):
     return pathlib.Path(__file__).parent.joinpath(file_name).resolve()
 
 
-def solve_day_8_part_ab():
+def solve_day_8():
     """ Decoding the broken LCD """
     with open(get_filepath("day_8.txt"), "r") as f:
         instructions = [line.strip() for line in f]
@@ -77,12 +77,17 @@ def solve_day_8_part_ab():
 
     return sum(lcd), as_text(lcd)
 
+def solve_day_9():
+    """ decompressing the text """
+    return 0,0
 
 def solve():
-    day8_a, day8_b = solve_day_8_part_ab()
+    day8_a, day8_b = solve_day_8()
     print(f"Day8a: There would {day8_a} pixels lit")
     print(f"Day8b: There lcd looks like \n {day8_b}")
 
+
+    day9_a, day9_b = solve_day_9()
 
 if __name__ == "__main__":
     solve()
