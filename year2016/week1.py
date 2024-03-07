@@ -12,6 +12,7 @@ def get_filepath(file_name):
 
 
 def solve_day_1_part_ab():
+   """ Finding the route to the Easter Bunny Headquarters """
    with open(get_filepath("day_1.txt"), "r") as f:
     line = f.read()
 
@@ -74,6 +75,7 @@ def solve_day_1_part_ab():
    return distance(*travel(sample)), distance(*travel_without_repeat(sample))
 
 def solve_day_2_part_ab():
+  """ Keycodes to the Bathroom """
   with open(get_filepath("day_2.txt"), "r") as f:
     instructions = [line.strip() for line in f]
 
@@ -131,6 +133,7 @@ def solve_day_2_part_ab():
   return solve_code(*instructions, keypad=keypad_part1), solve_code(*instructions, keypad=complex_keypad, start=(0,2))
   
 def solve_day_3_part_ab():
+    """ Triangles on the walls of the Graphic design department """
     def split_triangle(line):
         string_edges = filter(lambda x: x, line.split(" "))
         return [int(d) for d in string_edges]
@@ -163,6 +166,7 @@ def solve_day_3_part_ab():
     return sum(map(is_triangle, triangles)), sum(map(is_triangle, rotate_triangle_list(triangles)))
 
 def solve_day_4_part_ab():
+  """ Finding the right room """
   with open(get_filepath("day_4.txt"), "r") as f:
     instructions = [line.strip() for line in f]
   
@@ -223,6 +227,7 @@ def solve_day_4_part_ab():
   return count_valid(rooms), search_north_pole_sector(rooms)
 
 def solve_day_5():
+    """ Decoding the password  """
     import hashlib
     salt = b"reyedfim"
 
@@ -265,6 +270,7 @@ def solve_day_5():
         
 
 def solve_day_6():
+  """ Unjamming the signal """
   with open(get_filepath("day_6.txt"), "r") as f:
     rx_words = [line.strip() for line in f]
 
@@ -298,6 +304,7 @@ def solve_day_6():
   return most_common_letters(rx_letters), least_common_letters(rx_letters)
   
 def solve_day_7():
+    """ IP addresses of the Easter Bunny Headquarters"""
     def split_address(addr):
       results = []
       current = ""
