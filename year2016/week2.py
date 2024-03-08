@@ -4,6 +4,7 @@ import re
 import copy
 import itertools
 import pathlib
+import enum
 
 
 def get_filepath(file_name):
@@ -79,7 +80,57 @@ def solve_day_8():
 
 def solve_day_9():
     """ decompressing the text """
-    return 0,0
+    with open(get_filepath("day_9.txt"), "r") as f:
+        text = next(f).strip()
+
+    def uncompress(initial_txt):
+      states = enum.Enum('States', ['CHAR', 'RANGE', 'REPEAT', 'COLLECT']) 
+      EMPTY_OUT = iter([])
+      data = ""
+      def handle_char(ch, data):
+        if '(' == ch:
+          return EMPTY_OUT, states.RANGE, ""
+        else:
+          return ch, states.CHAR, data
+      def handle_range(ch, data):
+        if 'x' == ch:
+          data = (int(data), '')
+          return EMPTY_OUT, states.REPEAT, data 
+        else:
+          data += ch
+          return EMPTY_OUT, states.RANGE, data
+
+      def handle_repeat(ch, data):
+        range_cnt, str_repeat = data
+        if ')' == ch:
+          data = (int(range_cnt), int(str_repeat), '')
+          return EMPTY_OUT, states.COLLECT, data
+        else:
+          data = (range_cnt, str_repeat + ch)
+          return EMPTY_OUT, states.REPEAT, data
+
+      def handle_collect(ch, data):
+        range_cnt, str_repeat, collected = data
+        collected += ch
+        if range_cnt == 1:
+          return iter(collected * int(str_repeat)), states.CHAR, ''
+        else:
+          data = (range_cnt - 1, str_repeat, collected)
+          return EMPTY_OUT, states.COLLECT , data
+
+      current_state = states.CHAR
+      for ch in initial_txt:
+        if current_state == states.CHAR:
+          out, current_state, data = handle_char(ch, data)
+        elif current_state == states.RANGE:
+          out, current_state, data = handle_range(ch, data)
+        elif current_state == states.REPEAT:
+          out, current_state, data = handle_repeat(ch, data)
+        elif current_state == states.COLLECT:
+          out, current_state, data = handle_collect(ch, data)
+        yield from out
+
+    return len(list(uncompress(text))),0
 
 def solve():
     day8_a, day8_b = solve_day_8()
@@ -88,6 +139,7 @@ def solve():
 
 
     day9_a, day9_b = solve_day_9()
+    print(f"Day9a: Decompressed the file has {day9_a} characters")
 
 if __name__ == "__main__":
     solve()
