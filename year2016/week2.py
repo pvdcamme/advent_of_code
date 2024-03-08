@@ -88,33 +88,34 @@ def solve_day_9():
           The inner argumetn is called each time one
           of the inner values are expanded.
 
-          This allows to solve the 2nd part of the riddly
+          This allows to solve the 2nd part of the riddle
           fairly cleanly.
       """
-      states = enum.Enum('States', ['CHAR', 'RANGE', 'REPEAT', 'COLLECT']) 
       EMPTY_OUT = iter([])
       data = ""
+
       def handle_char(ch, data):
         if '(' == ch:
-          return EMPTY_OUT, states.RANGE, ""
+          return EMPTY_OUT, handle_range, ""
         else:
-          return ch, states.CHAR, data
+          return ch, handle_char, data
+
       def handle_range(ch, data):
         if 'x' == ch:
           data = (int(data), '')
-          return EMPTY_OUT, states.REPEAT, data 
+          return EMPTY_OUT, handle_repeat, data 
         else:
           data += ch
-          return EMPTY_OUT, states.RANGE, data
+          return EMPTY_OUT, handle_range, data
 
       def handle_repeat(ch, data):
         range_cnt, str_repeat = data
         if ')' == ch:
           data = (int(range_cnt), int(str_repeat), '')
-          return EMPTY_OUT, states.COLLECT, data
+          return EMPTY_OUT, handle_collect, data
         else:
           data = (range_cnt, str_repeat + ch)
-          return EMPTY_OUT, states.REPEAT, data
+          return EMPTY_OUT, handle_repeat, data
 
       def handle_collect(ch, data):
         range_cnt, str_repeat, collected = data
@@ -122,21 +123,14 @@ def solve_day_9():
         if range_cnt == 1:
           final = (inner(collected) for _ in range(int(str_repeat)))
           
-          return itertools.chain(*final), states.CHAR, ''
+          return itertools.chain(*final), handle_char, ''
         else:
           data = (range_cnt - 1, str_repeat, collected)
-          return EMPTY_OUT, states.COLLECT , data
+          return EMPTY_OUT, handle_collect, data
 
-      current_state = states.CHAR
+      current_state = handle_char
       for ch in initial_txt:
-        if current_state == states.CHAR:
-          out, current_state, data = handle_char(ch, data)
-        elif current_state == states.RANGE:
-          out, current_state, data = handle_range(ch, data)
-        elif current_state == states.REPEAT:
-          out, current_state, data = handle_repeat(ch, data)
-        elif current_state == states.COLLECT:
-          out, current_state, data = handle_collect(ch, data)
+        out, current_state, data = current_state(ch, data)
         yield from out
 
     def no_expand(vals):
