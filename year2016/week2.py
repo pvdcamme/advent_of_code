@@ -84,7 +84,13 @@ def solve_day_9():
         text = next(f).strip()
 
     def uncompress(initial_txt, inner):
-      """ Taking the state machine approach. """
+      """ Taking the state machine approach. 
+          The inner argumetn is called each time one
+          of the inner values are expanded.
+
+          This allows to solve the 2nd part of the riddly
+          fairly cleanly.
+      """
       states = enum.Enum('States', ['CHAR', 'RANGE', 'REPEAT', 'COLLECT']) 
       EMPTY_OUT = iter([])
       data = ""
@@ -133,15 +139,26 @@ def solve_day_9():
           out, current_state, data = handle_collect(ch, data)
         yield from out
 
+    def no_expand(vals):
+      return iter(vals)
+
     cache = {}
     def recurse_expand(rr):
+      """ Recursively go deeper if the input has more
+
+          Using a cache to efficiently deal with all
+          the repeated values.
+
+          Major constraint is trying avoid letting the 
+          memory grow too much out of bounds.
+      """
       if rr in cache:
         return iter(cache[rr])
       elif '(' in rr:
-        if cache.__len__() > 1024:
+        if len(cache) > 1024:
           print(f"Clearing cache")
           cache.clear()
-        max_size = 256 * 1024
+        max_size = 1024 * 1024
         elements = [ch for idx, ch in zip(range(max_size), uncompress(rr, recurse_expand))]
 
         if len(elements) == max_size:
@@ -158,7 +175,7 @@ def solve_day_9():
 
 
 
-    return len(list(uncompress(text, iter))), expanded
+    return len(list(uncompress(text, no_expand))), expanded
 
 def solve():
     day8_a, day8_b = solve_day_8()
