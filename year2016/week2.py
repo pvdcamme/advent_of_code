@@ -83,7 +83,8 @@ def solve_day_9():
     with open(get_filepath("day_9.txt"), "r") as f:
         text = next(f).strip()
 
-    def uncompress(initial_txt):
+    def uncompress(initial_txt, inner):
+      """ Taking the state machine approach. """
       states = enum.Enum('States', ['CHAR', 'RANGE', 'REPEAT', 'COLLECT']) 
       EMPTY_OUT = iter([])
       data = ""
@@ -113,7 +114,9 @@ def solve_day_9():
         range_cnt, str_repeat, collected = data
         collected += ch
         if range_cnt == 1:
-          return iter(collected * int(str_repeat)), states.CHAR, ''
+          final = (inner(collected) for _ in range(int(str_repeat)))
+          
+          return itertools.chain(*final), states.CHAR, ''
         else:
           data = (range_cnt - 1, str_repeat, collected)
           return EMPTY_OUT, states.COLLECT , data
@@ -130,16 +133,39 @@ def solve_day_9():
           out, current_state, data = handle_collect(ch, data)
         yield from out
 
-    return len(list(uncompress(text))),0
+    cache = {}
+    def recurse_expand(rr):
+      if rr in cache:
+        return iter(cache[rr])
+      elif '(' in rr:
+        if cache.__len__() > 1024:
+          print(f"Clearing cache")
+          cache.clear()
+        max_size = 256 * 1024
+        elements = [ch for idx, ch in zip(range(max_size), uncompress(rr, recurse_expand))]
+
+        if len(elements) == max_size:
+          return uncompress(rr, recurse_expand)
+        else:
+          cache[rr] = elements
+          return iter(elements)
+      else:
+        return iter(rr)
+
+    for expanded,_ in enumerate(uncompress(text, recurse_expand), start = 1):
+      if expanded & 0xFFFFFF == 0:
+        print(expanded)
+
+
+
+    return len(list(uncompress(text, iter))), expanded
 
 def solve():
     day8_a, day8_b = solve_day_8()
     print(f"Day8a: There would {day8_a} pixels lit")
     print(f"Day8b: There lcd looks like \n {day8_b}")
 
-
     day9_a, day9_b = solve_day_9()
     print(f"Day9a: Decompressed the file has {day9_a} characters")
+    print(f"Day9a: Recursively decompressing give {day9_b} characters")
 
-if __name__ == "__main__":
-    solve()
