@@ -118,14 +118,14 @@ def solve_day_9():
           return EMPTY_OUT, handle_repeat, data
 
       def handle_collect(ch, data):
-        range_cnt, str_repeat, collected = data
+        range_cnt, repeat, collected = data
         collected += ch
         if range_cnt == 1:
-          final = (inner(collected) for _ in range(int(str_repeat)))
+          final = (inner(collected) for _ in range(repeat))
           
           return itertools.chain(*final), handle_char, ''
         else:
-          data = (range_cnt - 1, str_repeat, collected)
+          data = (range_cnt - 1, repeat, collected)
           return EMPTY_OUT, handle_collect, data
 
       current_state = handle_char
