@@ -192,11 +192,28 @@ def solve_day_10():
         self.values = []
         self.outputs = []
 
-      def give(self, val):
+      def append(self, val):
         self.values.append(val)
 
       def instruction(self, lowout, highout):
         self.outputs = [lowout, highout]
+
+      def __call__(self, name, others, outputs):
+        should_act = len(self.values) == 2
+        if should_act:
+          places = {"output": outputs, "bot": others}
+          lower_val = min(self.values)
+          higher_val = max(self.values)
+
+          lower, higher = self.outputs
+          lower_type, lower_idx = lower 
+          higher_type, higher_idx = higher 
+
+          places[lower_type][lower_idx].append(min(self.values))
+          places[higher_type][higher_idx].append(max(self.values))
+          self.values.clear()
+        return should_act
+      
 
 
       def __str__(self):
@@ -208,7 +225,7 @@ def solve_day_10():
       
       if res := re.match(goes_to, line):
         val, bot_idx = res.groups()
-        bots[bot_idx].give(int(val))
+        bots[bot_idx].append(int(val))
       elif res := re.match(hand_over, line):
         bot_idx, low_type, low_idx, high_type, high_idx = res.groups() 
         bots[bot_idx].instruction((low_type, low_idx), (high_type, high_idx))
@@ -222,10 +239,17 @@ def solve_day_10():
     for l in instructions:
       decode_instruction(l,bots)
 
-    for (idx, b) in bots.items():
-      print(f"{idx} : {b}")
-
-    return 0, 0
+    acted = True
+    responsible = None
+    while acted:
+      acted = False
+      for name, b in bots.items():
+        if set([61, 17]) == set(b.values) and not responsible:
+          responsible = name
+          break
+          
+        acted = b(name, bots, outputs) or acted
+    return responsible, 0
 
 def solve():
     day8_a, day8_b = solve_day_8()
@@ -237,4 +261,5 @@ def solve():
     print(f"Day9a: Recursively decompressing give {day9_b} characters")
 
     day10_a, day10_b = solve_day_10()
+    print(f"Day10a: Bot {day10_a} is responsible for handling Microchips 17 and 61")
 
