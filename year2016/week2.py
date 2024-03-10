@@ -214,8 +214,6 @@ def solve_day_10():
           self.values.clear()
         return should_act
       
-
-
       def __str__(self):
         return f"Bot has {self.values} and {self.outputs}"
 
@@ -249,6 +247,8 @@ def solve_day_10():
           break
           
         acted = b(name, bots, outputs) or acted
+    for a,b in sorted(outputs.items):
+      print(f"{a} :: {b}")
     return responsible, 0
 
 def solve():
