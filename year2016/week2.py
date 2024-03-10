@@ -170,11 +170,17 @@ def solve_day_9():
       else:
         return iter((rr,))
 
-    expanded= 0
-    for fragment in uncompress(text, recurse_expand):
-      expanded += len(fragment)
+    def part_one(text):
+      full_text = list(uncompress(text, no_expand))
+      return len(full_text)
 
-    return len(list(uncompress(text, no_expand))), expanded 
+    def part_two(text):
+      expanded= 0
+      for fragment in uncompress(text, recurse_expand):
+        expanded += len(fragment)
+      return expanded
+
+    return part_one(text), part_two(text)
 
 def solve():
     day8_a, day8_b = solve_day_8()
