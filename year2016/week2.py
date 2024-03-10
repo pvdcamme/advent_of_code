@@ -1,10 +1,8 @@
 import collections
-import hashlib
 import re
-import copy
 import itertools
 import pathlib
-import enum
+import heapq
 
 
 def get_filepath(file_name):
@@ -281,13 +279,19 @@ def solve_day_11():
             chips = {rtg for rtg, part in floor if part == "microchip"}
             generators = {rtg for rtg, part in floor if part == "generator"}
 
-            if len(generators) > 0:
-                unprotected = chips.difference(generators)
-                if len(unprotected) > 0:
-                    return False
+            unprotected = chips.difference(generators)
+            if len(unprotected) > 0 and len(generators) > 0:
+                return False
         return True
 
+    def is_solved(world):
+        done = True
+        for idx, floor in enumerate(world, start=1):
+            done = (done and ((idx < 4 and len(floor) == 0) or (idx == 4)))
+        return done
+
     assert is_safe(initial_state)
+    assert not is_solved(initial_state)
 
     return 0, 0
 
