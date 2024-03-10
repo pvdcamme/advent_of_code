@@ -268,12 +268,19 @@ def solve_day_10():
 
 def solve_day_11():
     """ Safely bringing the microchips up """
-    initial_state = [{("thulium", "generator"), ("thulium", "microchip"),
-                      ("plutonium", "generator"), ("strontium", "generator")},
-                     {("plutonium", "microchip"), ("strontium", "microchip")},
-                     {("promethium", "generator"), ("promethium", "microchip"),
-                      ("ruthenium", "generator"), ("ruthenium", "microchip")},
-                     {}]
+
+    initial_floor_1 = set(
+        (("thulium", "generator"), ("thulium", "microchip"),
+         ("plutonium", "generator"), ("strontium", "generator")))
+    initial_floor_2 = set(
+        (("plutonium", "microchip"), ("strontium", "microchip")))
+    initial_floor_3 = set(
+        (("promethium", "generator"), ("promethium", "microchip"),
+         ("ruthenium", "generator"), ("ruthenium", "microchip")))
+
+    initial_floor_4 = set()
+    initial_state = (initial_floor_1, initial_floor_2, initial_floor_3,
+                     initial_floor_4)
 
     def is_safe(world):
         for floor in world:
@@ -292,40 +299,47 @@ def solve_day_11():
         return done
 
     def next_steps(elevator, world):
-      def change(next_floor):
-        start = world[elevator]
-        # Move nothing
-        result = [copy.deepcopy(world)]
+        def change(next_floor):
+            start = world[elevator]
+            # Move nothing
+            result = [copy.deepcopy(world)]
 
-        ## single element moves
-        for el in start:
-          a_result = copy.deepcopy(world)
-          a_result[elevator].remove(el)
-          a_result[next_floor].add(el)
+            ## single element moves
+            for el in start:
+                a_result = copy.deepcopy(world)
+                a_result[elevator].remove(el)
+                a_result[next_floor].add(el)
 
-          result.append(a_result)
+                result.append(a_result)
 
-        ## double element moves
-        for el1, el2 in itertools.combinations(start, 2):
-          a_result = copy.deepcopy(world)
-          a_result[elevator].remove(el1)
-          a_result[elevator].remove(el2)
-          a_result[next_floor].add(el1)
-          a_result[next_floor].add(el2)
+            ## double element moves
+            for el1, el2 in itertools.combinations(start, 2):
+                a_result = copy.deepcopy(world)
+                a_result[elevator].remove(el1)
+                a_result[elevator].remove(el2)
+                a_result[next_floor].add(el1)
+                a_result[next_floor].add(el2)
 
-          result.append(a_result)
-        return [(next_floor, r) for r in result]
+                result.append(a_result)
+            return [(next_floor, r) for r in result]
 
-      total_result = []
-      if elevator != 0:
-        total_result.append(change(elevator - 1))
-      if elevator != 3:
-        total_result.append(change(elevator + 1))
-      return total_result
+        total_result = []
+        if elevator != 0:
+            total_result.extend(change(elevator - 1))
+        if elevator != 3:
+            total_result.extend(change(elevator + 1))
+        return total_result
 
     assert is_safe(initial_state)
     assert not is_solved(initial_state)
-    print(next_steps(0, initial_state))
+
+    def freeze_world(elevator, floors):
+        floors = (frozenset(a_floor) for a_floor in floors)
+        return (elevator, floors)
+
+    seen = set()
+    for st in next_steps(0, initial_state):
+        seen.add(freeze_world(*st))
 
     return 0, 0
 
