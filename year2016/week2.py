@@ -184,6 +184,47 @@ def solve_day_9():
 
 def solve_day_10():
     """ Robots distributing chips """
+    with open(get_filepath("day_10.txt"), "r") as f:
+        instructions = [line.strip() for line in f]
+
+    class Bot:
+      def __init__(self):
+        self.values = []
+        self.outputs = []
+
+      def give(self, val):
+        self.values.append(val)
+
+      def instruction(self, lowout, highout):
+        self.outputs = [lowout, highout]
+
+
+      def __str__(self):
+        return f"Bot has {self.values} and {self.outputs}"
+
+    def decode_instruction(line, bots):
+      goes_to = "value (\d+) goes to bot (\d+)"
+      hand_over = "bot (\d+) gives low to (output|bot) (\d+) and high to (output|bot) (\d+)"
+      
+      if res := re.match(goes_to, line):
+        val, bot_idx = res.groups()
+        bots[bot_idx].give(int(val))
+      elif res := re.match(hand_over, line):
+        bot_idx, low_type, low_idx, high_type, high_idx = res.groups() 
+        bots[bot_idx].instruction((low_type, low_idx), (high_type, high_idx))
+        pass
+      else:
+        print(f"Not decoded: {line}")
+
+
+    bots = collections.defaultdict(Bot)
+    outputs= collections.defaultdict(list)
+    for l in instructions:
+      decode_instruction(l,bots)
+
+    for (idx, b) in bots.items():
+      print(f"{idx} : {b}")
+
     return 0, 0
 
 def solve():
