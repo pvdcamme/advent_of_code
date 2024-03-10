@@ -90,6 +90,13 @@ def solve_day_9():
 
           This allows to solve the 2nd part of the riddle
           fairly cleanly.
+
+          returns fragments of the uncompressed string.
+          Joined together these are these are the full 
+          decompressed text.
+          Working with these fragments as a tradeoff 
+          between keeping memory overhead reasonably low
+          and increasing efficiency by batching.
       """
       EMPTY_OUT = iter([])
       data = ""
@@ -147,10 +154,9 @@ def solve_day_9():
           memory grow too much out of bounds.
       """
       if rr in cache:
-        return iter(cache[rr])
+        return iter((cache[rr],))
       elif '(' in rr:
         if len(cache) > 1024:
-          print(f"Clearing cache")
           cache.clear()
         max_size = 1024 * 1024
         elements = [ch for idx, ch in zip(range(max_size), uncompress(rr, recurse_expand))]
@@ -158,18 +164,17 @@ def solve_day_9():
         if len(elements) == max_size:
           return uncompress(rr, recurse_expand)
         else:
+          elements = ''.join(elements)
           cache[rr] = elements
-          return iter(elements)
+          return iter((elements,))
       else:
-        return iter(rr)
+        return iter((rr,))
 
-    for expanded,_ in enumerate(uncompress(text, recurse_expand), start = 1):
-      if expanded & 0xFFFFFF == 0:
-        print(expanded)
+    expanded= 0
+    for fragment in uncompress(text, recurse_expand):
+      expanded += len(fragment)
 
-
-
-    return len(list(uncompress(text, no_expand))), expanded
+    return len(list(uncompress(text, no_expand))), expanded 
 
 def solve():
     day8_a, day8_b = solve_day_8()
