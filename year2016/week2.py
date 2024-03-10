@@ -267,6 +267,18 @@ def solve_day_10():
     return responsible, multiply(*(outputs["0"] + outputs["1"] + outputs["2"]))
 
 
+def solve_day_11():
+    """ Safely bringing the microchips up """
+    initial_state = [[("thulium", "generator"), ("thulium", "microchip"),
+                      ("plutonium", "generator"), ("strontium", "generator")],
+                     [("plutonium", "microchip"), ("strontium", "microchip")],
+                     [("promethium", "generator"), ("promethium", "microchip"),
+                      ("ruthenium", "generator"), ("ruthenium", "microchip")],
+                     []]
+
+    return 0, 0
+
+
 def solve():
     day8_a, day8_b = solve_day_8()
     print(f"Day8a: There would {day8_a} pixels lit")
@@ -279,3 +291,5 @@ def solve():
     day10_a, day10_b = solve_day_10()
     print(f"Day10a: Bot {day10_a} handles Microchips 17 and 61")
     print(f"Day10b: Multiplied values together are {day10_b}")
+
+    day11_a, day11_b = solve_day_11()
