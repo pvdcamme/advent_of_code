@@ -337,9 +337,23 @@ def solve_day_11():
         floors = (frozenset(a_floor) for a_floor in floors)
         return (elevator, floors)
 
-    seen = set()
-    for st in next_steps(0, initial_state):
-        seen.add(freeze_world(*st))
+
+    search = [(1, (1, initial_state))]
+    seen = set(freeze_world(1, initial_state))
+    while search:
+      steps, (elevator, state) = heapq.heappop(search)
+
+      print(f"Searching in {len(search)} for {steps}")
+      for next_el, next_state in next_steps(elevator, state):
+        if is_solved(next_state):
+          print(f"Found: {steps + 1}")
+          return 0
+        frozen = freeze_world(next_el, next_state)
+        if frozen not in seen:
+          seen.add(frozen)
+          heapq.heappush(search,(steps + 1, (next_el, next_state)))
+        else:
+          print("Already seen")
 
     return 0, 0
 
