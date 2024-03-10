@@ -188,11 +188,17 @@ def solve_day_10():
         instructions = [line.strip() for line in f]
 
     class Bot:
+      """ Values and instructions for the Bot.
+          Oddly enough we don't need to name.
+      """
       def __init__(self):
         self.values = []
         self.outputs = []
 
       def append(self, val):
+        # Match the list.append signature.
+        # Makes is polymorphic to add a val to
+        # a Bot or an output
         self.values.append(val)
 
       def instruction(self, lowout, highout):
@@ -201,9 +207,8 @@ def solve_day_10():
       def __call__(self, name, others, outputs):
         should_act = len(self.values) == 2
         if should_act:
+          # an easy switch between output locations
           places = {"output": outputs, "bot": others}
-          lower_val = min(self.values)
-          higher_val = max(self.values)
 
           lower, higher = self.outputs
           lower_type, lower_idx = lower 
@@ -249,6 +254,7 @@ def solve_day_10():
         acted = b(name, bots, outputs) or acted
     
     def multiply(*vals):
+      # For second part
       result = 1
       for a_val in vals:
         result = result * a_val
