@@ -246,10 +246,15 @@ def solve_day_10():
       for name, b in bots.items():
         if set([61, 17]) == set(b.values) and not responsible:
           responsible = name
-          break
-          
         acted = b(name, bots, outputs) or acted
-    return responsible, 0
+    
+    def multiply(*vals):
+      result = 1
+      for a_val in vals:
+        result = result * a_val
+      return result
+
+    return responsible, multiply(*(outputs["0"] + outputs["1"] + outputs["2"]))
 
 def solve():
     day8_a, day8_b = solve_day_8()
@@ -262,4 +267,5 @@ def solve():
 
     day10_a, day10_b = solve_day_10()
     print(f"Day10a: Bot {day10_a} is responsible for handling Microchips 17 and 61")
+    print(f"Day10b: Multiplied values together are {day10_b}")
 
