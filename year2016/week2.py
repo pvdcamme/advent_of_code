@@ -276,6 +276,25 @@ def solve_day_11():
                       ("ruthenium", "generator"), ("ruthenium", "microchip")],
                      []]
 
+    def is_safe(world):
+        for floor in world:
+            chips = {
+                rtg
+                for rtg, component in floor if component == "microchip"
+            }
+            generators = {
+                rtg
+                for rtg, component in floor if component == "generator"
+            }
+
+            if len(generators) > 0:
+                unprotected = chips.difference(generators)
+                if len(unprotected) > 0:
+                    return False
+        return True
+
+    assert is_safe(initial_state)
+
     return 0, 0
 
 
