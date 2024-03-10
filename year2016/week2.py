@@ -158,7 +158,7 @@ def solve_day_9():
       elif '(' in rr:
         if len(cache) > 1024:
           cache.clear()
-        max_size = 1024 * 1024
+        max_size = 16 * 1024
         elements = [ch for idx, ch in zip(range(max_size), uncompress(rr, recurse_expand))]
 
         if len(elements) == max_size:
@@ -182,6 +182,10 @@ def solve_day_9():
 
     return part_one(text), part_two(text)
 
+def solve_day_10():
+    """ Robots distributing chips """
+    return 0, 0
+
 def solve():
     day8_a, day8_b = solve_day_8()
     print(f"Day8a: There would {day8_a} pixels lit")
@@ -190,4 +194,6 @@ def solve():
     day9_a, day9_b = solve_day_9()
     print(f"Day9a: Decompressed the file has {day9_a} characters")
     print(f"Day9a: Recursively decompressing give {day9_b} characters")
+
+    day10_a, day10_b = solve_day_10()
 
