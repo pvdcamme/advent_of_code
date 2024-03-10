@@ -278,14 +278,8 @@ def solve_day_11():
 
     def is_safe(world):
         for floor in world:
-            chips = {
-                rtg
-                for rtg, component in floor if component == "microchip"
-            }
-            generators = {
-                rtg
-                for rtg, component in floor if component == "generator"
-            }
+            chips = {rtg for rtg, part in floor if part == "microchip"}
+            generators = {rtg for rtg, part in floor if part == "generator"}
 
             if len(generators) > 0:
                 unprotected = chips.difference(generators)
