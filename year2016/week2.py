@@ -356,21 +356,22 @@ def solve_day_11():
           print(f"{idx + 1} : . , {ll}")
         
 
-    search = [(0, (0, initial_state))]
-    seen = set(freeze_world(1, initial_state))
-    while search:
-      steps, (elevator, state), *rest = heapq.heappop(search)
-      if len(search) % 1024 == 0:
-        print(f"Searching in {len(search)} for {steps}")
-      for next_el, next_state in next_steps(elevator, state):
-        if is_solved(next_state):
-          return steps + 1,0
-        frozen = freeze_world(next_el, next_state)
-        if frozen not in seen and is_safe(next_state):
-          seen.add(frozen)
-          heapq.heappush(search,(steps + 1, (next_el, next_state), (elevator, state), *rest))
+    def search_pathlength(initial_state):
+      search = [(0, (0, initial_state))]
+      seen = set(freeze_world(1, initial_state))
+      while search:
+        steps, (elevator, state), *rest = heapq.heappop(search)
+        if len(search) % 1024 == 0:
+          print(f"Searching in {len(search)} for {steps}")
+        for next_el, next_state in next_steps(elevator, state):
+          if is_solved(next_state):
+            return steps + 1
+          frozen = freeze_world(next_el, next_state)
+          if frozen not in seen and is_safe(next_state):
+            seen.add(frozen)
+            heapq.heappush(search,(steps + 1, (next_el, next_state), (elevator, state), *rest))
 
-    return 0, 0
+    return search_pathlength(initial_state), 0
 
 
 def solve():
