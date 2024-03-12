@@ -278,6 +278,10 @@ def solve_day_11():
         (("promethium", "generator"), ("promethium", "microchip"),
          ("ruthenium", "generator"), ("ruthenium", "microchip")))
 
+    #initial_floor_1 = set((("hydrogen", "microchip"), ("lithium", "microchip")))
+    #initial_floor_2 = set((("hydrogen", "generator"),))
+    #initial_floor_3 = set((("lithium", "generator"),))
+
     initial_floor_4 = set()
     initial_state = (initial_floor_1, initial_floor_2, initial_floor_3,
                      initial_floor_4)
@@ -301,8 +305,8 @@ def solve_day_11():
     def next_steps(elevator, world):
         def change(next_floor):
             start = world[elevator]
-            # Move nothing
-            result = [copy.deepcopy(world)]
+            # Need to move something
+            result = []
 
             ## single element moves
             for el in start:
@@ -334,12 +338,37 @@ def solve_day_11():
     assert not is_solved(initial_state)
 
     def freeze_world(elevator, floors):
-        floors = (frozenset(a_floor) for a_floor in floors)
+        def freeze_floor(floor):
+          res = []
+          for a,b in sorted(floor):
+            res.append(a)
+            res.append(b)
+
+          return tuple(res)
+        floors = tuple(freeze_floor(a_floor) for a_floor in floors)
         return (elevator, floors)
 
-    seen = set()
-    for st in next_steps(0, initial_state):
-        seen.add(freeze_world(*st))
+    def show_state(el, ww):
+      for idx,  ll in enumerate(ww, start=0):
+        if idx == el:
+          print(f"{idx + 1} : E , {ll}")
+        else:
+          print(f"{idx + 1} : . , {ll}")
+        
+
+    search = [(0, (0, initial_state))]
+    seen = set(freeze_world(1, initial_state))
+    while search:
+      steps, (elevator, state), *rest = heapq.heappop(search)
+      if len(search) % 1024 == 0:
+        print(f"Searching in {len(search)} for {steps}")
+      for next_el, next_state in next_steps(elevator, state):
+        if is_solved(next_state):
+          return steps + 1,0
+        frozen = freeze_world(next_el, next_state)
+        if frozen not in seen and is_safe(next_state):
+          seen.add(frozen)
+          heapq.heappush(search,(steps + 1, (next_el, next_state), (elevator, state), *rest))
 
     return 0, 0
 
@@ -358,3 +387,4 @@ def solve():
     print(f"Day10b: Multiplied values together are {day10_b}")
 
     day11_a, day11_b = solve_day_11()
+    print(f"Day11a: Santa needs {day11_a} steps with the elevator")
