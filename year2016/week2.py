@@ -297,10 +297,11 @@ def solve_day_11():
         return True
 
     def is_solved(world):
-        done = True
-        for idx, floor in enumerate(world, start=1):
-            done = (done and ((idx < 4 and len(floor) == 0) or (idx == 4)))
-        return done
+        for lower_floor in world[:3]: 
+            if lower_floor:
+              return False
+        top_floor = world[3]
+        return len(top_floor) > 0
 
     def next_steps(elevator, world):
         def change(next_floor):
