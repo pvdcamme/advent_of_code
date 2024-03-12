@@ -306,16 +306,13 @@ def solve_day_11():
     def next_steps(elevator, world):
         def change(next_floor):
             start = world[elevator]
-            # Need to move something
-            result = []
 
             ## single element moves
             for el in start:
                 a_result = copy.deepcopy(world)
                 a_result[elevator].remove(el)
                 a_result[next_floor].add(el)
-
-                result.append(a_result)
+                yield (next_floor, a_result)
 
             ## double element moves
             for el1, el2 in itertools.combinations(start, 2):
@@ -324,9 +321,7 @@ def solve_day_11():
                 a_result[elevator].remove(el2)
                 a_result[next_floor].add(el1)
                 a_result[next_floor].add(el2)
-
-                result.append(a_result)
-            return [(next_floor, r) for r in result]
+                yield (next_floor, a_result)
 
         total_result = []
         if elevator != 0:
@@ -363,7 +358,7 @@ def solve_day_11():
       while search:
         steps, (elevator, state), *rest = heapq.heappop(search)
         if len(search) % 1024 == 0:
-          print(f"Searching in {len(search)} for {steps}")
+          print(f"Searching in {len(search)} for {steps} -- from {len(seen)} seen")
         for next_el, next_state in next_steps(elevator, state):
           if is_solved(next_state):
             return steps + 1
