@@ -3,7 +3,6 @@ import re
 import itertools
 import pathlib
 import heapq
-import copy
 import math
 
 
@@ -343,9 +342,8 @@ def solve_day_11():
           for a,b in sorted(floor):
             res.append(a)
             res.append(b)
-
-
           return tuple(res)
+
         floors = tuple(freeze_floor(a_floor) for a_floor in floors)
         return (elevator, floors)
 
@@ -372,8 +370,6 @@ def solve_day_11():
       seen = set(freeze_world(1, initial_state))
       while search:
         estimated, steps, (elevator, state), *rest = heapq.heappop(search)
-        if len(search) % 1024 == 0:
-          print(f"Searching in {len(search)} for {steps} -- from {len(seen)} seen")
         for next_el, next_state in next_steps(elevator, state):
           next_steps_cnt = steps + 1
           if is_solved(next_state):
@@ -381,7 +377,10 @@ def solve_day_11():
           frozen = freeze_world(next_el, next_state)
           if frozen not in seen and is_safe(next_state):
             seen.add(frozen)
-            heapq.heappush(search,(min_remaining_steps(next_state) + next_steps_cnt, next_steps_cnt, (next_el, next_state), (elevator, state), *rest))
+            heapq.heappush(search,
+                  (min_remaining_steps(next_state) + next_steps_cnt, 
+                   next_steps_cnt, 
+                   (next_el, next_state), (elevator, state), *rest))
 
     return search_pathlength(initial_state), 0
 
