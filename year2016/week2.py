@@ -269,27 +269,43 @@ def solve_day_10():
 def solve_day_11():
     """ Safely bringing the microchips up """
 
-    initial_floor_1 = set(
-        (("thulium", "generator"), ("thulium", "microchip"),
-         ("plutonium", "generator"), ("strontium", "generator")))
-    initial_floor_2 = set(
-        (("plutonium", "microchip"), ("strontium", "microchip")))
-    initial_floor_3 = set(
-        (("promethium", "generator"), ("promethium", "microchip"),
-         ("ruthenium", "generator"), ("ruthenium", "microchip")))
+    generator = 1
+    microchip = 2
+    thulium = 4
+    plutonium = 8
+    strontium = 16
+    promethium = 32
+    ruthenium = 64
+    elerium = 128
+    dilithium = 256
+    def input_part_a():
+      initial_floor_1 = set(
+        ((thulium, generator), (thulium, microchip),
+         (plutonium, generator), (strontium, generator)))
 
-    #initial_floor_1 = set((("hydrogen", "microchip"), ("lithium", "microchip")))
-    #initial_floor_2 = set((("hydrogen", "generator"),))
-    #initial_floor_3 = set((("lithium", "generator"),))
+      initial_floor_2 = set(
+        ((plutonium, microchip), (strontium, microchip)))
+      initial_floor_3 = set(
+        ((promethium, generator), (promethium, microchip),
+         (ruthenium, generator), (ruthenium, microchip)))
 
-    initial_floor_4 = set()
-    initial_state = (initial_floor_1, initial_floor_2, initial_floor_3,
+      initial_floor_4 = set()
+      initial_state = (initial_floor_1, initial_floor_2, initial_floor_3,
                      initial_floor_4)
+      return initial_state                
+
+    def input_part_b():
+      state = input_part_a()
+      state[0].add((elerium, generator))
+      state[0].add((elerium, microchip))
+      state[0].add((dilithium, generator))
+      state[0].add((dilithium, microchip))
+      return state                
 
     def is_safe(world):
         for floor in world:
-            chips = {rtg for rtg, part in floor if part == "microchip"}
-            generators = {rtg for rtg, part in floor if part == "generator"}
+            chips = {rtg for rtg, part in floor if part == microchip}
+            generators = {rtg for rtg, part in floor if part == generator}
 
             unprotected = chips.difference(generators)
             if len(unprotected) > 0 and len(generators) > 0:
@@ -333,19 +349,17 @@ def solve_day_11():
             total_result.extend(change(elevator + 1))
         return total_result
 
-    assert is_safe(initial_state)
-    assert not is_solved(initial_state)
-
     def freeze_world(elevator, floors):
+        res = []
         def freeze_floor(floor):
-          res = []
           for a,b in sorted(floor):
-            res.append(a)
-            res.append(b)
-          return tuple(res)
+            yield a | b
+          yield 0
 
-        floors = tuple(freeze_floor(a_floor) for a_floor in floors)
-        return (elevator, floors)
+        for a_floor in floors:
+          res.extend(freeze_floor(a_floor))
+
+        return (elevator, *res)
 
     def show_state(el, ww):
       for idx,  ll in enumerate(ww, start=0):
@@ -369,7 +383,10 @@ def solve_day_11():
       search = [(min_remaining_steps(initial_state), 0, (0, initial_state))]
       seen = set(freeze_world(1, initial_state))
       while search:
-        estimated, steps, (elevator, state), *rest = heapq.heappop(search)
+        estimated, steps, (elevator, state) = heapq.heappop(search)
+        if len(seen) % (2 * 1024) == 0:
+          print(f"{steps} for {len(seen)}, estimated: {estimated} still {len(search)}")
+
         for next_el, next_state in next_steps(elevator, state):
           next_steps_cnt = steps + 1
           if is_solved(next_state):
@@ -380,9 +397,9 @@ def solve_day_11():
             heapq.heappush(search,
                   (min_remaining_steps(next_state) + next_steps_cnt, 
                    next_steps_cnt, 
-                   (next_el, next_state), (elevator, state), *rest))
+                   (next_el, next_state), ))
 
-    return search_pathlength(initial_state), 0
+    return search_pathlength(input_part_a()), search_pathlength(input_part_b())
 
 
 def solve():
@@ -400,3 +417,4 @@ def solve():
 
     day11_a, day11_b = solve_day_11()
     print(f"Day11a: Santa needs {day11_a} steps with the elevator")
+    print(f"Day11a: Santa needs extra {day11_b} steps")
