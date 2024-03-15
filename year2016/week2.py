@@ -280,14 +280,14 @@ def solve_day_11():
     dilithium = 256
     def input_part_a():
       initial_floor_1 = set(
-        ((thulium, generator), (thulium, microchip),
-         (plutonium, generator), (strontium, generator)))
+        ((thulium| generator), (thulium| microchip),
+         (plutonium| generator), (strontium| generator)))
 
       initial_floor_2 = set(
-        ((plutonium, microchip), (strontium, microchip)))
+        ((plutonium| microchip), (strontium| microchip)))
       initial_floor_3 = set(
-        ((promethium, generator), (promethium, microchip),
-         (ruthenium, generator), (ruthenium, microchip)))
+        ((promethium| generator), (promethium| microchip),
+         (ruthenium| generator), (ruthenium| microchip)))
 
       initial_floor_4 = set()
       initial_state = (initial_floor_1, initial_floor_2, initial_floor_3,
@@ -296,20 +296,27 @@ def solve_day_11():
 
     def input_part_b():
       state = input_part_a()
-      state[0].add((elerium, generator))
-      state[0].add((elerium, microchip))
-      state[0].add((dilithium, generator))
-      state[0].add((dilithium, microchip))
+      state[0].add((elerium| generator))
+      state[0].add((elerium| microchip))
+      state[0].add((dilithium| generator))
+      state[0].add((dilithium| microchip))
       return state                
 
     def is_safe(world):
         for floor in world:
-            chips = {rtg for rtg, part in floor if part == microchip}
-            generators = {rtg for rtg, part in floor if part == generator}
+            chips = 0
+            generators = 0
+            for part in floor:
+              if (part & microchip) > 0:
+                chips = chips | part
+              else:
+                generators = generators | part
 
-            unprotected = chips.difference(generators)
-            if len(unprotected) > 0 and len(generators) > 0:
-                return False
+            chips = chips >> 2
+            generators = generators >> 2
+            if generators > 0 and (chips & ~generators) > 0:
+              return False
+
         return True
 
     def is_solved(world):
@@ -352,8 +359,8 @@ def solve_day_11():
     def freeze_world(elevator, floors):
         res = []
         def freeze_floor(floor):
-          for a,b in sorted(floor):
-            yield a | b
+          for part in sorted(floor):
+            yield part
           yield 0
 
         for a_floor in floors:
@@ -399,7 +406,7 @@ def solve_day_11():
                    next_steps_cnt, 
                    (next_el, next_state), ))
 
-    return search_pathlength(input_part_a()), search_pathlength(input_part_b())
+    return search_pathlength(input_part_a()), 0 #search_pathlength(input_part_b())
 
 
 def solve():
