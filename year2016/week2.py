@@ -328,7 +328,10 @@ def solve_day_11():
 
     def next_steps(elevator, world):
         def copy_world():
-          return tuple((set(floor) for floor in world))
+          return (set(world[0]),
+                  set(world[1]),
+                  set(world[2]),
+                  set(world[3]))
           
         def change(next_floor):
             start = world[elevator]
@@ -394,19 +397,19 @@ def solve_day_11():
         if len(seen) % (2 * 1024) == 0:
           print(f"{steps} for {len(seen)}, estimated: {estimated} still {len(search)}")
 
+
+        next_steps_cnt = steps + 1
         for next_el, next_state in next_steps(elevator, state):
-          next_steps_cnt = steps + 1
           if is_solved(next_state):
             return next_steps_cnt
-          frozen = freeze_world(next_el, next_state)
-          if frozen not in seen and is_safe(next_state):
+          if is_safe(next_state) and (frozen := freeze_world(next_el, next_state)) not in seen:
             seen.add(frozen)
             heapq.heappush(search,
                   (min_remaining_steps(next_state) + next_steps_cnt, 
                    next_steps_cnt, 
                    (next_el, next_state), ))
 
-    return search_pathlength(input_part_a()), 0 #search_pathlength(input_part_b())
+    return search_pathlength(input_part_a()), search_pathlength(input_part_b())
 
 
 def solve():
