@@ -352,12 +352,10 @@ def solve_day_11():
                 a_result[next_floor].add(el2)
                 yield (next_floor, a_result)
 
-        total_result = []
         if elevator != 0:
-            total_result.extend(change(elevator - 1))
+            yield from change(elevator - 1)
         if elevator != 3:
-            total_result.extend(change(elevator + 1))
-        return total_result
+            yield from change(elevator + 1)
 
     def freeze_world(elevator, floors):
         res = []
