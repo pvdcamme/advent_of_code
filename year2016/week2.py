@@ -426,6 +426,27 @@ def solve_day_12():
     with open(get_filepath("day_12.txt"), "r") as f:
         instructions = [line.strip() for line in f]
 
+    registers = {"a": 0, "b": 0, "c":0, "d":0}
+    def apply(inst, registers):
+      cpy_inst = "cpy (\d+|[abcd]) ([abcd])"
+      inc_inst = "inc ([abcd])"
+      dec_inst = "dec ([abcd])"
+      jnz_inst = "jnz (\d+|[abcd]) (-*\d+)"
+
+      if re.match(cpy_inst, inst):
+        print('cpy')
+      elif  re.match(inc_inst, inst):
+        print('cpy')
+      elif  re.match(dec_inst, inst):
+        print('dec')
+      elif  re.match(jnz_inst, inst):
+        print('jnc')
+      else:
+        print(f"unknown: {inst}")
+
+    for inst in instructions:
+      apply(inst, registers)
+
     return 0,0
 
 
