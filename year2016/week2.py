@@ -429,48 +429,71 @@ def solve_day_12():
 
     registers = {"a": 0, "b": 0, "c": 0, "d": 0}
 
-    def apply_inst(inst, registers):
-        """ Runs the instructions using the register.
-            Returns the offset of next next instruction
+    def compile_inst(inst):
+        """ Comiles a single instruction to an function 
+
+            This function return the PC offset and accepts the 
+            register map as input
         """
         cpy_inst = "cpy (\d+|[abcd]) ([abcd])"
         inc_inst = "inc ([abcd])"
         dec_inst = "dec ([abcd])"
         jnz_inst = "jnz (\d+|[abcd]) (-*\d+)"
-        program_inc = 1
-
         if cpy_val := re.match(cpy_inst, inst):
             src, dest = cpy_val.groups()
-            if src in registers:
+            def cpy_regist(registers):
                 registers[dest] = registers[src]
-            else:
+                return 1
+            def cpy_val(registers):
                 registers[dest] = int(src)
-
+                return 1
+            if src in registers:
+                return cpy_regist
+            else:
+                return cpy_val
         elif inc_val := re.match(inc_inst, inst):
             src, = inc_val.groups()
-            registers[src] += 1
+            def inc_action(registers):
+              registers[src] += 1
+              return 1
+            return inc_action
         elif dec_val := re.match(dec_inst, inst):
             src, = dec_val.groups()
-            registers[src] -= 1
+            def dec_action(registers):
+              registers[src] -= 1
+              return 1
+            return dec_action
         elif jnz_val := re.match(jnz_inst, inst):
             src, dest = jnz_val.groups()
-            if src in registers and registers[src] != 0:
-                program_inc = int(dest)
-            elif src in registers:
-                pass
-            elif int(src) != 0:
-                program_inc = int(dest)
+            def register_jump(registers):
+                if registers[src] == 0:
+                  return 1
+                else:
+                  return int(dest)
+            def fixed_jump(registers):
+                if int(src) == 0:
+                  return 1
+                else:
+                  return int(dest)
+            if src in registers:
+                return register_jump 
+            else:
+                return fixed_jump
         else:
-            print(f"unknown: {inst} -- shouldn't happen")
-        return program_inc
+            print("Unknown instruction")
+
+
+    def compile_program():
+      return [compile_inst(inst) for inst in instructions]
+
+    compiled = compile_program()
 
     def run_program(registers):
       """ For second part of the questions """
       program_counter = 0
       registers = registers.copy()
       while program_counter < len(instructions):
-        current = instructions[program_counter]
-        offset = apply_inst(current, registers)
+        offset = compiled[program_counter](registers)
 
         program_counter += offset
       return registers
