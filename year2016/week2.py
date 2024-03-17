@@ -430,6 +430,9 @@ def solve_day_12():
     registers = {"a": 0, "b": 0, "c": 0, "d": 0}
 
     def apply(inst, registers):
+        """ Runs the instructions using the register.
+            Returns the offset of next next instruction
+        """
         cpy_inst = "cpy (\d+|[abcd]) ([abcd])"
         inc_inst = "inc ([abcd])"
         dec_inst = "dec ([abcd])"
@@ -462,10 +465,16 @@ def solve_day_12():
             print(f"unknown: {inst}")
         return program_inc
 
-    for inst in instructions:
-        apply(inst, registers)
+    program_counter = 0
+    while program_counter < len(instructions):
+        current = instructions[program_counter]
+        offset = apply(current, registers)
 
-    return 0, 0
+        #print(f"{program_counter}: {current} with now {registers} moving to {program_counter + offset}")
+        program_counter += offset
+
+      
+    return registers["a"], 0
 
 
 def solve():
@@ -487,3 +496,4 @@ def solve():
     print(f"Day11a: Santa needs extra {day11_b} steps")
 
     day12_a, day12_b = solve_day_12()
+    print(f"Day12a: Register a has {day12_a}")
