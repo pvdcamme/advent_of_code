@@ -465,16 +465,20 @@ def solve_day_12():
             print(f"unknown: {inst}")
         return program_inc
 
-    program_counter = 0
-    while program_counter < len(instructions):
+    def run_program(registers):
+      program_counter = 0
+      while program_counter < len(instructions):
         current = instructions[program_counter]
         offset = apply(current, registers)
 
-        #print(f"{program_counter}: {current} with now {registers} moving to {program_counter + offset}")
         program_counter += offset
+      return registers
+    
+    result_a = run_program(registers.copy())
+
 
       
-    return registers["a"], 0
+    return result_a["a"], 0
 
 
 def solve():
