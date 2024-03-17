@@ -429,7 +429,7 @@ def solve_day_12():
 
     registers = {"a": 0, "b": 0, "c": 0, "d": 0}
 
-    def apply(inst, registers):
+    def apply_inst(inst, registers):
         """ Runs the instructions using the register.
             Returns the offset of next next instruction
         """
@@ -469,16 +469,18 @@ def solve_day_12():
       program_counter = 0
       while program_counter < len(instructions):
         current = instructions[program_counter]
-        offset = apply(current, registers)
+        offset = apply_inst(current, registers)
 
         program_counter += offset
       return registers
     
     result_a = run_program(registers.copy())
 
+    registers["c"] = 1
+    result_b = run_program(registers.copy())
 
       
-    return result_a["a"], 0
+    return result_a["a"], result_b["a"]
 
 
 def solve():
@@ -501,3 +503,4 @@ def solve():
 
     day12_a, day12_b = solve_day_12()
     print(f"Day12a: Register a has {day12_a}")
+    print(f"Day12b: With c=1, Register a has value {day12_b}")
