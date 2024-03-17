@@ -460,13 +460,14 @@ def solve_day_12():
                 pass
             elif int(src) != 0:
                 program_inc = int(dest)
-
         else:
-            print(f"unknown: {inst}")
+            print(f"unknown: {inst} -- shouldn't happen")
         return program_inc
 
     def run_program(registers):
+      """ For second part of the questions """
       program_counter = 0
+      registers = registers.copy()
       while program_counter < len(instructions):
         current = instructions[program_counter]
         offset = apply_inst(current, registers)
