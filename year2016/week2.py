@@ -421,6 +421,10 @@ def solve_day_11():
 
     return search_pathlength(input_part_a()), search_pathlength(input_part_b())
 
+def solve_day_12():
+    """ Running the program """
+    return 0,0
+
 
 def solve():
     import cProfile
@@ -439,3 +443,5 @@ def solve():
     day11_a, day11_b = solve_day_11()
     print(f"Day11a: Santa needs {day11_a} steps with the elevator")
     print(f"Day11a: Santa needs extra {day11_b} steps")
+
+    day12_a, day12_b = solve_day_12()
