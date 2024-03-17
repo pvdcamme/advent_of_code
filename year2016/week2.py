@@ -434,7 +434,9 @@ def solve_day_12():
 
             This function return the PC offset and accepts the 
             register map as input
+
         """
+        # Using many inner fucntions to accomplish this compilation 
         cpy_inst = "cpy (\d+|[abcd]) ([abcd])"
         inc_inst = "inc ([abcd])"
         dec_inst = "dec ([abcd])"
