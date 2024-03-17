@@ -302,8 +302,7 @@ def solve_day_11():
       state[0].add((dilithium| microchip))
       return state                
 
-    def is_safe(world):
-        for floor in world:
+    def is_safe_floor(floor):
             chips = 0
             generators = 0
             for part in floor:
@@ -312,16 +311,25 @@ def solve_day_11():
               else:
                 generators = generators | part
 
+            if generators == 0:
+              return True
+
             chips = chips >> 2
             generators = generators >> 2
-            if generators > 0 and (chips & ~generators) > 0:
+            unprotected = chips & ~generators
+            return unprotected <= 0
+
+
+    def is_safe(world):
+        for floor in world:
+            if not is_safe_floor(floor):
               return False
 
         return True
 
     def is_solved(world):
         for lower_floor in world[:3]: 
-            if lower_floor:
+            if len(lower_floor) > 0:
               return False
         top_floor = world[3]
         return len(top_floor) > 0
@@ -360,8 +368,8 @@ def solve_day_11():
     def freeze_world(elevator, floors):
         res = []
         def freeze_floor(floor):
-          for part in sorted(floor):
-            yield part
+          yield from sorted(floor)
+          # As stop marker.
           yield 0
 
         for a_floor in floors:
@@ -411,6 +419,7 @@ def solve_day_11():
 
 
 def solve():
+    import cProfile
     day8_a, day8_b = solve_day_8()
     print(f"Day8a: There would {day8_a} pixels lit")
     print(f"Day8b: There lcd looks like \n {day8_b}")
@@ -423,6 +432,8 @@ def solve():
     print(f"Day10a: Bot {day10_a} handles Microchips 17 and 61")
     print(f"Day10b: Multiplied values together are {day10_b}")
 
-    day11_a, day11_b = solve_day_11()
+    with cProfile.Profile() as pr:
+      day11_a, day11_b = solve_day_11()
+      pr.print_stats('cumulative')
     print(f"Day11a: Santa needs {day11_a} steps with the elevator")
     print(f"Day11a: Santa needs extra {day11_b} steps")
