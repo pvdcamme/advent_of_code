@@ -324,7 +324,6 @@ def solve_day_11():
         for floor in world:
             if not is_safe_floor(floor):
               return False
-
         return True
 
     def is_solved(world):
@@ -335,6 +334,7 @@ def solve_day_11():
         return len(top_floor) > 0
 
     def next_steps(elevator, world):
+        """ Only generates next valid steps """
         def copy_world():
           return (set(world[0]),
                   set(world[1]),
@@ -347,18 +347,30 @@ def solve_day_11():
             ## single element moves
             for el in start:
                 a_result = copy_world()
-                a_result[elevator].remove(el)
-                a_result[next_floor].add(el)
-                yield (next_floor, a_result)
+                current_floor = a_result[elevator]
+                target_floor = a_result[next_floor]
+                
+                current_floor.remove(el)
+                target_floor.add(el)
+                if is_safe_floor(current_floor) and is_safe_floor(target_floor):
+                  yield (next_floor, a_result)
+
 
             ## double element moves
             for el1, el2 in itertools.combinations(start, 2):
                 a_result = copy_world()
-                a_result[elevator].remove(el1)
-                a_result[elevator].remove(el2)
-                a_result[next_floor].add(el1)
-                a_result[next_floor].add(el2)
-                yield (next_floor, a_result)
+                current_floor = a_result[elevator]
+                target_floor = a_result[next_floor]
+                
+                current_floor.remove(el1)
+                current_floor.remove(el2)
+                if not is_safe_floor(current_floor):
+                  continue
+
+                target_floor.add(el1)
+                target_floor.add(el2)
+                if is_safe_floor(target_floor):
+                  yield (next_floor, a_result)
 
         if elevator != 0:
             yield from change(elevator - 1)
@@ -408,7 +420,7 @@ def solve_day_11():
         for next_el, next_state in next_steps(elevator, state):
           if is_solved(next_state):
             return next_steps_cnt
-          if is_safe(next_state) and (frozen := freeze_world(next_el, next_state)) not in seen:
+          if (frozen := freeze_world(next_el, next_state)) not in seen:
             seen.add(frozen)
             heapq.heappush(search,
                   (min_remaining_steps(next_state) + next_steps_cnt, 
