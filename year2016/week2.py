@@ -423,6 +423,9 @@ def solve_day_11():
 
 def solve_day_12():
     """ Running the program """
+    with open(get_filepath("day_12.txt"), "r") as f:
+        instructions = [line.strip() for line in f]
+
     return 0,0
 
 
