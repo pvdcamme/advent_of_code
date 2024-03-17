@@ -278,69 +278,66 @@ def solve_day_11():
     ruthenium = 64
     elerium = 128
     dilithium = 256
+
     def input_part_a():
-      initial_floor_1 = set(
-        ((thulium| generator), (thulium| microchip),
-         (plutonium| generator), (strontium| generator)))
+        initial_floor_1 = set(
+            ((thulium | generator), (thulium | microchip),
+             (plutonium | generator), (strontium | generator)))
 
-      initial_floor_2 = set(
-        ((plutonium| microchip), (strontium| microchip)))
-      initial_floor_3 = set(
-        ((promethium| generator), (promethium| microchip),
-         (ruthenium| generator), (ruthenium| microchip)))
+        initial_floor_2 = set(
+            ((plutonium | microchip), (strontium | microchip)))
+        initial_floor_3 = set(
+            ((promethium | generator), (promethium | microchip),
+             (ruthenium | generator), (ruthenium | microchip)))
 
-      initial_floor_4 = set()
-      initial_state = (initial_floor_1, initial_floor_2, initial_floor_3,
-                     initial_floor_4)
-      return initial_state                
+        initial_floor_4 = set()
+        initial_state = (initial_floor_1, initial_floor_2, initial_floor_3,
+                         initial_floor_4)
+        return initial_state
 
     def input_part_b():
-      state = input_part_a()
-      state[0].add((elerium| generator))
-      state[0].add((elerium| microchip))
-      state[0].add((dilithium| generator))
-      state[0].add((dilithium| microchip))
-      return state                
+        state = input_part_a()
+        state[0].add((elerium | generator))
+        state[0].add((elerium | microchip))
+        state[0].add((dilithium | generator))
+        state[0].add((dilithium | microchip))
+        return state
 
     def is_safe_floor(floor):
-            chips = 0
-            generators = 0
-            for part in floor:
-              if (part & microchip) > 0:
+        chips = 0
+        generators = 0
+        for part in floor:
+            if (part & microchip) > 0:
                 chips = chips | part
-              else:
+            else:
                 generators = generators | part
 
-            if generators == 0:
-              return True
+        if generators == 0:
+            return True
 
-            chips = chips >> 2
-            generators = generators >> 2
-            unprotected = chips & ~generators
-            return unprotected <= 0
-
+        chips = chips >> 2
+        generators = generators >> 2
+        unprotected = chips & ~generators
+        return unprotected <= 0
 
     def is_safe(world):
         for floor in world:
             if not is_safe_floor(floor):
-              return False
+                return False
         return True
 
     def is_solved(world):
-        for lower_floor in world[:3]: 
+        for lower_floor in world[:3]:
             if len(lower_floor) > 0:
-              return False
+                return False
         top_floor = world[3]
         return len(top_floor) > 0
 
     def next_steps(elevator, world):
         """ Only generates next valid steps """
         def copy_world():
-          return (set(world[0]),
-                  set(world[1]),
-                  set(world[2]),
-                  set(world[3]))
-          
+            return (set(world[0]), set(world[1]), set(world[2]), set(world[3]))
+
         def change(next_floor):
             start = world[elevator]
 
@@ -349,27 +346,28 @@ def solve_day_11():
                 a_result = copy_world()
                 current_floor = a_result[elevator]
                 target_floor = a_result[next_floor]
-                
+
                 current_floor.remove(el)
                 target_floor.add(el)
-                if is_safe_floor(current_floor) and is_safe_floor(target_floor):
-                  yield (next_floor, a_result)
+                if is_safe_floor(current_floor) and is_safe_floor(
+                        target_floor):
+                    yield (next_floor, a_result)
 
             ## double element moves
             for el1, el2 in itertools.combinations(start, 2):
                 a_result = copy_world()
                 current_floor = a_result[elevator]
                 target_floor = a_result[next_floor]
-                
+
                 current_floor.remove(el1)
                 current_floor.remove(el2)
                 if not is_safe_floor(current_floor):
-                  continue
+                    continue
 
                 target_floor.add(el1)
                 target_floor.add(el2)
                 if is_safe_floor(target_floor):
-                  yield (next_floor, a_result)
+                    yield (next_floor, a_result)
 
         if elevator != 0:
             yield from change(elevator - 1)
@@ -378,53 +376,51 @@ def solve_day_11():
 
     def freeze_world(elevator, floors):
         res = []
+
         def freeze_floor(floor):
-          yield from sorted(floor)
-          # As stop marker.
-          yield 0
+            yield from sorted(floor)
+            # As stop marker.
+            yield 0
 
         for a_floor in floors:
-          res.extend(freeze_floor(a_floor))
+            res.extend(freeze_floor(a_floor))
 
         return (elevator, *res)
 
     def show_state(el, ww):
-      for idx,  ll in enumerate(ww, start=0):
-        if idx == el:
-          print(f"{idx + 1} : E , {ll}")
-        else:
-          print(f"{idx + 1} : . , {ll}")
-        
+        for idx, ll in enumerate(ww, start=0):
+            if idx == el:
+                print(f"{idx + 1} : E , {ll}")
+            else:
+                print(f"{idx + 1} : . , {ll}")
 
     def search_pathlength(initial_state):
-      """ A-star search approach.
+        """ A-star search approach.
           Guaranteed to find a correct match thanks
           to an admissable heuristic
       """
-      def min_remaining_steps(floors):
-        min_cost = 0
-        for lvl, a_floor in enumerate(floors[:3], start=1):
-          min_cost += math.ceil(len(a_floor) / 2) * (4 - lvl)
-        return min_cost
-        
-      search = [(min_remaining_steps(initial_state), 0, (0, initial_state))]
-      seen = set(freeze_world(1, initial_state))
-      while search:
-        estimated, steps, (elevator, state) = heapq.heappop(search)
-        if len(seen) % (2 * 1024) == 0:
-          print(f"{steps} for {len(seen)}, estimated: {estimated} still {len(search)}")
+        def min_remaining_steps(floors):
+            min_cost = 0
+            for lvl, a_floor in enumerate(floors[:3], start=1):
+                min_cost += math.ceil(len(a_floor) / 2) * (4 - lvl)
+            return min_cost
 
+        search = [(min_remaining_steps(initial_state), 0, (0, initial_state))]
+        seen = set(freeze_world(1, initial_state))
+        while search:
+            estimated, steps, (elevator, state) = heapq.heappop(search)
 
-        next_steps_cnt = steps + 1
-        for next_el, next_state in next_steps(elevator, state):
-          if is_solved(next_state):
-            return next_steps_cnt
-          if (frozen := freeze_world(next_el, next_state)) not in seen:
-            seen.add(frozen)
-            heapq.heappush(search,
-                  (min_remaining_steps(next_state) + next_steps_cnt, 
-                   next_steps_cnt, 
-                   (next_el, next_state), ))
+            next_steps_cnt = steps + 1
+            for next_el, next_state in next_steps(elevator, state):
+                if is_solved(next_state):
+                    return next_steps_cnt
+                if (frozen := freeze_world(next_el, next_state)) not in seen:
+                    seen.add(frozen)
+                    heapq.heappush(search, (
+                        min_remaining_steps(next_state) + next_steps_cnt,
+                        next_steps_cnt,
+                        (next_el, next_state),
+                    ))
 
     return search_pathlength(input_part_a()), search_pathlength(input_part_b())
 
