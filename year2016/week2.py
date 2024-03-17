@@ -355,7 +355,6 @@ def solve_day_11():
                 if is_safe_floor(current_floor) and is_safe_floor(target_floor):
                   yield (next_floor, a_result)
 
-
             ## double element moves
             for el1, el2 in itertools.combinations(start, 2):
                 a_result = copy_world()
@@ -444,8 +443,6 @@ def solve():
     print(f"Day10a: Bot {day10_a} handles Microchips 17 and 61")
     print(f"Day10b: Multiplied values together are {day10_b}")
 
-    with cProfile.Profile() as pr:
-      day11_a, day11_b = solve_day_11()
-      pr.print_stats('cumulative')
+    day11_a, day11_b = solve_day_11()
     print(f"Day11a: Santa needs {day11_a} steps with the elevator")
     print(f"Day11a: Santa needs extra {day11_b} steps")
