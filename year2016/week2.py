@@ -421,33 +421,51 @@ def solve_day_11():
 
     return search_pathlength(input_part_a()), search_pathlength(input_part_b())
 
+
 def solve_day_12():
     """ Running the program """
     with open(get_filepath("day_12.txt"), "r") as f:
         instructions = [line.strip() for line in f]
 
-    registers = {"a": 0, "b": 0, "c":0, "d":0}
-    def apply(inst, registers):
-      cpy_inst = "cpy (\d+|[abcd]) ([abcd])"
-      inc_inst = "inc ([abcd])"
-      dec_inst = "dec ([abcd])"
-      jnz_inst = "jnz (\d+|[abcd]) (-*\d+)"
+    registers = {"a": 0, "b": 0, "c": 0, "d": 0}
 
-      if re.match(cpy_inst, inst):
-        print('cpy')
-      elif  re.match(inc_inst, inst):
-        print('cpy')
-      elif  re.match(dec_inst, inst):
-        print('dec')
-      elif  re.match(jnz_inst, inst):
-        print('jnc')
-      else:
-        print(f"unknown: {inst}")
+    def apply(inst, registers):
+        cpy_inst = "cpy (\d+|[abcd]) ([abcd])"
+        inc_inst = "inc ([abcd])"
+        dec_inst = "dec ([abcd])"
+        jnz_inst = "jnz (\d+|[abcd]) (-*\d+)"
+        program_inc = 1
+
+        if cpy_val := re.match(cpy_inst, inst):
+            src, dest = cpy_val.groups()
+            if src in registers:
+                registers[dest] = registers[src]
+            else:
+                registers[dest] = int(src)
+
+        elif inc_val := re.match(inc_inst, inst):
+            src, = inc_val.groups()
+            registers[src] += 1
+        elif dec_val := re.match(dec_inst, inst):
+            src, = dec_val.groups()
+            registers[src] -= 1
+        elif jnz_val := re.match(jnz_inst, inst):
+            src, dest = jnz_val.groups()
+            if src in registers and registers[src] != 0:
+                program_inc = int(dest)
+            elif src in registers:
+                pass
+            elif int(src) != 0:
+                program_inc = int(dest)
+
+        else:
+            print(f"unknown: {inst}")
+        return program_inc
 
     for inst in instructions:
-      apply(inst, registers)
+        apply(inst, registers)
 
-    return 0,0
+    return 0, 0
 
 
 def solve():
