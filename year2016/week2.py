@@ -269,6 +269,8 @@ def solve_day_10():
 def solve_day_11():
     """ Safely bringing the microchips up """
 
+    # Asigned unique powers of 2 to each type.
+    # Allos for several memory saving tricks later on
     generator = 1
     microchip = 2
     thulium = 4
@@ -336,6 +338,7 @@ def solve_day_11():
     def next_steps(elevator, world):
         """ Only generates next valid steps """
         def copy_world():
+            # Explict 4 levels, because it made a large difference to performance.
             return (set(world[0]), set(world[1]), set(world[2]), set(world[3]))
 
         def change(next_floor):
@@ -375,6 +378,7 @@ def solve_day_11():
             yield from change(elevator + 1)
 
     def freeze_world(elevator, floors):
+        """ Freeze the world to make it easier find back. """
         res = []
 
         def freeze_floor(floor):
@@ -386,13 +390,6 @@ def solve_day_11():
             res.extend(freeze_floor(a_floor))
 
         return (elevator, *res)
-
-    def show_state(el, ww):
-        for idx, ll in enumerate(ww, start=0):
-            if idx == el:
-                print(f"{idx + 1} : E , {ll}")
-            else:
-                print(f"{idx + 1} : . , {ll}")
 
     def search_pathlength(initial_state):
         """ A-star search approach.
